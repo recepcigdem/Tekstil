@@ -8,7 +8,7 @@ namespace Core.Utilities.Results
     {
         public Result(bool success, string message) : this(success)
         {
-            Messagge = message;
+            Message = message;
         }
 
         public Result(bool success)
@@ -17,8 +17,7 @@ namespace Core.Utilities.Results
         }
 
         public bool Success { get; }
-        public string Messagge { get; }
-
-
+        public string Message { get; set; }
+       
     }
 }

@@ -16,6 +16,7 @@ namespace Entities.Concrete
 
         public AgeGroup()
         {
+            Id = 0;
             IsActive = false;
             ShortDescription = string.Empty;
             Description = string.Empty;

@@ -1,0 +1,6 @@
+﻿.subListContentContainer .form-control {
+    display: initial !important;
+    max-width: initial;
+    margin-right: 10px;
+    margin-bottom: 5px !important;
+}

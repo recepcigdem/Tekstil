@@ -1,0 +1,29 @@
+﻿.subListContentContainer .form-control {
+    display: initial !important;
+    max-width: initial;
+    margin-right: 10px;
+    margin-bottom: 5px !important;
+}
+
+.customerReadOnlyPanelBody {
+    /*padding: 30px;*/
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-right: 30px !important;
+    padding-left: 30px !important;
+}
+
+
+.page-content {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
+
+
+
+
+
+

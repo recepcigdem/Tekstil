@@ -1,0 +1,11 @@
+﻿
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocalizer
+
+<div class="site-footer-legal">© 2021 @SharedLocalizer.GetLocalizedHtmlString("ApplicationBy"). @SharedLocalizer.GetLocalizedHtmlString("AllRightsReserved")</div>
+<div class="site-footer-right">
+    <p>@SharedLocalizer.GetLocalizedHtmlString("ContactUs")</p>
+</div>
+

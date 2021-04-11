@@ -12,8 +12,8 @@ namespace Business.Abstract
     {
         IDataResult<List<AgeGroup>> GetAll();
         IDataResult<AgeGroup> GetById(int ageGroupId);
-        IResult Add(AgeGroup ageGroup);
-        IResult Update(AgeGroup ageGroup);
+        IDataResult<AgeGroup> Add(AgeGroup ageGroup);
+        IDataResult<AgeGroup> Update(AgeGroup ageGroup);
         IResult Delete(AgeGroup ageGroup);
     }
 }

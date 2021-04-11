@@ -1,0 +1,17 @@
+﻿.col-md-12 .row .subListRow {
+   
+    pointer-events: none;
+    opacity: 0.7;
+    /*background-color: #eee;
+    opacity: 1;*/
+}
+
+.panel-heading-kna:hover .col-md-1 {
+    /* display: none !important;subListRow
+    /*pointer-events: none;
+    opacity: 0.7;*/
+}
+
+
+
+

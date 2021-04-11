@@ -1,0 +1,35 @@
+﻿.select2 {
+    z-index: -1300 !important;
+}
+
+img[name="littleModelPhoto"] {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 50px;
+    max-height: 50px;
+    margin-left: 15px;
+    margin-top: 5px;
+}
+
+.swal2-container {
+    z-index: 3000 !important;
+}
+
+.table td, .table th {
+    vertical-align: middle !important;
+}
+
+.select2 {
+    z-index: 0 !important;
+}
+
+img[name="bigModelPhoto"] {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 500px;
+    max-height: 400px;
+    margin-left: 15px;
+    margin-top: 5px;
+}

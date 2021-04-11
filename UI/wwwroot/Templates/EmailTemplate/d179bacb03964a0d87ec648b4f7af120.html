@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)https://localhost:44319/tr/Mailing/Detail -->
+<html class="no-js js-menubar" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="bootstrap admin template">
+    <meta name="author" content="">
+
+    <title>Programmatic</title>
+    <script src="./Programmatic_files/jquery-3.4.1.min.js.indir"></script>
+    <script src="./Programmatic_files/select2.full.min.js.indir"></script>
+    <script src="./Programmatic_files/utils.js.indir" charset="utf-8"></script>
+    <script src="./Programmatic_files/icheck.min.js.indir"></script>
+
+
+    <link rel="apple-touch-icon" href="https://localhost:44319/assets/images/apple-touch-icon.png">
+    <link rel="shortcut icon" href="https://localhost:44319/assets/images/favicon.ico">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="./Programmatic_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./Programmatic_files/bootstrap-extend.min.css">
+    <link rel="stylesheet" href="./Programmatic_files/site.min.css">
+
+    <!-- Plugins -->
+    <link rel="stylesheet" href="./Programmatic_files/animsition.css">
+    <link rel="stylesheet" href="./Programmatic_files/asScrollable.css">
+    <link rel="stylesheet" href="./Programmatic_files/switchery.css">
+    <link rel="stylesheet" href="./Programmatic_files/introjs.css">
+    <link rel="stylesheet" href="./Programmatic_files/slidePanel.css">
+    <link rel="stylesheet" href="./Programmatic_files/flag-icon.css">
+    <link href="./Programmatic_files/dashboard.min.css" rel="stylesheet">
+
+    <link href="./Programmatic_files/bootstrap-tagsinput.min.css" rel="stylesheet">
+
+
+    <link href="./Programmatic_files/modals.min.css" rel="stylesheet">
+    <link href="./Programmatic_files/sweetalert2.min.css" rel="stylesheet">
+    <link href="./Programmatic_files/select2.min.css" rel="stylesheet">
+    <link href="./Programmatic_files/icheck.css" rel="stylesheet">
+
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="./Programmatic_files/weather-icons.min.css">
+    <link rel="stylesheet" href="./Programmatic_files/web-icons.min.css">
+    <link rel="stylesheet" href="./Programmatic_files/brand-icons.min.css">
+    <script src="./Programmatic_files/breakpoints.js.indir"></script>
+
+    <!-- Core  -->
+    <script src="./Programmatic_files/babel-external-helpers.js.indir"></script>
+    <script src="./Programmatic_files/popper.min.js.indir"></script>
+    <script src="./Programmatic_files/bootstrap.min.js.indir"></script>
+    <script src="./Programmatic_files/animsition.min.js.indir"></script>
+    <script src="./Programmatic_files/jquery.mousewheel.js.indir"></script>
+    <script src="./Programmatic_files/jquery-asScrollbar.js.indir"></script>
+    <script src="./Programmatic_files/jquery-asScrollable.js.indir"></script>
+    <script src="./Programmatic_files/breakpoints.js.indir"></script>
+    <script src="./Programmatic_files/sweetalert2.min.js.indir"></script><style>.swal2-popup.swal2-toast{flex-direction:row;align-items:center;width:auto;padding:.625em;overflow-y:hidden;background:#fff;box-shadow:0 0 .625em #d9d9d9}.swal2-popup.swal2-toast .swal2-header{flex-direction:row}.swal2-popup.swal2-toast .swal2-title{flex-grow:1;justify-content:flex-start;margin:0 .6em;font-size:1em}.swal2-popup.swal2-toast .swal2-footer{margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-popup.swal2-toast .swal2-close{position:static;width:.8em;height:.8em;line-height:.8}.swal2-popup.swal2-toast .swal2-content{justify-content:flex-start;font-size:1em}.swal2-popup.swal2-toast .swal2-icon{width:2em;min-width:2em;height:2em;margin:0}.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:700}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{font-size:.25em}}.swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-popup.swal2-toast .swal2-actions{flex-basis:auto!important;width:auto;height:auto;margin:0 .3125em}.swal2-popup.swal2-toast .swal2-styled{margin:0 .3125em;padding:.3125em .625em;font-size:1em}.swal2-popup.swal2-toast .swal2-styled:focus{box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(50,100,150,.4)}.swal2-popup.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;transform:rotate(45deg);border-radius:50%}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.8em;left:-.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-popup.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-toast-animate-success-line-tip .75s;animation:swal2-toast-animate-success-line-tip .75s}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-toast-animate-success-line-long .75s;animation:swal2-toast-animate-success-line-long .75s}.swal2-popup.swal2-toast.swal2-show{-webkit-animation:swal2-toast-show .5s;animation:swal2-toast-show .5s}.swal2-popup.swal2-toast.swal2-hide{-webkit-animation:swal2-toast-hide .1s forwards;animation:swal2-toast-hide .1s forwards}.swal2-container{display:flex;position:fixed;z-index:1060;top:0;right:0;bottom:0;left:0;flex-direction:row;align-items:center;justify-content:center;padding:.625em;overflow-x:hidden;transition:background-color .1s;-webkit-overflow-scrolling:touch}.swal2-container.swal2-backdrop-show{background:rgba(0,0,0,.4)}.swal2-container.swal2-backdrop-hide{background:0 0!important}.swal2-container.swal2-top{align-items:flex-start}.swal2-container.swal2-top-left,.swal2-container.swal2-top-start{align-items:flex-start;justify-content:flex-start}.swal2-container.swal2-top-end,.swal2-container.swal2-top-right{align-items:flex-start;justify-content:flex-end}.swal2-container.swal2-center{align-items:center}.swal2-container.swal2-center-left,.swal2-container.swal2-center-start{align-items:center;justify-content:flex-start}.swal2-container.swal2-center-end,.swal2-container.swal2-center-right{align-items:center;justify-content:flex-end}.swal2-container.swal2-bottom{align-items:flex-end}.swal2-container.swal2-bottom-left,.swal2-container.swal2-bottom-start{align-items:flex-end;justify-content:flex-start}.swal2-container.swal2-bottom-end,.swal2-container.swal2-bottom-right{align-items:flex-end;justify-content:flex-end}.swal2-container.swal2-bottom-end>:first-child,.swal2-container.swal2-bottom-left>:first-child,.swal2-container.swal2-bottom-right>:first-child,.swal2-container.swal2-bottom-start>:first-child,.swal2-container.swal2-bottom>:first-child{margin-top:auto}.swal2-container.swal2-grow-fullscreen>.swal2-modal{display:flex!important;flex:1;align-self:stretch;justify-content:center}.swal2-container.swal2-grow-row>.swal2-modal{display:flex!important;flex:1;align-content:center;justify-content:center}.swal2-container.swal2-grow-column{flex:1;flex-direction:column}.swal2-container.swal2-grow-column.swal2-bottom,.swal2-container.swal2-grow-column.swal2-center,.swal2-container.swal2-grow-column.swal2-top{align-items:center}.swal2-container.swal2-grow-column.swal2-bottom-left,.swal2-container.swal2-grow-column.swal2-bottom-start,.swal2-container.swal2-grow-column.swal2-center-left,.swal2-container.swal2-grow-column.swal2-center-start,.swal2-container.swal2-grow-column.swal2-top-left,.swal2-container.swal2-grow-column.swal2-top-start{align-items:flex-start}.swal2-container.swal2-grow-column.swal2-bottom-end,.swal2-container.swal2-grow-column.swal2-bottom-right,.swal2-container.swal2-grow-column.swal2-center-end,.swal2-container.swal2-grow-column.swal2-center-right,.swal2-container.swal2-grow-column.swal2-top-end,.swal2-container.swal2-grow-column.swal2-top-right{align-items:flex-end}.swal2-container.swal2-grow-column>.swal2-modal{display:flex!important;flex:1;align-content:center;justify-content:center}.swal2-container.swal2-no-transition{transition:none!important}.swal2-container:not(.swal2-top):not(.swal2-top-start):not(.swal2-top-end):not(.swal2-top-left):not(.swal2-top-right):not(.swal2-center-start):not(.swal2-center-end):not(.swal2-center-left):not(.swal2-center-right):not(.swal2-bottom):not(.swal2-bottom-start):not(.swal2-bottom-end):not(.swal2-bottom-left):not(.swal2-bottom-right):not(.swal2-grow-fullscreen)>.swal2-modal{margin:auto}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-container .swal2-modal{margin:0!important}}.swal2-popup{display:none;position:relative;box-sizing:border-box;flex-direction:column;justify-content:center;width:32em;max-width:100%;padding:1.25em;border:none;border-radius:.3125em;background:#fff;font-family:inherit;font-size:1rem}.swal2-popup:focus{outline:0}.swal2-popup.swal2-loading{overflow-y:hidden}.swal2-header{display:flex;flex-direction:column;align-items:center}.swal2-title{position:relative;max-width:100%;margin:0 0 .4em;padding:0;color:#595959;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;word-wrap:break-word}.swal2-actions{display:flex;z-index:1;flex-wrap:wrap;align-items:center;justify-content:center;width:100%;margin:1.25em auto 0}.swal2-actions:not(.swal2-loading) .swal2-styled[disabled]{opacity:.4}.swal2-actions:not(.swal2-loading) .swal2-styled:hover{background-image:linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1))}.swal2-actions:not(.swal2-loading) .swal2-styled:active{background-image:linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2))}.swal2-actions.swal2-loading .swal2-styled.swal2-confirm{box-sizing:border-box;width:2.5em;height:2.5em;margin:.46875em;padding:0;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border:.25em solid transparent;border-radius:100%;border-color:transparent;background-color:transparent!important;color:transparent;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-actions.swal2-loading .swal2-styled.swal2-cancel{margin-right:30px;margin-left:30px}.swal2-actions.swal2-loading :not(.swal2-styled).swal2-confirm::after{content:"";display:inline-block;width:15px;height:15px;margin-left:5px;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border:3px solid #999;border-radius:50%;border-right-color:transparent;box-shadow:1px 1px 1px #fff}.swal2-styled{margin:.3125em;padding:.625em 2em;box-shadow:none;font-weight:500}.swal2-styled:not([disabled]){cursor:pointer}.swal2-styled.swal2-confirm{border:0;border-radius:.25em;background:initial;background-color:#3085d6;color:#fff;font-size:1.0625em}.swal2-styled.swal2-cancel{border:0;border-radius:.25em;background:initial;background-color:#aaa;color:#fff;font-size:1.0625em}.swal2-styled:focus{outline:0;box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(50,100,150,.4)}.swal2-styled::-moz-focus-inner{border:0}.swal2-footer{justify-content:center;margin:1.25em 0 0;padding:1em 0 0;border-top:1px solid #eee;color:#545454;font-size:1em}.swal2-timer-progress-bar{position:absolute;bottom:0;left:0;width:100%;height:.25em;background:rgba(0,0,0,.2)}.swal2-image{max-width:100%;margin:1.25em auto}.swal2-close{position:absolute;z-index:2;top:0;right:0;justify-content:center;width:1.2em;height:1.2em;padding:0;overflow:hidden;transition:color .1s ease-out;border:none;border-radius:0;outline:initial;background:0 0;color:#ccc;font-family:serif;font-size:2.5em;line-height:1.2;cursor:pointer}.swal2-close:hover{transform:none;background:0 0;color:#f27474}.swal2-close::-moz-focus-inner{border:0}.swal2-content{z-index:1;justify-content:center;margin:0;padding:0;color:#545454;font-size:1.125em;font-weight:400;line-height:normal;text-align:center;word-wrap:break-word}.swal2-checkbox,.swal2-file,.swal2-input,.swal2-radio,.swal2-select,.swal2-textarea{margin:1em auto}.swal2-file,.swal2-input,.swal2-textarea{box-sizing:border-box;width:100%;transition:border-color .3s,box-shadow .3s;border:1px solid #d9d9d9;border-radius:.1875em;background:inherit;box-shadow:inset 0 1px 1px rgba(0,0,0,.06);color:inherit;font-size:1.125em}.swal2-file.swal2-inputerror,.swal2-input.swal2-inputerror,.swal2-textarea.swal2-inputerror{border-color:#f27474!important;box-shadow:0 0 2px #f27474!important}.swal2-file:focus,.swal2-input:focus,.swal2-textarea:focus{border:1px solid #b4dbed;outline:0;box-shadow:0 0 3px #c4e6f5}.swal2-file::-webkit-input-placeholder,.swal2-input::-webkit-input-placeholder,.swal2-textarea::-webkit-input-placeholder{color:#ccc}.swal2-file::-moz-placeholder,.swal2-input::-moz-placeholder,.swal2-textarea::-moz-placeholder{color:#ccc}.swal2-file:-ms-input-placeholder,.swal2-input:-ms-input-placeholder,.swal2-textarea:-ms-input-placeholder{color:#ccc}.swal2-file::-ms-input-placeholder,.swal2-input::-ms-input-placeholder,.swal2-textarea::-ms-input-placeholder{color:#ccc}.swal2-file::placeholder,.swal2-input::placeholder,.swal2-textarea::placeholder{color:#ccc}.swal2-range{margin:1em auto;background:#fff}.swal2-range input{width:80%}.swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}.swal2-range input,.swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}.swal2-input{height:2.625em;padding:0 .75em}.swal2-input[type=number]{max-width:10em}.swal2-file{background:inherit;font-size:1.125em}.swal2-textarea{height:6.75em;padding:.75em}.swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:inherit;color:inherit;font-size:1.125em}.swal2-checkbox,.swal2-radio{align-items:center;justify-content:center;background:#fff;color:inherit}.swal2-checkbox label,.swal2-radio label{margin:0 .6em;font-size:1.125em}.swal2-checkbox input,.swal2-radio input{margin:0 .4em}.swal2-validation-message{display:none;align-items:center;justify-content:center;padding:.625em;overflow:hidden;background:#f0f0f0;color:#666;font-size:1em;font-weight:300}.swal2-validation-message::before{content:"!";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}.swal2-icon{position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:1.25em auto 1.875em;border:.25em solid transparent;border-radius:50%;font-family:inherit;line-height:5em;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}.swal2-icon.swal2-error{border-color:#f27474;color:#f27474}.swal2-icon.swal2-error .swal2-x-mark{position:relative;flex-grow:1}.swal2-icon.swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}.swal2-icon.swal2-error.swal2-icon-show{-webkit-animation:swal2-animate-error-icon .5s;animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-error.swal2-icon-show .swal2-x-mark{-webkit-animation:swal2-animate-error-x-mark .5s;animation:swal2-animate-error-x-mark .5s}.swal2-icon.swal2-warning{border-color:#facea8;color:#f8bb86}.swal2-icon.swal2-info{border-color:#9de0f6;color:#3fc3ee}.swal2-icon.swal2-question{border-color:#c9dae1;color:#87adbd}.swal2-icon.swal2-success{border-color:#a5dc86;color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;transform:rotate(45deg);border-radius:50%}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}.swal2-icon.swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-.25em;left:-.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}.swal2-icon.swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}.swal2-icon.swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}.swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-animate-success-line-tip .75s;animation:swal2-animate-success-line-tip .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-animate-success-line-long .75s;animation:swal2-animate-success-line-long .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-circular-line-right{-webkit-animation:swal2-rotate-success-circular-line 4.25s ease-in;animation:swal2-rotate-success-circular-line 4.25s ease-in}.swal2-progress-steps{align-items:center;margin:0 0 1.25em;padding:0;background:inherit;font-weight:600}.swal2-progress-steps li{display:inline-block;position:relative}.swal2-progress-steps .swal2-progress-step{z-index:20;width:2em;height:2em;border-radius:2em;background:#3085d6;color:#fff;line-height:2em;text-align:center}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#3085d6}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:#add8e6;color:#fff}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:#add8e6}.swal2-progress-steps .swal2-progress-step-line{z-index:10;width:2.5em;height:.4em;margin:0 -1px;background:#3085d6}[class^=swal2]{-webkit-tap-highlight-color:transparent}.swal2-show{-webkit-animation:swal2-show .3s;animation:swal2-show .3s}.swal2-hide{-webkit-animation:swal2-hide .15s forwards;animation:swal2-hide .15s forwards}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{right:auto;left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}@supports (-ms-accelerator:true){.swal2-range input{width:100%!important}.swal2-range output{display:none}}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-range input{width:100%!important}.swal2-range output{display:none}}@-moz-document url-prefix(){.swal2-close:focus{outline:2px solid rgba(50,100,150,.4)}}@-webkit-keyframes swal2-toast-show{0%{transform:translateY(-.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0)}}@keyframes swal2-toast-show{0%{transform:translateY(-.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0)}}@-webkit-keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@-webkit-keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@-webkit-keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@-webkit-keyframes swal2-show{0%{transform:scale(.7)}45%{transform:scale(1.05)}80%{transform:scale(.95)}100%{transform:scale(1)}}@keyframes swal2-show{0%{transform:scale(.7)}45%{transform:scale(1.05)}80%{transform:scale(.95)}100%{transform:scale(1)}}@-webkit-keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(.5);opacity:0}}@keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(.5);opacity:0}}@-webkit-keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@-webkit-keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@-webkit-keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@-webkit-keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(.4);opacity:0}50%{margin-top:1.625em;transform:scale(.4);opacity:0}80%{margin-top:-.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(.4);opacity:0}50%{margin-top:1.625em;transform:scale(.4);opacity:0}80%{margin-top:-.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@-webkit-keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0);opacity:1}}@-webkit-keyframes swal2-rotate-loading{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes swal2-rotate-loading{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto!important}body.swal2-no-backdrop .swal2-container{top:auto;right:auto;bottom:auto;left:auto;max-width:calc(100% - .625em * 2);background-color:transparent!important}body.swal2-no-backdrop .swal2-container>.swal2-modal{box-shadow:0 0 10px rgba(0,0,0,.4)}body.swal2-no-backdrop .swal2-container.swal2-top{top:0;left:50%;transform:translateX(-50%)}body.swal2-no-backdrop .swal2-container.swal2-top-left,body.swal2-no-backdrop .swal2-container.swal2-top-start{top:0;left:0}body.swal2-no-backdrop .swal2-container.swal2-top-end,body.swal2-no-backdrop .swal2-container.swal2-top-right{top:0;right:0}body.swal2-no-backdrop .swal2-container.swal2-center{top:50%;left:50%;transform:translate(-50%,-50%)}body.swal2-no-backdrop .swal2-container.swal2-center-left,body.swal2-no-backdrop .swal2-container.swal2-center-start{top:50%;left:0;transform:translateY(-50%)}body.swal2-no-backdrop .swal2-container.swal2-center-end,body.swal2-no-backdrop .swal2-container.swal2-center-right{top:50%;right:0;transform:translateY(-50%)}body.swal2-no-backdrop .swal2-container.swal2-bottom{bottom:0;left:50%;transform:translateX(-50%)}body.swal2-no-backdrop .swal2-container.swal2-bottom-left,body.swal2-no-backdrop .swal2-container.swal2-bottom-start{bottom:0;left:0}body.swal2-no-backdrop .swal2-container.swal2-bottom-end,body.swal2-no-backdrop .swal2-container.swal2-bottom-right{right:0;bottom:0}@media print{body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow-y:scroll!important}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container{position:static!important}}body.swal2-toast-shown .swal2-container{background-color:transparent}body.swal2-toast-shown .swal2-container.swal2-top{top:0;right:auto;bottom:auto;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{top:0;right:0;bottom:auto;left:auto}body.swal2-toast-shown .swal2-container.swal2-top-left,body.swal2-toast-shown .swal2-container.swal2-top-start{top:0;right:auto;bottom:auto;left:0}body.swal2-toast-shown .swal2-container.swal2-center-left,body.swal2-toast-shown .swal2-container.swal2-center-start{top:50%;right:auto;bottom:auto;left:0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{top:50%;right:auto;bottom:auto;left:50%;transform:translate(-50%,-50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{top:50%;right:0;bottom:auto;left:auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-left,body.swal2-toast-shown .swal2-container.swal2-bottom-start{top:auto;right:auto;bottom:0;left:0}body.swal2-toast-shown .swal2-container.swal2-bottom{top:auto;right:auto;bottom:0;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{top:auto;right:0;bottom:0;left:auto}body.swal2-toast-column .swal2-toast{flex-direction:column;align-items:stretch}body.swal2-toast-column .swal2-toast .swal2-actions{flex:1;align-self:stretch;height:2.2em;margin-top:.3125em}body.swal2-toast-column .swal2-toast .swal2-loading{justify-content:center}body.swal2-toast-column .swal2-toast .swal2-input{height:2em;margin:.3125em auto;font-size:1em}body.swal2-toast-column .swal2-toast .swal2-validation-message{font-size:1em}</style><style>.swal2-popup.swal2-toast{flex-direction:row;align-items:center;width:auto;padding:.625em;overflow-y:hidden;background:#fff;box-shadow:0 0 .625em #d9d9d9}.swal2-popup.swal2-toast .swal2-header{flex-direction:row}.swal2-popup.swal2-toast .swal2-title{flex-grow:1;justify-content:flex-start;margin:0 .6em;font-size:1em}.swal2-popup.swal2-toast .swal2-footer{margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-popup.swal2-toast .swal2-close{position:static;width:.8em;height:.8em;line-height:.8}.swal2-popup.swal2-toast .swal2-content{justify-content:flex-start;font-size:1em}.swal2-popup.swal2-toast .swal2-icon{width:2em;min-width:2em;height:2em;margin:0}.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:700}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{font-size:.25em}}.swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-popup.swal2-toast .swal2-actions{flex-basis:auto!important;width:auto;height:auto;margin:0 .3125em}.swal2-popup.swal2-toast .swal2-styled{margin:0 .3125em;padding:.3125em .625em;font-size:1em}.swal2-popup.swal2-toast .swal2-styled:focus{box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(50,100,150,.4)}.swal2-popup.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;transform:rotate(45deg);border-radius:50%}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.8em;left:-.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-popup.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-toast-animate-success-line-tip .75s;animation:swal2-toast-animate-success-line-tip .75s}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-toast-animate-success-line-long .75s;animation:swal2-toast-animate-success-line-long .75s}.swal2-popup.swal2-toast.swal2-show{-webkit-animation:swal2-toast-show .5s;animation:swal2-toast-show .5s}.swal2-popup.swal2-toast.swal2-hide{-webkit-animation:swal2-toast-hide .1s forwards;animation:swal2-toast-hide .1s forwards}.swal2-container{display:flex;position:fixed;z-index:1060;top:0;right:0;bottom:0;left:0;flex-direction:row;align-items:center;justify-content:center;padding:.625em;overflow-x:hidden;transition:background-color .1s;-webkit-overflow-scrolling:touch}.swal2-container.swal2-backdrop-show{background:rgba(0,0,0,.4)}.swal2-container.swal2-backdrop-hide{background:0 0!important}.swal2-container.swal2-top{align-items:flex-start}.swal2-container.swal2-top-left,.swal2-container.swal2-top-start{align-items:flex-start;justify-content:flex-start}.swal2-container.swal2-top-end,.swal2-container.swal2-top-right{align-items:flex-start;justify-content:flex-end}.swal2-container.swal2-center{align-items:center}.swal2-container.swal2-center-left,.swal2-container.swal2-center-start{align-items:center;justify-content:flex-start}.swal2-container.swal2-center-end,.swal2-container.swal2-center-right{align-items:center;justify-content:flex-end}.swal2-container.swal2-bottom{align-items:flex-end}.swal2-container.swal2-bottom-left,.swal2-container.swal2-bottom-start{align-items:flex-end;justify-content:flex-start}.swal2-container.swal2-bottom-end,.swal2-container.swal2-bottom-right{align-items:flex-end;justify-content:flex-end}.swal2-container.swal2-bottom-end>:first-child,.swal2-container.swal2-bottom-left>:first-child,.swal2-container.swal2-bottom-right>:first-child,.swal2-container.swal2-bottom-start>:first-child,.swal2-container.swal2-bottom>:first-child{margin-top:auto}.swal2-container.swal2-grow-fullscreen>.swal2-modal{display:flex!important;flex:1;align-self:stretch;justify-content:center}.swal2-container.swal2-grow-row>.swal2-modal{display:flex!important;flex:1;align-content:center;justify-content:center}.swal2-container.swal2-grow-column{flex:1;flex-direction:column}.swal2-container.swal2-grow-column.swal2-bottom,.swal2-container.swal2-grow-column.swal2-center,.swal2-container.swal2-grow-column.swal2-top{align-items:center}.swal2-container.swal2-grow-column.swal2-bottom-left,.swal2-container.swal2-grow-column.swal2-bottom-start,.swal2-container.swal2-grow-column.swal2-center-left,.swal2-container.swal2-grow-column.swal2-center-start,.swal2-container.swal2-grow-column.swal2-top-left,.swal2-container.swal2-grow-column.swal2-top-start{align-items:flex-start}.swal2-container.swal2-grow-column.swal2-bottom-end,.swal2-container.swal2-grow-column.swal2-bottom-right,.swal2-container.swal2-grow-column.swal2-center-end,.swal2-container.swal2-grow-column.swal2-center-right,.swal2-container.swal2-grow-column.swal2-top-end,.swal2-container.swal2-grow-column.swal2-top-right{align-items:flex-end}.swal2-container.swal2-grow-column>.swal2-modal{display:flex!important;flex:1;align-content:center;justify-content:center}.swal2-container.swal2-no-transition{transition:none!important}.swal2-container:not(.swal2-top):not(.swal2-top-start):not(.swal2-top-end):not(.swal2-top-left):not(.swal2-top-right):not(.swal2-center-start):not(.swal2-center-end):not(.swal2-center-left):not(.swal2-center-right):not(.swal2-bottom):not(.swal2-bottom-start):not(.swal2-bottom-end):not(.swal2-bottom-left):not(.swal2-bottom-right):not(.swal2-grow-fullscreen)>.swal2-modal{margin:auto}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-container .swal2-modal{margin:0!important}}.swal2-popup{display:none;position:relative;box-sizing:border-box;flex-direction:column;justify-content:center;width:32em;max-width:100%;padding:1.25em;border:none;border-radius:.3125em;background:#fff;font-family:inherit;font-size:1rem}.swal2-popup:focus{outline:0}.swal2-popup.swal2-loading{overflow-y:hidden}.swal2-header{display:flex;flex-direction:column;align-items:center}.swal2-title{position:relative;max-width:100%;margin:0 0 .4em;padding:0;color:#595959;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;word-wrap:break-word}.swal2-actions{display:flex;z-index:1;flex-wrap:wrap;align-items:center;justify-content:center;width:100%;margin:1.25em auto 0}.swal2-actions:not(.swal2-loading) .swal2-styled[disabled]{opacity:.4}.swal2-actions:not(.swal2-loading) .swal2-styled:hover{background-image:linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1))}.swal2-actions:not(.swal2-loading) .swal2-styled:active{background-image:linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2))}.swal2-actions.swal2-loading .swal2-styled.swal2-confirm{box-sizing:border-box;width:2.5em;height:2.5em;margin:.46875em;padding:0;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border:.25em solid transparent;border-radius:100%;border-color:transparent;background-color:transparent!important;color:transparent;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-actions.swal2-loading .swal2-styled.swal2-cancel{margin-right:30px;margin-left:30px}.swal2-actions.swal2-loading :not(.swal2-styled).swal2-confirm::after{content:"";display:inline-block;width:15px;height:15px;margin-left:5px;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border:3px solid #999;border-radius:50%;border-right-color:transparent;box-shadow:1px 1px 1px #fff}.swal2-styled{margin:.3125em;padding:.625em 2em;box-shadow:none;font-weight:500}.swal2-styled:not([disabled]){cursor:pointer}.swal2-styled.swal2-confirm{border:0;border-radius:.25em;background:initial;background-color:#3085d6;color:#fff;font-size:1.0625em}.swal2-styled.swal2-cancel{border:0;border-radius:.25em;background:initial;background-color:#aaa;color:#fff;font-size:1.0625em}.swal2-styled:focus{outline:0;box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(50,100,150,.4)}.swal2-styled::-moz-focus-inner{border:0}.swal2-footer{justify-content:center;margin:1.25em 0 0;padding:1em 0 0;border-top:1px solid #eee;color:#545454;font-size:1em}.swal2-timer-progress-bar{position:absolute;bottom:0;left:0;width:100%;height:.25em;background:rgba(0,0,0,.2)}.swal2-image{max-width:100%;margin:1.25em auto}.swal2-close{position:absolute;z-index:2;top:0;right:0;justify-content:center;width:1.2em;height:1.2em;padding:0;overflow:hidden;transition:color .1s ease-out;border:none;border-radius:0;outline:initial;background:0 0;color:#ccc;font-family:serif;font-size:2.5em;line-height:1.2;cursor:pointer}.swal2-close:hover{transform:none;background:0 0;color:#f27474}.swal2-close::-moz-focus-inner{border:0}.swal2-content{z-index:1;justify-content:center;margin:0;padding:0;color:#545454;font-size:1.125em;font-weight:400;line-height:normal;text-align:center;word-wrap:break-word}.swal2-checkbox,.swal2-file,.swal2-input,.swal2-radio,.swal2-select,.swal2-textarea{margin:1em auto}.swal2-file,.swal2-input,.swal2-textarea{box-sizing:border-box;width:100%;transition:border-color .3s,box-shadow .3s;border:1px solid #d9d9d9;border-radius:.1875em;background:inherit;box-shadow:inset 0 1px 1px rgba(0,0,0,.06);color:inherit;font-size:1.125em}.swal2-file.swal2-inputerror,.swal2-input.swal2-inputerror,.swal2-textarea.swal2-inputerror{border-color:#f27474!important;box-shadow:0 0 2px #f27474!important}.swal2-file:focus,.swal2-input:focus,.swal2-textarea:focus{border:1px solid #b4dbed;outline:0;box-shadow:0 0 3px #c4e6f5}.swal2-file::-webkit-input-placeholder,.swal2-input::-webkit-input-placeholder,.swal2-textarea::-webkit-input-placeholder{color:#ccc}.swal2-file::-moz-placeholder,.swal2-input::-moz-placeholder,.swal2-textarea::-moz-placeholder{color:#ccc}.swal2-file:-ms-input-placeholder,.swal2-input:-ms-input-placeholder,.swal2-textarea:-ms-input-placeholder{color:#ccc}.swal2-file::-ms-input-placeholder,.swal2-input::-ms-input-placeholder,.swal2-textarea::-ms-input-placeholder{color:#ccc}.swal2-file::placeholder,.swal2-input::placeholder,.swal2-textarea::placeholder{color:#ccc}.swal2-range{margin:1em auto;background:#fff}.swal2-range input{width:80%}.swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}.swal2-range input,.swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}.swal2-input{height:2.625em;padding:0 .75em}.swal2-input[type=number]{max-width:10em}.swal2-file{background:inherit;font-size:1.125em}.swal2-textarea{height:6.75em;padding:.75em}.swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:inherit;color:inherit;font-size:1.125em}.swal2-checkbox,.swal2-radio{align-items:center;justify-content:center;background:#fff;color:inherit}.swal2-checkbox label,.swal2-radio label{margin:0 .6em;font-size:1.125em}.swal2-checkbox input,.swal2-radio input{margin:0 .4em}.swal2-validation-message{display:none;align-items:center;justify-content:center;padding:.625em;overflow:hidden;background:#f0f0f0;color:#666;font-size:1em;font-weight:300}.swal2-validation-message::before{content:"!";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}.swal2-icon{position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:1.25em auto 1.875em;border:.25em solid transparent;border-radius:50%;font-family:inherit;line-height:5em;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}.swal2-icon.swal2-error{border-color:#f27474;color:#f27474}.swal2-icon.swal2-error .swal2-x-mark{position:relative;flex-grow:1}.swal2-icon.swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}.swal2-icon.swal2-error.swal2-icon-show{-webkit-animation:swal2-animate-error-icon .5s;animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-error.swal2-icon-show .swal2-x-mark{-webkit-animation:swal2-animate-error-x-mark .5s;animation:swal2-animate-error-x-mark .5s}.swal2-icon.swal2-warning{border-color:#facea8;color:#f8bb86}.swal2-icon.swal2-info{border-color:#9de0f6;color:#3fc3ee}.swal2-icon.swal2-question{border-color:#c9dae1;color:#87adbd}.swal2-icon.swal2-success{border-color:#a5dc86;color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;transform:rotate(45deg);border-radius:50%}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}.swal2-icon.swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-.25em;left:-.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}.swal2-icon.swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}.swal2-icon.swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}.swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-animate-success-line-tip .75s;animation:swal2-animate-success-line-tip .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-animate-success-line-long .75s;animation:swal2-animate-success-line-long .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-circular-line-right{-webkit-animation:swal2-rotate-success-circular-line 4.25s ease-in;animation:swal2-rotate-success-circular-line 4.25s ease-in}.swal2-progress-steps{align-items:center;margin:0 0 1.25em;padding:0;background:inherit;font-weight:600}.swal2-progress-steps li{display:inline-block;position:relative}.swal2-progress-steps .swal2-progress-step{z-index:20;width:2em;height:2em;border-radius:2em;background:#3085d6;color:#fff;line-height:2em;text-align:center}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#3085d6}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:#add8e6;color:#fff}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:#add8e6}.swal2-progress-steps .swal2-progress-step-line{z-index:10;width:2.5em;height:.4em;margin:0 -1px;background:#3085d6}[class^=swal2]{-webkit-tap-highlight-color:transparent}.swal2-show{-webkit-animation:swal2-show .3s;animation:swal2-show .3s}.swal2-hide{-webkit-animation:swal2-hide .15s forwards;animation:swal2-hide .15s forwards}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{right:auto;left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}@supports (-ms-accelerator:true){.swal2-range input{width:100%!important}.swal2-range output{display:none}}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-range input{width:100%!important}.swal2-range output{display:none}}@-moz-document url-prefix(){.swal2-close:focus{outline:2px solid rgba(50,100,150,.4)}}@-webkit-keyframes swal2-toast-show{0%{transform:translateY(-.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0)}}@keyframes swal2-toast-show{0%{transform:translateY(-.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0)}}@-webkit-keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@-webkit-keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@-webkit-keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@-webkit-keyframes swal2-show{0%{transform:scale(.7)}45%{transform:scale(1.05)}80%{transform:scale(.95)}100%{transform:scale(1)}}@keyframes swal2-show{0%{transform:scale(.7)}45%{transform:scale(1.05)}80%{transform:scale(.95)}100%{transform:scale(1)}}@-webkit-keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(.5);opacity:0}}@keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(.5);opacity:0}}@-webkit-keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@-webkit-keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@-webkit-keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@-webkit-keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(.4);opacity:0}50%{margin-top:1.625em;transform:scale(.4);opacity:0}80%{margin-top:-.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(.4);opacity:0}50%{margin-top:1.625em;transform:scale(.4);opacity:0}80%{margin-top:-.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@-webkit-keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0);opacity:1}}@-webkit-keyframes swal2-rotate-loading{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes swal2-rotate-loading{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto!important}body.swal2-no-backdrop .swal2-container{top:auto;right:auto;bottom:auto;left:auto;max-width:calc(100% - .625em * 2);background-color:transparent!important}body.swal2-no-backdrop .swal2-container>.swal2-modal{box-shadow:0 0 10px rgba(0,0,0,.4)}body.swal2-no-backdrop .swal2-container.swal2-top{top:0;left:50%;transform:translateX(-50%)}body.swal2-no-backdrop .swal2-container.swal2-top-left,body.swal2-no-backdrop .swal2-container.swal2-top-start{top:0;left:0}body.swal2-no-backdrop .swal2-container.swal2-top-end,body.swal2-no-backdrop .swal2-container.swal2-top-right{top:0;right:0}body.swal2-no-backdrop .swal2-container.swal2-center{top:50%;left:50%;transform:translate(-50%,-50%)}body.swal2-no-backdrop .swal2-container.swal2-center-left,body.swal2-no-backdrop .swal2-container.swal2-center-start{top:50%;left:0;transform:translateY(-50%)}body.swal2-no-backdrop .swal2-container.swal2-center-end,body.swal2-no-backdrop .swal2-container.swal2-center-right{top:50%;right:0;transform:translateY(-50%)}body.swal2-no-backdrop .swal2-container.swal2-bottom{bottom:0;left:50%;transform:translateX(-50%)}body.swal2-no-backdrop .swal2-container.swal2-bottom-left,body.swal2-no-backdrop .swal2-container.swal2-bottom-start{bottom:0;left:0}body.swal2-no-backdrop .swal2-container.swal2-bottom-end,body.swal2-no-backdrop .swal2-container.swal2-bottom-right{right:0;bottom:0}@media print{body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow-y:scroll!important}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container{position:static!important}}body.swal2-toast-shown .swal2-container{background-color:transparent}body.swal2-toast-shown .swal2-container.swal2-top{top:0;right:auto;bottom:auto;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{top:0;right:0;bottom:auto;left:auto}body.swal2-toast-shown .swal2-container.swal2-top-left,body.swal2-toast-shown .swal2-container.swal2-top-start{top:0;right:auto;bottom:auto;left:0}body.swal2-toast-shown .swal2-container.swal2-center-left,body.swal2-toast-shown .swal2-container.swal2-center-start{top:50%;right:auto;bottom:auto;left:0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{top:50%;right:auto;bottom:auto;left:50%;transform:translate(-50%,-50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{top:50%;right:0;bottom:auto;left:auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-left,body.swal2-toast-shown .swal2-container.swal2-bottom-start{top:auto;right:auto;bottom:0;left:0}body.swal2-toast-shown .swal2-container.swal2-bottom{top:auto;right:auto;bottom:0;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{top:auto;right:0;bottom:0;left:auto}body.swal2-toast-column .swal2-toast{flex-direction:column;align-items:stretch}body.swal2-toast-column .swal2-toast .swal2-actions{flex:1;align-self:stretch;height:2.2em;margin-top:.3125em}body.swal2-toast-column .swal2-toast .swal2-loading{justify-content:center}body.swal2-toast-column .swal2-toast .swal2-input{height:2em;margin:.3125em auto;font-size:1em}body.swal2-toast-column .swal2-toast .swal2-validation-message{font-size:1em}</style><style>.swal2-popup.swal2-toast{flex-direction:row;align-items:center;width:auto;padding:.625em;overflow-y:hidden;background:#fff;box-shadow:0 0 .625em #d9d9d9}.swal2-popup.swal2-toast .swal2-header{flex-direction:row}.swal2-popup.swal2-toast .swal2-title{flex-grow:1;justify-content:flex-start;margin:0 .6em;font-size:1em}.swal2-popup.swal2-toast .swal2-footer{margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-popup.swal2-toast .swal2-close{position:static;width:.8em;height:.8em;line-height:.8}.swal2-popup.swal2-toast .swal2-content{justify-content:flex-start;font-size:1em}.swal2-popup.swal2-toast .swal2-icon{width:2em;min-width:2em;height:2em;margin:0}.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:700}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{font-size:.25em}}.swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-popup.swal2-toast .swal2-actions{flex-basis:auto!important;width:auto;height:auto;margin:0 .3125em}.swal2-popup.swal2-toast .swal2-styled{margin:0 .3125em;padding:.3125em .625em;font-size:1em}.swal2-popup.swal2-toast .swal2-styled:focus{box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(50,100,150,.4)}.swal2-popup.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;transform:rotate(45deg);border-radius:50%}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.8em;left:-.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-popup.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-toast-animate-success-line-tip .75s;animation:swal2-toast-animate-success-line-tip .75s}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-toast-animate-success-line-long .75s;animation:swal2-toast-animate-success-line-long .75s}.swal2-popup.swal2-toast.swal2-show{-webkit-animation:swal2-toast-show .5s;animation:swal2-toast-show .5s}.swal2-popup.swal2-toast.swal2-hide{-webkit-animation:swal2-toast-hide .1s forwards;animation:swal2-toast-hide .1s forwards}.swal2-container{display:flex;position:fixed;z-index:1060;top:0;right:0;bottom:0;left:0;flex-direction:row;align-items:center;justify-content:center;padding:.625em;overflow-x:hidden;transition:background-color .1s;-webkit-overflow-scrolling:touch}.swal2-container.swal2-backdrop-show{background:rgba(0,0,0,.4)}.swal2-container.swal2-backdrop-hide{background:0 0!important}.swal2-container.swal2-top{align-items:flex-start}.swal2-container.swal2-top-left,.swal2-container.swal2-top-start{align-items:flex-start;justify-content:flex-start}.swal2-container.swal2-top-end,.swal2-container.swal2-top-right{align-items:flex-start;justify-content:flex-end}.swal2-container.swal2-center{align-items:center}.swal2-container.swal2-center-left,.swal2-container.swal2-center-start{align-items:center;justify-content:flex-start}.swal2-container.swal2-center-end,.swal2-container.swal2-center-right{align-items:center;justify-content:flex-end}.swal2-container.swal2-bottom{align-items:flex-end}.swal2-container.swal2-bottom-left,.swal2-container.swal2-bottom-start{align-items:flex-end;justify-content:flex-start}.swal2-container.swal2-bottom-end,.swal2-container.swal2-bottom-right{align-items:flex-end;justify-content:flex-end}.swal2-container.swal2-bottom-end>:first-child,.swal2-container.swal2-bottom-left>:first-child,.swal2-container.swal2-bottom-right>:first-child,.swal2-container.swal2-bottom-start>:first-child,.swal2-container.swal2-bottom>:first-child{margin-top:auto}.swal2-container.swal2-grow-fullscreen>.swal2-modal{display:flex!important;flex:1;align-self:stretch;justify-content:center}.swal2-container.swal2-grow-row>.swal2-modal{display:flex!important;flex:1;align-content:center;justify-content:center}.swal2-container.swal2-grow-column{flex:1;flex-direction:column}.swal2-container.swal2-grow-column.swal2-bottom,.swal2-container.swal2-grow-column.swal2-center,.swal2-container.swal2-grow-column.swal2-top{align-items:center}.swal2-container.swal2-grow-column.swal2-bottom-left,.swal2-container.swal2-grow-column.swal2-bottom-start,.swal2-container.swal2-grow-column.swal2-center-left,.swal2-container.swal2-grow-column.swal2-center-start,.swal2-container.swal2-grow-column.swal2-top-left,.swal2-container.swal2-grow-column.swal2-top-start{align-items:flex-start}.swal2-container.swal2-grow-column.swal2-bottom-end,.swal2-container.swal2-grow-column.swal2-bottom-right,.swal2-container.swal2-grow-column.swal2-center-end,.swal2-container.swal2-grow-column.swal2-center-right,.swal2-container.swal2-grow-column.swal2-top-end,.swal2-container.swal2-grow-column.swal2-top-right{align-items:flex-end}.swal2-container.swal2-grow-column>.swal2-modal{display:flex!important;flex:1;align-content:center;justify-content:center}.swal2-container.swal2-no-transition{transition:none!important}.swal2-container:not(.swal2-top):not(.swal2-top-start):not(.swal2-top-end):not(.swal2-top-left):not(.swal2-top-right):not(.swal2-center-start):not(.swal2-center-end):not(.swal2-center-left):not(.swal2-center-right):not(.swal2-bottom):not(.swal2-bottom-start):not(.swal2-bottom-end):not(.swal2-bottom-left):not(.swal2-bottom-right):not(.swal2-grow-fullscreen)>.swal2-modal{margin:auto}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-container .swal2-modal{margin:0!important}}.swal2-popup{display:none;position:relative;box-sizing:border-box;flex-direction:column;justify-content:center;width:32em;max-width:100%;padding:1.25em;border:none;border-radius:.3125em;background:#fff;font-family:inherit;font-size:1rem}.swal2-popup:focus{outline:0}.swal2-popup.swal2-loading{overflow-y:hidden}.swal2-header{display:flex;flex-direction:column;align-items:center}.swal2-title{position:relative;max-width:100%;margin:0 0 .4em;padding:0;color:#595959;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;word-wrap:break-word}.swal2-actions{display:flex;z-index:1;flex-wrap:wrap;align-items:center;justify-content:center;width:100%;margin:1.25em auto 0}.swal2-actions:not(.swal2-loading) .swal2-styled[disabled]{opacity:.4}.swal2-actions:not(.swal2-loading) .swal2-styled:hover{background-image:linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1))}.swal2-actions:not(.swal2-loading) .swal2-styled:active{background-image:linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2))}.swal2-actions.swal2-loading .swal2-styled.swal2-confirm{box-sizing:border-box;width:2.5em;height:2.5em;margin:.46875em;padding:0;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border:.25em solid transparent;border-radius:100%;border-color:transparent;background-color:transparent!important;color:transparent;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-actions.swal2-loading .swal2-styled.swal2-cancel{margin-right:30px;margin-left:30px}.swal2-actions.swal2-loading :not(.swal2-styled).swal2-confirm::after{content:"";display:inline-block;width:15px;height:15px;margin-left:5px;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border:3px solid #999;border-radius:50%;border-right-color:transparent;box-shadow:1px 1px 1px #fff}.swal2-styled{margin:.3125em;padding:.625em 2em;box-shadow:none;font-weight:500}.swal2-styled:not([disabled]){cursor:pointer}.swal2-styled.swal2-confirm{border:0;border-radius:.25em;background:initial;background-color:#3085d6;color:#fff;font-size:1.0625em}.swal2-styled.swal2-cancel{border:0;border-radius:.25em;background:initial;background-color:#aaa;color:#fff;font-size:1.0625em}.swal2-styled:focus{outline:0;box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(50,100,150,.4)}.swal2-styled::-moz-focus-inner{border:0}.swal2-footer{justify-content:center;margin:1.25em 0 0;padding:1em 0 0;border-top:1px solid #eee;color:#545454;font-size:1em}.swal2-timer-progress-bar{position:absolute;bottom:0;left:0;width:100%;height:.25em;background:rgba(0,0,0,.2)}.swal2-image{max-width:100%;margin:1.25em auto}.swal2-close{position:absolute;z-index:2;top:0;right:0;align-items:center;justify-content:center;width:1.2em;height:1.2em;padding:0;overflow:hidden;transition:color .1s ease-out;border:none;border-radius:0;outline:initial;background:0 0;color:#ccc;font-family:serif;font-size:2.5em;line-height:1.2;cursor:pointer}.swal2-close:hover{transform:none;background:0 0;color:#f27474}.swal2-close::-moz-focus-inner{border:0}.swal2-content{z-index:1;justify-content:center;margin:0;padding:0;color:#545454;font-size:1.125em;font-weight:400;line-height:normal;text-align:center;word-wrap:break-word}.swal2-checkbox,.swal2-file,.swal2-input,.swal2-radio,.swal2-select,.swal2-textarea{margin:1em auto}.swal2-file,.swal2-input,.swal2-textarea{box-sizing:border-box;width:100%;transition:border-color .3s,box-shadow .3s;border:1px solid #d9d9d9;border-radius:.1875em;background:inherit;box-shadow:inset 0 1px 1px rgba(0,0,0,.06);color:inherit;font-size:1.125em}.swal2-file.swal2-inputerror,.swal2-input.swal2-inputerror,.swal2-textarea.swal2-inputerror{border-color:#f27474!important;box-shadow:0 0 2px #f27474!important}.swal2-file:focus,.swal2-input:focus,.swal2-textarea:focus{border:1px solid #b4dbed;outline:0;box-shadow:0 0 3px #c4e6f5}.swal2-file::-webkit-input-placeholder,.swal2-input::-webkit-input-placeholder,.swal2-textarea::-webkit-input-placeholder{color:#ccc}.swal2-file::-moz-placeholder,.swal2-input::-moz-placeholder,.swal2-textarea::-moz-placeholder{color:#ccc}.swal2-file:-ms-input-placeholder,.swal2-input:-ms-input-placeholder,.swal2-textarea:-ms-input-placeholder{color:#ccc}.swal2-file::-ms-input-placeholder,.swal2-input::-ms-input-placeholder,.swal2-textarea::-ms-input-placeholder{color:#ccc}.swal2-file::placeholder,.swal2-input::placeholder,.swal2-textarea::placeholder{color:#ccc}.swal2-range{margin:1em auto;background:#fff}.swal2-range input{width:80%}.swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}.swal2-range input,.swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}.swal2-input{height:2.625em;padding:0 .75em}.swal2-input[type=number]{max-width:10em}.swal2-file{background:inherit;font-size:1.125em}.swal2-textarea{height:6.75em;padding:.75em}.swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:inherit;color:inherit;font-size:1.125em}.swal2-checkbox,.swal2-radio{align-items:center;justify-content:center;background:#fff;color:inherit}.swal2-checkbox label,.swal2-radio label{margin:0 .6em;font-size:1.125em}.swal2-checkbox input,.swal2-radio input{margin:0 .4em}.swal2-validation-message{display:none;align-items:center;justify-content:center;padding:.625em;overflow:hidden;background:#f0f0f0;color:#666;font-size:1em;font-weight:300}.swal2-validation-message::before{content:"!";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}.swal2-icon{position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:1.25em auto 1.875em;border:.25em solid transparent;border-radius:50%;font-family:inherit;line-height:5em;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}.swal2-icon.swal2-error{border-color:#f27474;color:#f27474}.swal2-icon.swal2-error .swal2-x-mark{position:relative;flex-grow:1}.swal2-icon.swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}.swal2-icon.swal2-error.swal2-icon-show{-webkit-animation:swal2-animate-error-icon .5s;animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-error.swal2-icon-show .swal2-x-mark{-webkit-animation:swal2-animate-error-x-mark .5s;animation:swal2-animate-error-x-mark .5s}.swal2-icon.swal2-warning{border-color:#facea8;color:#f8bb86}.swal2-icon.swal2-info{border-color:#9de0f6;color:#3fc3ee}.swal2-icon.swal2-question{border-color:#c9dae1;color:#87adbd}.swal2-icon.swal2-success{border-color:#a5dc86;color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;transform:rotate(45deg);border-radius:50%}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}.swal2-icon.swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-.25em;left:-.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}.swal2-icon.swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}.swal2-icon.swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}.swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-animate-success-line-tip .75s;animation:swal2-animate-success-line-tip .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-animate-success-line-long .75s;animation:swal2-animate-success-line-long .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-circular-line-right{-webkit-animation:swal2-rotate-success-circular-line 4.25s ease-in;animation:swal2-rotate-success-circular-line 4.25s ease-in}.swal2-progress-steps{align-items:center;margin:0 0 1.25em;padding:0;background:inherit;font-weight:600}.swal2-progress-steps li{display:inline-block;position:relative}.swal2-progress-steps .swal2-progress-step{z-index:20;width:2em;height:2em;border-radius:2em;background:#3085d6;color:#fff;line-height:2em;text-align:center}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#3085d6}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:#add8e6;color:#fff}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:#add8e6}.swal2-progress-steps .swal2-progress-step-line{z-index:10;width:2.5em;height:.4em;margin:0 -1px;background:#3085d6}[class^=swal2]{-webkit-tap-highlight-color:transparent}.swal2-show{-webkit-animation:swal2-show .3s;animation:swal2-show .3s}.swal2-hide{-webkit-animation:swal2-hide .15s forwards;animation:swal2-hide .15s forwards}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{right:auto;left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}@supports (-ms-accelerator:true){.swal2-range input{width:100%!important}.swal2-range output{display:none}}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-range input{width:100%!important}.swal2-range output{display:none}}@-moz-document url-prefix(){.swal2-close:focus{outline:2px solid rgba(50,100,150,.4)}}@-webkit-keyframes swal2-toast-show{0%{transform:translateY(-.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0)}}@keyframes swal2-toast-show{0%{transform:translateY(-.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0)}}@-webkit-keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@-webkit-keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@-webkit-keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@-webkit-keyframes swal2-show{0%{transform:scale(.7)}45%{transform:scale(1.05)}80%{transform:scale(.95)}100%{transform:scale(1)}}@keyframes swal2-show{0%{transform:scale(.7)}45%{transform:scale(1.05)}80%{transform:scale(.95)}100%{transform:scale(1)}}@-webkit-keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(.5);opacity:0}}@keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(.5);opacity:0}}@-webkit-keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@-webkit-keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@-webkit-keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@-webkit-keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(.4);opacity:0}50%{margin-top:1.625em;transform:scale(.4);opacity:0}80%{margin-top:-.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(.4);opacity:0}50%{margin-top:1.625em;transform:scale(.4);opacity:0}80%{margin-top:-.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@-webkit-keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0);opacity:1}}@-webkit-keyframes swal2-rotate-loading{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes swal2-rotate-loading{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto!important}body.swal2-no-backdrop .swal2-container{top:auto;right:auto;bottom:auto;left:auto;max-width:calc(100% - .625em * 2);background-color:transparent!important}body.swal2-no-backdrop .swal2-container>.swal2-modal{box-shadow:0 0 10px rgba(0,0,0,.4)}body.swal2-no-backdrop .swal2-container.swal2-top{top:0;left:50%;transform:translateX(-50%)}body.swal2-no-backdrop .swal2-container.swal2-top-left,body.swal2-no-backdrop .swal2-container.swal2-top-start{top:0;left:0}body.swal2-no-backdrop .swal2-container.swal2-top-end,body.swal2-no-backdrop .swal2-container.swal2-top-right{top:0;right:0}body.swal2-no-backdrop .swal2-container.swal2-center{top:50%;left:50%;transform:translate(-50%,-50%)}body.swal2-no-backdrop .swal2-container.swal2-center-left,body.swal2-no-backdrop .swal2-container.swal2-center-start{top:50%;left:0;transform:translateY(-50%)}body.swal2-no-backdrop .swal2-container.swal2-center-end,body.swal2-no-backdrop .swal2-container.swal2-center-right{top:50%;right:0;transform:translateY(-50%)}body.swal2-no-backdrop .swal2-container.swal2-bottom{bottom:0;left:50%;transform:translateX(-50%)}body.swal2-no-backdrop .swal2-container.swal2-bottom-left,body.swal2-no-backdrop .swal2-container.swal2-bottom-start{bottom:0;left:0}body.swal2-no-backdrop .swal2-container.swal2-bottom-end,body.swal2-no-backdrop .swal2-container.swal2-bottom-right{right:0;bottom:0}@media print{body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow-y:scroll!important}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container{position:static!important}}body.swal2-toast-shown .swal2-container{background-color:transparent}body.swal2-toast-shown .swal2-container.swal2-top{top:0;right:auto;bottom:auto;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{top:0;right:0;bottom:auto;left:auto}body.swal2-toast-shown .swal2-container.swal2-top-left,body.swal2-toast-shown .swal2-container.swal2-top-start{top:0;right:auto;bottom:auto;left:0}body.swal2-toast-shown .swal2-container.swal2-center-left,body.swal2-toast-shown .swal2-container.swal2-center-start{top:50%;right:auto;bottom:auto;left:0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{top:50%;right:auto;bottom:auto;left:50%;transform:translate(-50%,-50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{top:50%;right:0;bottom:auto;left:auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-left,body.swal2-toast-shown .swal2-container.swal2-bottom-start{top:auto;right:auto;bottom:0;left:0}body.swal2-toast-shown .swal2-container.swal2-bottom{top:auto;right:auto;bottom:0;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{top:auto;right:0;bottom:0;left:auto}body.swal2-toast-column .swal2-toast{flex-direction:column;align-items:stretch}body.swal2-toast-column .swal2-toast .swal2-actions{flex:1;align-self:stretch;height:2.2em;margin-top:.3125em}body.swal2-toast-column .swal2-toast .swal2-loading{justify-content:center}body.swal2-toast-column .swal2-toast .swal2-input{height:2em;margin:.3125em auto;font-size:1em}body.swal2-toast-column .swal2-toast .swal2-validation-message{font-size:1em}</style>
+    <script src="./Programmatic_files/bootstrap-tagsinput.min.js.indir"></script>
+    <script>
+        Breakpoints();
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../../global/vendor/html5shiv/html5shiv.min.js"></script>
+    <![endif]-->
+    <!--[if lt IE 10]>
+    <script src="../../global/vendor/media-match/media.match.min.js"></script>
+    <script src="../../global/vendor/respond/respond.min.js"></script>
+    <![endif]-->
+    <!-- Scripts -->
+
+    <script src="./Programmatic_files/jquery.dataTables.min.js.indir"></script>
+    <link href="./Programmatic_files/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="./Programmatic_files/font-awesome.min.css" rel="stylesheet">
+    <script src="./Programmatic_files/dataTables.bootstrap4.min.js.indir"></script>
+    <script src="./Programmatic_files/dataTables.buttons.min.js.indir"></script>
+    <link href="./Programmatic_files/buttons.bootstrap4.min.css" rel="stylesheet">
+    <script src="./Programmatic_files/buttons.bootstrap4.min.js.indir"></script>
+    <script src="./Programmatic_files/buttons.colVis.min.js.indir"></script>
+    <script src="./Programmatic_files/buttons.html5.min.js.indir"></script>
+    <script src="./Programmatic_files/buttons.print.min.js.indir"></script>
+    <script src="./Programmatic_files/jszip.min.js.indir"></script>
+    <script src="./Programmatic_files/pdfmake.min.js.indir"></script>
+    <script src="./Programmatic_files/vfs_fonts.js.indir"></script>
+
+</head>
+
+<body class="animsition dashboard site-menubar-unfold" style="animation-duration: 800ms; opacity: 1;">
+    <!--[if lt IE 8]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <!--<div class="site-menubar">-->
+
+    <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation">
+        
+
+<div class="navbar-header">
+    <button type="button" class="navbar-toggler hamburger hamburger-close navbar-toggler-left hided" data-toggle="menubar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="hamburger-bar"></span>
+    </button>
+    <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-collapse" data-toggle="collapse">
+        <i class="icon wb-more-horizontal" aria-hidden="true"></i>
+    </button>
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle active" data-toggle="gridmenu" aria-expanded="true">
+        <img class="navbar-brand-logo" src="./Programmatic_files/logo.png" title="">
+        <span class="navbar-brand-text hidden-xs-down">Programmatic</span>
+    </div>
+    <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">
+        <span class="sr-only">Toggle Search</span>
+        <i class="icon wb-search" aria-hidden="true"></i>
+    </button>
+</div>
+
+
+<div class="navbar-container container-fluid">
+    <!-- Navbar Collapse -->
+    <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
+        <!-- Navbar Toolbar -->
+        <ul class="nav navbar-toolbar">
+            <li class="nav-item hidden-float" id="toggleMenubar">
+                <a class="nav-link" data-toggle="menubar" href="https://localhost:44319/tr/Mailing/Detail#" role="button">
+                    <i class="icon hamburger hamburger-arrow-left">
+                        <span class="sr-only">Toggle menubar</span>
+                        <span class="hamburger-bar"></span>
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item hidden-sm-down" id="toggleFullscreen">
+                <a class="nav-link icon icon-fullscreen" role="button" id="fullScreenButton">
+                    <span class="sr-only">Toggle fullscreen</span>
+                </a>
+            </li>
+        </ul>
+        <!-- End Navbar Toolbar -->
+        <!-- Navbar Toolbar Right -->
+        <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)" data-animation="scale-up" aria-expanded="false" role="button" id="cultureDropdown">
+                    <span class="flag-icon flag-icon-gb"></span>
+                </a>
+                <div class="dropdown-menu" role="menu">
+                    <a class="dropdown-item" href="javascript:ChangeCulture(&#39;en&#39;)" role="menuitem">
+                        <span class="flag-icon flag-icon-gb"></span> English
+                    </a>
+                    <a class="dropdown-item" href="javascript:ChangeCulture(&#39;tr&#39;)" role="menuitem">
+                        <span class="flag-icon flag-icon-tr"></span> Türkçe
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link navbar-avatar" data-toggle="dropdown" href="https://localhost:44319/tr/Mailing/Detail#" aria-expanded="false" data-animation="scale-up" role="button">
+                    <span class="avatar avatar-online">
+                        <img src="./Programmatic_files/staff_male.jpg" id="imageStaffPhoto">
+                        <i></i>
+                    </span>
+                </a>
+                <div class="dropdown-menu" role="menu">
+                    <a id="menuItemProfile" class="dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-user" aria-hidden="true"></i> Profile</a>
+                    <a class="dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-bell" aria-hidden="true"></i> Notifications</a>
+                    <a class="dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-settings" aria-hidden="true"></i> Settings</a>
+                    <div class="dropdown-divider" role="presentation"></div>
+                    <a class="dropdown-item" href="javascript:Logout()" role="menuitem"><i class="icon wb-power" aria-hidden="true"></i> Logout</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)" title="Notifications" aria-expanded="false" data-animation="scale-up" role="button">
+                    <i class="icon wb-bell" aria-hidden="true"></i>
+                    <span class="badge badge-pill badge-danger up">5</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-media" role="menu">
+                    <div class="dropdown-menu-header">
+                        <h5>NOTIFICATIONS</h5>
+                        <span class="badge badge-round badge-danger">New 5</span>
+                    </div>
+
+                    <div class="list-group">
+                        <div data-role="container">
+                            <div data-role="content">
+                                <a class="list-group-item dropdown-item" href="javascript:void(0)" role="menuitem">
+                                    <div class="media">
+                                        <div class="pr-10">
+                                            <i class="icon wb-order bg-red-600 white icon-circle" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="media-heading">A new order has been placed</h6>
+                                            <time class="media-meta" datetime="2018-06-12T20:50:48+08:00">5 hours ago</time>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="list-group-item dropdown-item" href="javascript:void(0)" role="menuitem">
+                                    <div class="media">
+                                        <div class="pr-10">
+                                            <i class="icon wb-user bg-green-600 white icon-circle" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="media-heading">Completed the task</h6>
+                                            <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">2 days ago</time>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="list-group-item dropdown-item" href="javascript:void(0)" role="menuitem">
+                                    <div class="media">
+                                        <div class="pr-10">
+                                            <i class="icon wb-settings bg-red-600 white icon-circle" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="media-heading">Settings updated</h6>
+                                            <time class="media-meta" datetime="2018-06-11T14:05:00+08:00">2 days ago</time>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="list-group-item dropdown-item" href="javascript:void(0)" role="menuitem">
+                                    <div class="media">
+                                        <div class="pr-10">
+                                            <i class="icon wb-calendar bg-blue-600 white icon-circle" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="media-heading">Event started</h6>
+                                            <time class="media-meta" datetime="2018-06-10T13:50:18+08:00">3 days ago</time>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="list-group-item dropdown-item" href="javascript:void(0)" role="menuitem">
+                                    <div class="media">
+                                        <div class="pr-10">
+                                            <i class="icon wb-chat bg-orange-600 white icon-circle" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="media-heading">Message received</h6>
+                                            <time class="media-meta" datetime="2018-06-10T12:34:48+08:00">3 days ago</time>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu-footer">
+                        <a class="dropdown-menu-footer-btn" href="javascript:void(0)" role="button">
+                            <i class="icon wb-settings" aria-hidden="true"></i>
+                        </a>
+                        <a class="dropdown-item" href="javascript:void(0)" role="menuitem">
+                            All notifications
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <!-- End Navbar Toolbar Right -->
+    </div>
+    <!-- End Navbar Collapse -->
+</div>
+
+    </nav>
+
+    <!--</div>-->
+    <div class="site-menubar">
+        <div class="site-menubar-body scrollable scrollable-inverse is-enabled scrollable-vertical hoverscorll-disabled" style="position: relative;">
+            <div class="scrollable-container" style="height: 523.588px; width: 277px;">
+                <div id="partialViewMenu" class="scrollable-content" style="width: 260px;">
+<ul class="site-menu" data-plugin="menu" style="transform: translate3d(0px, 0px, 0px);">
+    <li class="site-menu-category">General</li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-dashboard" aria-hidden="true"></i>
+            <span class="site-menu-title">Dashboard</span>
+            <div class="site-menu-badge">
+                <span class="badge badge-pill badge-success">3</span>
+            </div>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item active">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/index.html">
+                    <span class="site-menu-title">Dashboard v1</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/dashboard/v2.html">
+                    <span class="site-menu-title">Dashboard v2</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/dashboard/ecommerce.html">
+                    <span class="site-menu-title">Ecommerce</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/dashboard/analytics.html">
+                    <span class="site-menu-title">Analytics</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/dashboard/team.html">
+                    <span class="site-menu-title">Team</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-layout" aria-hidden="true"></i>
+            <span class="site-menu-title">Layouts</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/menu-collapsed.html">
+                    <span class="site-menu-title">Menu Collapsed</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/menu-collapsed-alt.html">
+                    <span class="site-menu-title">Menu Collapsed Alt</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/menu-expended.html">
+                    <span class="site-menu-title">Menu Expended</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/grids.html">
+                    <span class="site-menu-title">Grid Scaffolding</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/layout-grid.html">
+                    <span class="site-menu-title">Layout Grid</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/headers.html">
+                    <span class="site-menu-title">Different Headers</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/panel-transition.html">
+                    <span class="site-menu-title">Panel Transition</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/boxed.html">
+                    <span class="site-menu-title">Boxed Layout</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/two-columns.html">
+                    <span class="site-menu-title">Two Columns</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/menubar-flipped.html">
+                    <span class="site-menu-title">Menubar Flipped</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/menubar-native-scrolling.html">
+                    <span class="site-menu-title">Menubar Native Scrolling</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/bordered-header.html">
+                    <span class="site-menu-title">Bordered Header</span>
+                </a>
+            </li>
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)">
+                    <span class="site-menu-title">Page Aside</span>
+                    <div class="site-menu-label">
+                        <span class="badge badge-danger badge-round mr-25">new</span>
+                    </div>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/aside-left-static.html">
+                            <span class="site-menu-title">Left Static</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/aside-right-static.html">
+                            <span class="site-menu-title">Right Static</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/aside-left-fixed.html">
+                            <span class="site-menu-title">Left Fixed</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/layouts/aside-right-fixed.html">
+                            <span class="site-menu-title">Right Fixed</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-file" aria-hidden="true"></i>
+            <span class="site-menu-title">Pages</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)">
+                    <span class="site-menu-title">Errors</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/error-400.html">
+                            <span class="site-menu-title">400 Bad Request</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/error-403.html">
+                            <span class="site-menu-title">403 Forbidden</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/error-404.html">
+                            <span class="site-menu-title">404 Not Found</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/error-500.html">
+                            <span class="site-menu-title">500 Internal Server Error</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/error-503.html">
+                            <span class="site-menu-title">503 Service Unavailable</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/faq.html">
+                    <span class="site-menu-title">FAQ</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/gallery.html">
+                    <span class="site-menu-title">Gallery</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/gallery-grid.html">
+                    <span class="site-menu-title">Gallery Grid</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/search-result.html">
+                    <span class="site-menu-title">Search Result</span>
+                </a>
+            </li>
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)">
+                    <span class="site-menu-title">Maps</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/map-google.html">
+                            <span class="site-menu-title">Google Maps</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/map-vector.html">
+                            <span class="site-menu-title">Vector Maps</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/maintenance.html">
+                    <span class="site-menu-title">Maintenance</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/forgot-password.html">
+                    <span class="site-menu-title">Forgot Password</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/lockscreen.html">
+                    <span class="site-menu-title">Lockscreen</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/login.html">
+                    <span class="site-menu-title">Login</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/register.html">
+                    <span class="site-menu-title">Register</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/login-v2.html">
+                    <span class="site-menu-title">Login V2</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/register-v2.html">
+                    <span class="site-menu-title">Register V2</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/login-v3.html">
+                    <span class="site-menu-title">Login V3</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/register-v3.html">
+                    <span class="site-menu-title">Register V3</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/user.html">
+                    <span class="site-menu-title">User List</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/invoice.html">
+                    <span class="site-menu-title">Invoice</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/blank.html">
+                    <span class="site-menu-title">Blank Page</span>
+                </a>
+            </li>
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)">
+                    <span class="site-menu-title">Email</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/email-articles.html">
+                            <span class="site-menu-title">Articles</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/email-welcome.html">
+                            <span class="site-menu-title">Welcome</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/email-post.html">
+                            <span class="site-menu-title">Post</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/email-thumbnail.html">
+                            <span class="site-menu-title">Thumbnail</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/email-news.html">
+                            <span class="site-menu-title">News</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/code-editor.html">
+                    <span class="site-menu-title">Code Editor</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/profile.html">
+                    <span class="site-menu-title">Profile</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/profile-v2.html">
+                    <span class="site-menu-title">Profile V2</span>
+                    <div class="site-menu-label">
+                        <span class="badge badge-info badge-round">new</span>
+                    </div>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/profile-v3.html">
+                    <span class="site-menu-title">Profile V3</span>
+                    <div class="site-menu-label">
+                        <span class="badge badge-info badge-round">new</span>
+                    </div>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/site-map.html">
+                    <span class="site-menu-title">Sitemap</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/pages/project.html">
+                    <span class="site-menu-title">Project</span>
+                    <div class="site-menu-label">
+                        <span class="badge badge-info badge-round">new</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-category">Elements</li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-bookmark" aria-hidden="true"></i>
+            <span class="site-menu-title">Basic UI</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)">
+                    <span class="site-menu-title">Panel</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/panel-structure.html">
+                            <span class="site-menu-title">Panel Structure</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/panel-actions.html">
+                            <span class="site-menu-title">Panel Actions</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/panel-portlets.html">
+                            <span class="site-menu-title">Panel Portlets</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/buttons.html">
+                    <span class="site-menu-title">Buttons</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/cards.html">
+                    <span class="site-menu-title">Cards</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/dropdowns.html">
+                    <span class="site-menu-title">Dropdowns</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/icons.html">
+                    <span class="site-menu-title">Icons</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/list.html">
+                    <span class="site-menu-title">List</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/tooltip-popover.html">
+                    <span class="site-menu-title">Tooltip &amp; Popover</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/modals.html">
+                    <span class="site-menu-title">Modals</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/tabs-accordions.html">
+                    <span class="site-menu-title">Tabs &amp; Accordions</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/images.html">
+                    <span class="site-menu-title">Images</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/badges.html">
+                    <span class="site-menu-title">Badges</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/progress-bars.html">
+                    <span class="site-menu-title">Progress Bars</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/carousel.html">
+                    <span class="site-menu-title">Carousel</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/typography.html">
+                    <span class="site-menu-title">Typography</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/colors.html">
+                    <span class="site-menu-title">Colors</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/uikit/utilities.html">
+                    <span class="site-menu-title">Utilties</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-hammer" aria-hidden="true"></i>
+            <span class="site-menu-title">Advanced UI</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item hidden-sm-down site-tour-trigger">
+                <a href="javascript:void(0)">
+                    <span class="site-menu-title">Tour</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/animation.html">
+                    <span class="site-menu-title">Animation</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/highlight.html">
+                    <span class="site-menu-title">Highlight</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/lightbox.html">
+                    <span class="site-menu-title">Lightbox</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/scrollable.html">
+                    <span class="site-menu-title">Scrollable</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/rating.html">
+                    <span class="site-menu-title">Rating</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/context-menu.html">
+                    <span class="site-menu-title">Context Menu</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/alertify.html">
+                    <span class="site-menu-title">Alertify</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/masonry.html">
+                    <span class="site-menu-title">Masonry</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/treeview.html">
+                    <span class="site-menu-title">Treeview</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/toastr.html">
+                    <span class="site-menu-title">Toastr</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/maps-vector.html">
+                    <span class="site-menu-title">Vector Maps</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/maps-google.html">
+                    <span class="site-menu-title">Google Maps</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/sortable-nestable.html">
+                    <span class="site-menu-title">Sortable &amp; Nestable</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/advanced/bootbox-sweetalert.html">
+                    <span class="site-menu-title">Bootbox &amp; Sweetalert</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-plugin" aria-hidden="true"></i>
+            <span class="site-menu-title">Structure</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/alerts.html">
+                    <span class="site-menu-title">Alerts</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/ribbon.html">
+                    <span class="site-menu-title">Ribbon</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/pricing-tables.html">
+                    <span class="site-menu-title">Pricing Tables</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/overlay.html">
+                    <span class="site-menu-title">Overlay</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/cover.html">
+                    <span class="site-menu-title">Cover</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/timeline-simple.html">
+                    <span class="site-menu-title">Simple Timeline</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/timeline.html">
+                    <span class="site-menu-title">Timeline</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/step.html">
+                    <span class="site-menu-title">Step</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/comments.html">
+                    <span class="site-menu-title">Comments</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/media.html">
+                    <span class="site-menu-title">Media</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/chat.html">
+                    <span class="site-menu-title">Chat</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/testimonials.html">
+                    <span class="site-menu-title">Testimonials</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/nav.html">
+                    <span class="site-menu-title">Nav</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/navbars.html">
+                    <span class="site-menu-title">Navbars</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/blockquotes.html">
+                    <span class="site-menu-title">Blockquotes</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/pagination.html">
+                    <span class="site-menu-title">Pagination</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/structure/breadcrumbs.html">
+                    <span class="site-menu-title">Breadcrumbs</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-extension" aria-hidden="true"></i>
+            <span class="site-menu-title">Widgets</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/widgets/statistics.html">
+                    <span class="site-menu-title">Statistics Widgets</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/widgets/data.html">
+                    <span class="site-menu-title">Data Widgets</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/widgets/blog.html">
+                    <span class="site-menu-title">Blog Widgets</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/widgets/chart.html">
+                    <span class="site-menu-title">Chart Widgets</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/widgets/social.html">
+                    <span class="site-menu-title">Social Widgets</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/widgets/weather.html">
+                    <span class="site-menu-title">Weather Widgets</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-library" aria-hidden="true"></i>
+            <span class="site-menu-title">Forms</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/general.html">
+                    <span class="site-menu-title">General Elements</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/material.html">
+                    <span class="site-menu-title">Material Elements</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/advanced.html">
+                    <span class="site-menu-title">Advanced Elements</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/layouts.html">
+                    <span class="site-menu-title">Form Layouts</span>
+                    <div class="site-menu-label">
+                        <span class="badge badge badge-warning badge-round">new</span>
+                    </div>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/wizard.html">
+                    <span class="site-menu-title">Form Wizard</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/validation.html">
+                    <span class="site-menu-title">Form Validation</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/masks.html">
+                    <span class="site-menu-title">Form Masks</span>
+                </a>
+            </li>
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)">
+                    <span class="site-menu-title">Editors</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/editor-summernote.html">
+                            <span class="site-menu-title">Summernote</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/editor-markdown.html">
+                            <span class="site-menu-title">Markdown</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/editor-ace.html">
+                            <span class="site-menu-title">Ace Editor</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/image-cropping.html">
+                    <span class="site-menu-title">Image Cropping</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/forms/file-uploads.html">
+                    <span class="site-menu-title">File Uploads</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-table" aria-hidden="true"></i>
+            <span class="site-menu-title">Tables</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/basic.html">
+                    <span class="site-menu-title">Basic Tables</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/bootstrap.html">
+                    <span class="site-menu-title">Bootstrap Tables</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/floatthead.html">
+                    <span class="site-menu-title">floatThead</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/responsive.html">
+                    <span class="site-menu-title">Responsive Tables</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/editable.html">
+                    <span class="site-menu-title">Editable Tables</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/jsgrid.html">
+                    <span class="site-menu-title">jsGrid</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/footable.html">
+                    <span class="site-menu-title">FooTable</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/datatable.html">
+                    <span class="site-menu-title">DataTables</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/jqtabledit.html">
+                    <span class="site-menu-title">Jquery Tabledit</span>
+                    <div class="site-menu-label">
+                        <span class="badge badge badge-info badge-round">new</span>
+                    </div>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/tables/table-dragger.html">
+                    <span class="site-menu-title">Table Dragger</span>
+                    <div class="site-menu-label">
+                        <span class="badge badge badge-warning badge-round">new</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-pie-chart" aria-hidden="true"></i>
+            <span class="site-menu-title">Chart</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/chartjs.html">
+                    <span class="site-menu-title">Chart.js</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/gauges.html">
+                    <span class="site-menu-title">Gauges</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/flot.html">
+                    <span class="site-menu-title">Flot</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/peity.html">
+                    <span class="site-menu-title">Peity</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/sparkline.html">
+                    <span class="site-menu-title">Sparkline</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/morris.html">
+                    <span class="site-menu-title">Morris</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/chartist.html">
+                    <span class="site-menu-title">Chartist.js</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/rickshaw.html">
+                    <span class="site-menu-title">Rickshaw</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/pie-progress.html">
+                    <span class="site-menu-title">Pie Progress</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/charts/c3.html">
+                    <span class="site-menu-title">C3</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="site-menu-category">Apps</li>
+    <li class="site-menu-item has-sub">
+        <a href="javascript:void(0)">
+            <i class="site-menu-icon wb-grid-4" aria-hidden="true"></i>
+            <span class="site-menu-title">Apps</span>
+            <span class="site-menu-arrow"></span>
+        </a>
+        <ul class="site-menu-sub">
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/contacts/contacts.html">
+                    <span class="site-menu-title">Contacts</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/calendar/calendar.html">
+                    <span class="site-menu-title">Calendar</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/notebook/notebook.html">
+                    <span class="site-menu-title">Notebook</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/taskboard/taskboard.html">
+                    <span class="site-menu-title">Taskboard</span>
+                </a>
+            </li>
+            <li class="site-menu-item has-sub">
+                <a href="javascript:void(0)">
+                    <span class="site-menu-title">Documents</span>
+                    <span class="site-menu-arrow"></span>
+                </a>
+                <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/documents/articles.html">
+                            <span class="site-menu-title">Articles</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/documents/categories.html">
+                            <span class="site-menu-title">Categories</span>
+                        </a>
+                    </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/documents/article.html">
+                            <span class="site-menu-title">Article</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/forum/forum.html">
+                    <span class="site-menu-title">Forum</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/message/message.html">
+                    <span class="site-menu-title">Message</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/projects/projects.html">
+                    <span class="site-menu-title">Projects</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/mailbox/mailbox.html">
+                    <span class="site-menu-title">Mailbox</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/media/overview.html">
+                    <span class="site-menu-title">Media</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/work/work.html">
+                    <span class="site-menu-title">Work</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/location/location.html">
+                    <span class="site-menu-title">Location</span>
+                </a>
+            </li>
+            <li class="site-menu-item">
+                <a class="animsition-link" href="https://localhost:44319/tr/Mailing/apps/travel/travel.html">
+                    <span class="site-menu-title">Travel</span>
+                    <div class="site-menu-label">
+                        <span class="badge badge-info badge-round">new</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>
+<div class="site-menubar-section">
+    <h5>
+        Milestone
+        <span class="float-right">30%</span>
+    </h5>
+    <div class="progress progress-xs">
+        <div class="progress-bar active" style="width: 30%;" role="progressbar"></div>
+    </div>
+    <h5>
+        Release
+        <span class="float-right">60%</span>
+    </h5>
+    <div class="progress progress-xs">
+        <div class="progress-bar progress-bar-warning" style="width: 60%;" role="progressbar"></div>
+    </div>
+</div>
+</div>
+            </div>
+        <div class="scrollable-bar scrollable-bar-vertical scrollable-bar-hide" draggable="false"><div class="scrollable-bar-handle" style="height: 344.872px;"></div></div></div>
+    </div>
+
+    <!-- Page -->
+    <div class="page">
+        
+
+
+<link href="./Programmatic_files/customerDetail.css" rel="stylesheet">
+<link href="./Programmatic_files/panel-structure.js.indir" rel="stylesheet">
+
+<form action="https://localhost:44319/tr/Mailing/Detail" id="formDetail" method="post"><input data-val="true" data-val-required="The EntityId field is required." id="EntityId" name="EntityId" type="hidden" value="0"><input id="TemplateAddress" name="TemplateAddress" type="hidden" value=""><input id="RootPath" name="RootPath" type="hidden" value="C:\Users\recep\Documents\TFS\PozitifYazilim\Programmatic\Programmatic.v2\Programmatic\Pozitif.Programmatic.UI\wwwroot">    <div class="page-header page-header-bordered">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="https://localhost:44319/tr/Home/Index">Anasayfa</a></li>
+            <li class="breadcrumb-item"><a href="https://localhost:44319/tr/Mailing/Index">List</a></li>
+
+                <li class="breadcrumb-item active">Yeni Tema</li>
+        </ol>
+    </div>
+    <div class="page-content">
+        <div class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions"></div>
+                <h3 class="panel-title">Mail Tema Detayı</h3>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top:20px;">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    Mail Tema Adı
+                                                    <input class="form-control" id="MailingName" name="MailingName" type="text" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    Açıklama
+                                                    <input class="form-control" id="Explanation" name="Explanation" type="text" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    Tema Dosyası<br>
+                                                    <input type="file" name="file" id="fileInput" class="dropify" data-default-file="" data-height="300" data-show-remove="true" data-max-file-size="10M">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-success" id="buttonSave" onclick="Save();">Kaydet</button>
+                        </div>
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-danger" onclick="window.location.href=&#39;Index&#39;">İptal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<input name="__RequestVerificationToken" type="hidden" value="CfDJ8C93cIM8iZ9KtdpE9plFUFf-1fFsFOX6ITmFI9stUvwqXEky7M_EBwbIRL2Nozdxb8Xv7kW-VDEbdQNRWR8mp9LjKR1qv3VjX6PV0BSDNMo1mJHLBof9z3ia8gJIgQFTa2cGPxosRu97DQ6wffgE0do"></form>
+
+<script type="text/javascript">
+    var fileName;
+    $(document).ready(function () {
+
+    });
+        $('#fileInput').on('change', function (e) {
+            var file = $("#fileInput").prop('files')[0];
+            var fd = new FormData();
+            fd.append("file", file);
+            var urlForFile = "/tr/Mailing/SaveFile";
+            $.ajax({
+
+                url: urlForFile,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                processData: false,
+                data: fd,
+                contentType: false,
+                success: function (data) {
+                    if (data.result == false) {
+                        ShowError('Hata', data.message);
+                    } else {
+                        fileName = data.message;
+                    }
+                }
+            })
+        });
+
+    function Save() {
+        var url = "/tr/Mailing/Save";
+        $('#TemplateAddress').val(fileName);
+            $.post(url,
+                $("form").serialize(),
+                function(data) {
+                    if (data.result == false) {
+                        ShowError('Hata', data.message);
+                    }
+                    if (data.result == true) {
+                        newID = data.obj;
+                        ShowSuccess('Kay&#x131;t ba&#x15F;ar&#x131;l&#x131;!');
+                    }
+                });
+            };
+
+            function ShowError(title, message) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: 'error',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    padding: '4em'
+                });
+            }
+
+            function ShowSuccess(title, message) {
+
+                Swal.fire({
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: 'success',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    padding: '4em'
+                }).then(function() {
+                    window.location.href = "/tr/Mailing";
+                });
+            }
+
+
+</script>
+
+
+    </div>
+    <!-- End Page -->
+    <!-- Footer -->
+    <footer class="site-footer">
+        
+
+
+<div class="site-footer-legal">© 2021 Programmatic. AllRights</div>
+<div class="site-footer-right">
+    <p>ContactUs</p>
+</div>
+
+
+    </footer>
+    <!--Menu Partial View   -->
+    <script type="text/javascript">
+        $('#partialViewMenu').load('/Menu/Index');
+    </script>
+
+    <script src="./Programmatic_files/jquery-asHoverScroll.js.indir"></script>
+    <!-- Plugins -->
+    <script src="./Programmatic_files/switchery.min.js.indir"></script>
+    <script src="./Programmatic_files/intro.min.js.indir"></script>
+    <script src="./Programmatic_files/screenfull.js.indir"></script>
+    <script src="./Programmatic_files/jquery-slidePanel.js.indir"></script>
+    <script src="./Programmatic_files/bootstrap-datepicker.min.js.indir"></script>
+
+    <!-- Scripts -->
+    <script src="./Programmatic_files/Component.js.indir"></script>
+    <script src="./Programmatic_files/Plugin.js.indir"></script>
+    <script src="./Programmatic_files/Base.js.indir"></script>
+    <script src="./Programmatic_files/Config.js.indir"></script>
+
+    <script src="./Programmatic_files/Menubar.js.indir"></script>
+    <script src="./Programmatic_files/GridMenu.js.indir"></script>
+    <script src="./Programmatic_files/Sidebar.js.indir"></script>
+    <script src="./Programmatic_files/PageAside.js.indir"></script>
+    <script src="./Programmatic_files/menu.js.indir"></script>
+
+    <script src="./Programmatic_files/colors.js.indir"></script>
+    <script src="./Programmatic_files/tour.js.indir"></script>
+    <script>Config.set('assets', '../assets');</script>
+
+    <!-- Page -->
+    <script src="./Programmatic_files/Site.js.indir"></script>
+    <script src="./Programmatic_files/asscrollable.js.indir"></script>
+    <script src="./Programmatic_files/slidepanel.js.indir"></script>
+    <script src="./Programmatic_files/switchery.js.indir"></script>
+    <script src="./Programmatic_files/dashboard.js.indir"></script>
+
+
+
+</body></html>

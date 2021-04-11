@@ -6,6 +6,8 @@ namespace Core.Utilities.Results
 {
     public class ErrorDataResult<T> : DataResult<T>
     {
+
+
         public ErrorDataResult(bool success, string message, T data) : base(data, false, message)
         {
 
@@ -25,5 +27,6 @@ namespace Core.Utilities.Results
         {
 
         }
+
     }
 }

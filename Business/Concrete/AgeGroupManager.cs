@@ -35,38 +35,31 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("admin,definition.add")]
+         //[LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
-        public IResult Add(AgeGroup ageGroup)
+        public IDataResult<AgeGroup> Add(AgeGroup ageGroup)
         {
             IResult result = BusinessRules.Run(CheckIfCodeExists(ageGroup), CheckIfShortDescriptionExists(ageGroup), CheckIfDescriptionExists(ageGroup));
 
             if (result != null)
-            {
-                return result;
+                return new ErrorDataResult<AgeGroup>("ControlErrorAdded");
 
-            }
-            _ageGroupDal.Add(ageGroup);
-
-            return new SuccessResult("Added");
+            return new SuccessDataResult<AgeGroup>(true,"Added", _ageGroupDal.Add(ageGroup));
 
         }
 
         [SecuredOperation("admin,definition.updated")]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
-        public IResult Update(AgeGroup ageGroup)
+        public IDataResult<AgeGroup> Update(AgeGroup ageGroup)
         {
             IResult result = BusinessRules.Run(CheckIfCodeExists(ageGroup), CheckIfShortDescriptionExists(ageGroup), CheckIfDescriptionExists(ageGroup));
-
             if (result != null)
-            {
-                return result;
+                return new ErrorDataResult<AgeGroup>("ControlErrorUpdated");
 
-            }
-            _ageGroupDal.Add(ageGroup);
+            return new SuccessDataResult<AgeGroup>(true, "Updated", _ageGroupDal.Update(ageGroup));
 
-            return new SuccessResult("Updated");
         }
 
         [SecuredOperation("admin,definition.deleted")]

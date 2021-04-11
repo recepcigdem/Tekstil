@@ -25,7 +25,7 @@ namespace Core.Utilities.Results
 
         }
 
-        public SuccessDataResult(string messaage) : base(default, true, messaage)
+        public SuccessDataResult(string message) : base(default, true, message)
         {
 
         }
