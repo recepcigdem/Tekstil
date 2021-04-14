@@ -1,5 +1,254 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+
+@model UI.Models.Login.Login
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocalizer
+
 @{
+    Layout = null;
 }
+<!DOCTYPE html>
+
+<script src="~/plugin/jquery/jquery-3.4.1.min.js"></script>
+<script src="~/plugin/sweetalert/sweetalert2.min.js"></script>
+<script src="~/js/utils.js"></script>
+<script type="text/javascript">
+
+    function validateEmail()
+    {
+        var emailTextBox = document.getElementById("textEmail");
+
+        var email = emailTextBox.value;
+
+        var emailRegEx = /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        emailTextBox.style.color = "white";
+
+        if (!emailRegEx.test(email))
+        {
+            emailTextBox.style.backgroundColor = "red";
+        } else {
+            emailTextBox.style.backgroundColor = "";
+            emailTextBox.style.color = "black";
+        }
+
+    }
+
+    function validateAndSubmitForm() {
+
+        var emailTextBox = document.getElementById("textEmail").value;
+
+        var passwordTextBox = document.getElementById("textPassword").value;
+        //var password = passwordTextBox.value;
+        var reg = /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if (!emailTextBox ) {
+            ShowError('@Html.Raw(SharedLocalizer.GetLocalizedHtmlString("Error.Login_WrongMail"))');
+            return false;
+        }
+        if (!reg.test(emailTextBox))
+        {
+            ShowError('@Html.Raw(SharedLocalizer.GetLocalizedHtmlString("Error.Login_WrongMail"))');
+            return false;
+        }
+
+        if (!passwordTextBox) {
+            ShowError('@Html.Raw(SharedLocalizer.GetLocalizedHtmlString("Error.Login_WrongPassword"))');
+            return false;
+        }
+        if (passwordTextBox.length < 6) {
+            ShowError('@Html.Raw(SharedLocalizer.GetLocalizedHtmlString("Error.Login_6MinPassword"))');
+            return false;
+        }
+
+        return true;
+
+    }
+
+    function ShowError(title, message) {
+        Swal.fire({
+            position: 'top-end',
+            title: title,
+            text: message,
+            icon: 'error',
+            showCloseButton: true,
+            showConfirmButton: true,
+            padding: '4em'
+        });
+    }
+
+    function GetCulture() {
+
+    var url = window.location.href;
+    url = url.replace("https://", "").replace("http://", "");
+    urlPart = url.split('/');
+    var culture = 'en';
+    if (urlPart.length > 1)
+        culture = urlPart[1];
+    if (culture == '' || culture == null || (culture != 'en' && culture != 'tr'))
+        culture = 'en';
+
+    return culture;
+
+}
+
+    GetCulture();
+</script>
+
+
+<html class="no-js css-menubar" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="bootstrap admin template">
+    <meta name="author" content="">
+    <title>@Localizer["PageTitle"]</title>
+    <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-extend.min.css">
+    <link rel="stylesheet" href="/css/site.min.css">
+    <!-- Plugins -->
+    <link rel="stylesheet" href="~/plugin/animsition/animsition.min.css">
+    <link rel="stylesheet" href="~/plugin/asscrollable/asScrollable.min.css">
+    <link rel="stylesheet" href="~/plugin/switchery/switchery.min.css">
+    <link rel="stylesheet" href="~/plugin/intro-js/introjs.min.css">
+    <link rel="stylesheet" href="~/plugin/slidepanel/slidePanel.css">
+    <link rel="stylesheet" href="~/plugin/flag-icon-css/flag-icon.min.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <!-- Fonts -->
+    <link rel="stylesheet" href="~/assets/fonts/web-icons/web-icons.min.css">
+    <link rel="stylesheet" href="~/assets/fonts/brand-icons/brand-icons.min.css">
+
+    <script src="~/plugin/breakpoints/breakpoints.js"></script>
+    <script>Breakpoints();</script>
+</head>
+<body class="animsition page-login layout-full page-dark">
+
+    <div class="page vertical-align text-center" data-animsition-in="fade-in" data-animsition-out="fade-out">
+
+        <div class="page-content vertical-align-middle animation-slide-top animation-duration-1">
+            @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { onsubmit = "return validateAndSubmitForm();", onkeyup = "return validateEmail();" }))
+            {
+                @if (ViewBag.Error != null)
+                {
+                    <script type="text/javascript">
+                        ShowError("Hata", "@Html.Raw(ViewBag.Error)");
+                    </script>
+                }
+
+                @Html.ValidationSummary(true)
+                <fieldset>
+
+                    <div class="brand">
+                        <img class="brand-img" src="/assets/images/logo.png" alt="...">
+                        <h2 class="brand-text">@Localizer["Tekstil"].Value</h2>
+                    </div>
+                    <p>@Localizer["SignIntoYourAccount"].Value.ToString()</p>
+                    <form method="post" action="login.html">
+
+
+                        <div class="form-group">
+                            <label class="sr-only" for="inputEmail">@Localizer["Email"]</label>
+                            @*<input type="email" class="form-control" id="inputEmail" name="email" placeholder="@Localizer["Email"]">*@
+                            @Html.TextBoxFor(l => l.UserName, new
+                            {
+                                @class = "form-control",
+                                id = "textEmail",
+                                placeholder = @Localizer["EmailPlaceHolder"].Value.ToString(),
+
+                            })
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="inputPassword">@Localizer["Password"]</label>
+                            @*<input type="password" class="form-control" id="inputPassword" name="password" placeholder="@Localizer["Password"]">*@
+                            @Html.PasswordFor(l => l.Password, new { @class = "form-control", id = "textPassword", placeholder = @Localizer["Password"].Value.ToString() })
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="checkbox-custom checkbox-inline checkbox-primary float-left">
+                                @Html.CheckBoxFor(l => l.RememberMe)
+                                <label for="inputCheckbox">@Localizer["RememberMe"]</label>
+                            </div>
+                            <a class="float-right" href="/login/forgotpassword">@Localizer["ForgotPassword"]</a>
+                        </div>
+
+                        @*<button type="submit" class="btn btn-primary btn-block" onclick="validate()">@Localizer["SignIn"]</button>*@
+
+                        <input type="submit" class="btn btn-primary btn-block" value="@Localizer["SignIn"]" />
+
+
+                    </form>
+                    @*<p>Still no account? Please go to <a href="register.html">Register</a></p>*@
+                    <footer class="page-copyright page-copyright-inverse">
+                        <p>@Localizer["ApplicationBy"]</p>
+                        <p>2021 @Localizer["AllRightsReserved"]</p>
+                        <div class="social">
+                            <a class="btn btn-icon btn-pure" href="javascript:void(0)">
+                                <i class="icon bd-twitter" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn btn-icon btn-pure" href="javascript:void(0)">
+                                <i class="icon bd-facebook" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn btn-icon btn-pure" href="javascript:void(0)">
+                                <i class="icon bd-dribbble" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </footer>
+                </fieldset>
+            }
+
+        </div>
+
+
+    </div>
+    <!-- End Page -->
+    <!-- Core  -->
+    <script src="~/plugin/babel-external-helpers/babel-external-helpers.js"></script>
+    @*<script src="~/plugin/jquery/jquery.js"></script>*@
+    <script src="~/plugin/JQuery/jquery-3.4.1.min.js"></script>
+    <script src="~/plugin/popper-js/umd/popper.min.js"></script>
+    <script src="~/plugin/bootstrap/bootstrap.min.js"></script>
+    <script src="~/plugin/animsition/animsition.min.js"></script>
+    <script src="~/plugin/mousewheel/jquery.mousewheel.js"></script>
+    <script src="~/plugin/asscrollbar/jquery-asScrollbar.min.js"></script>
+    <script src="~/plugin/asscrollable/jquery-asScrollable.min.js"></script>
+    <script src="~/plugin/ashoverscroll/jquery-asHoverScroll.min.js"></script>
+    <!-- Plugins -->
+    <script src="~/plugin/switchery/switchery.min.js"></script>
+    <script src="~/plugin/intro-js/intro.min.js"></script>
+    <script src="~/plugin/screenfull/screenfull.js"></script>
+    <script src="~/plugin/slidepanel/jquery-slidePanel.min.js"></script>
+    <script src="~/plugin/jquery-placeholder/jquery.placeholder.js"></script>
+    <!-- Scripts -->
+    <script src="~/js/Component.js"></script>
+    <script src="~/js/Plugin.js"></script>
+    <script src="~/js/Base.js"></script>
+    <script src="~/js/Config.js"></script>
+    <script src="~/js/Menubar.js"></script>
+    <script src="~/js/GridMenu.js"></script>
+    <script src="~/js/Sidebar.js"></script>
+    <script src="~/js/PageAside.js"></script>
+    <script src="~/js/menu.js"></script>
+    <script src="~/js/colors.js"></script>
+    <script src="~/js/tour.js"></script>
+    <script>Config.set('assets', '../assets');</script>
+    <!-- Page -->
+    <script src="~/js/Site.js"></script>
+    <script src="~/js/Plugin/asscrollable.js"></script>
+    <script src="~/js/Plugin/slidepanel.js"></script>
+    <script src="~/js/Plugin/switchery.js"></script>
+    <script src="~/js/Plugin/jquery-placeholder.js"></script>
+    <script>
+    (function (document, window, $) {
+        'use strict';
+        var Site = window.Site;
+        $(document).ready(function () {
+            Site.run();
+        });
+    })(document, window, jQuery);</script>
+</body>
+</html>

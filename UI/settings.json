@@ -1,7 +1,5 @@
 {
-  "ServiceUrl": {
-    "UserManagementBaseUrl": ""
-  },
+ 
   "Info": {
     "ProjectUrl": "https://localhost:44354/",
     "BaseURL": "https://localhost:44354/"

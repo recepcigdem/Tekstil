@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Business.Abstract;
 using Business.Concrete;
 
 namespace UI.Models.AgeGroup
@@ -10,12 +11,12 @@ namespace UI.Models.AgeGroup
     {
         public List<AgeGroupListLine> data { get; set; }
 
-        private AgeGroupManager _ageGroupManager;
+        private IAgeGroupService _ageGroupService;
 
-        public AgeGroupList(AgeGroupManager ageGroupManager)
+        public AgeGroupList(IAgeGroupService ageGroupService)
         {
-            _ageGroupManager = ageGroupManager;
-            var listGrid = _ageGroupManager.GetAll().Data;
+            _ageGroupService = ageGroupService;
+            var listGrid = _ageGroupService.GetAll().Data;
             data = new List<AgeGroupListLine>();
             foreach (var item in listGrid)
             {

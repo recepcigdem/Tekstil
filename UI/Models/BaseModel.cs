@@ -13,13 +13,11 @@ namespace UI.Models
 
         public string DateFormat { get; set; }
 
-        public string UserManagementBaseUrl { get; set; }
 
         public BaseModel()
         {
             Culture = "tr";
-           // UserManagementBaseUrl = KNA.Core.Helper.SettingsHelper.GetValue("ServiceUrl", "UserManagementBaseUrl");
-
+           
         }
         public BaseModel(HttpRequest request)
         {
@@ -29,8 +27,6 @@ namespace UI.Models
                 DateFormat = "DD.MM.YYYY";
             else
                 DateFormat = "MM/DD/YYYY";
-
-            //UserManagementBaseUrl = KNA.Core.Helper.SettingsHelper.GetValue("ServiceUrl", "UserManagementBaseUrl");
 
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Business.Abstract;
 using Core.Utilities.Results;
 using UI.Models;
 using UI.Models.AgeGroup;
@@ -12,11 +13,11 @@ namespace UI.Controllers.AgeGroup
 {
     public class AgeGroupController : BaseController
     {
-        private AgeGroupManager _ageGroupManager;
+        private IAgeGroupService _ageGroupService;
 
-        public AgeGroupController(IStringLocalizerFactory factory, IStringLocalizer<AgeGroupController> localizer, ILogger<AgeGroupController> logger, IWebHostEnvironment env, AgeGroupManager ageGroupManager) : base(factory, env)
+        public AgeGroupController(IStringLocalizerFactory factory, IStringLocalizer<AgeGroupController> localizer, ILogger<AgeGroupController> logger, IWebHostEnvironment env, IAgeGroupService ageGroupService) : base(factory, env)
         {
-            _ageGroupManager = ageGroupManager;
+            _ageGroupService = ageGroupService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resouces.SharedResource);
@@ -30,13 +31,13 @@ namespace UI.Controllers.AgeGroup
         }
         public JsonResult AgeGroupList()
         {
-            AgeGroupList list = new AgeGroupList(_ageGroupManager);
+            AgeGroupList list = new AgeGroupList(_ageGroupService);
             return Json(list);
         }
 
         public ActionResult Detail(int id)
         {
-            var serviceDetail = _ageGroupManager.GetById(id).Data;
+            var serviceDetail = _ageGroupService.GetById(id).Data;
             if (serviceDetail == null || serviceDetail.Id < 1)
                 serviceDetail = new Entities.Concrete.AgeGroup();
 
@@ -48,7 +49,7 @@ namespace UI.Controllers.AgeGroup
         {
             if (id > 0)
             {
-                var serviceDetail = _ageGroupManager.GetById(id).Data;
+                var serviceDetail = _ageGroupService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
                     Models.AgeGroup.AgeGroup model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
@@ -73,7 +74,7 @@ namespace UI.Controllers.AgeGroup
             Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
             if (entity.Id > 0)
             {
-                var res = _ageGroupManager.Delete(entity);
+                var res = _ageGroupService.Delete(entity);
                 return Json(res);
             }
             return null;
@@ -96,15 +97,15 @@ namespace UI.Controllers.AgeGroup
                 if (entity == null)
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _ageGroupManager.Add(entity);
+                var result = _ageGroupService.Add(entity);
 
                 if (ageGroup.EntityId > 0)
                 {
-                    result = _ageGroupManager.Update(entity);
+                    result = _ageGroupService.Update(entity);
                 }
                 else
                 {
-                    result = _ageGroupManager.Add(entity);
+                    result = _ageGroupService.Add(entity);
                 }
 
                 if (result.Success == false)

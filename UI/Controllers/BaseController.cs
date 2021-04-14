@@ -36,21 +36,21 @@ namespace UI.Controllers
             string staffId = "0";
             bool UseParameter = Convert.ToBoolean(Core.Helper.SettingsHelper.GetValue("Log", "UseParameter"));
             StaffSession resultStaffSession = Helpers.SessionHelper.GetStaff(context.HttpContext.Request);
-            if (resultStaffSession != null)
-            {
-                staffId = resultStaffSession.StaffId.ToString();
+            //if (resultStaffSession != null)
+            //{
+            //    staffId = resultStaffSession.StaffId.ToString();
 
-            }
-            var param = "";
-            if (UseParameter)
-            {
-                if (context.ActionArguments.Values.Count > 0)
-                {
-                    param = JsonConvert.SerializeObject(context.ActionArguments.Values.FirstOrDefault());
-                }
-            }
+            //}
+            //var param = "";
+            //if (UseParameter)
+            //{
+            //    if (context.ActionArguments.Values.Count > 0)
+            //    {
+            //        param = JsonConvert.SerializeObject(context.ActionArguments.Values.FirstOrDefault());
+            //    }
+            //}
 
-            Helpers.LogHelper.AddLog("StaffId=" + staffId + " IpAddress=" + ipAddress + " Controller=" + controllerName + " Action=" + actionName + " Method=" + method, param);
+            //Helpers.LogHelper.AddLog("StaffId=" + staffId + " IpAddress=" + ipAddress + " Controller=" + controllerName + " Action=" + actionName + " Method=" + method, param);
 
         }
     }
