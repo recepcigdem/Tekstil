@@ -20,7 +20,7 @@ namespace UI.Controllers.AgeGroup
             _ageGroupService = ageGroupService;
             _localizer = localizer;
             _logger = logger;
-            var type = typeof(Resouces.SharedResource);
+            var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
         }
@@ -29,6 +29,7 @@ namespace UI.Controllers.AgeGroup
             BaseModel model = new BaseModel(Request);
             return View(model);
         }
+        [HttpPost]
         public JsonResult AgeGroupList()
         {
             AgeGroupList list = new AgeGroupList(_ageGroupService);
@@ -62,12 +63,12 @@ namespace UI.Controllers.AgeGroup
 
         public JsonResult Delete(Models.AgeGroup.AgeGroup ageGroup)
         {
-            #region  Staff Session Control
+            #region  AgeGroup Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult( _localizer.GetString("Error_Programmatic_UserNotFound")));
+                return Json(new ErrorResult( _localizer.GetString("Error_UserNotFound")));
             }
             #endregion
             
@@ -79,7 +80,7 @@ namespace UI.Controllers.AgeGroup
             }
             return null;
         }
-
+        [HttpPost]
         public JsonResult Save(Models.AgeGroup.AgeGroup ageGroup)
         {
             #region  Staff Session Control
@@ -87,7 +88,7 @@ namespace UI.Controllers.AgeGroup
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult(_localizer.GetString("Error_Programmatic_UserNotFound")));
+                return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
             }
             #endregion
 

@@ -15,5 +15,6 @@ namespace Business.Abstract
         IResult Add(Staff staff);
         IResult Update(Staff staff);
         IResult Delete(Staff staff);
+        IResult DeleteAll(int staffId);
     }
 }

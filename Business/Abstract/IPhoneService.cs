@@ -15,5 +15,6 @@ namespace Business.Abstract
         IResult Add(Phone phone);
         IResult Update(Phone phone);
         IResult Delete(Phone phone);
+        IResult DeleteByPhoneId(int phoneId);
     }
 }

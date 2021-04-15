@@ -13,7 +13,7 @@ using UI.Models.Common;
 
 namespace UI.Models.Staff
 {
-    public class Staff :BaseModel
+    public class Staff : BaseModel
     {
         public int CustomerId { get; set; }
         public int DepartmentId { get; set; }
@@ -45,7 +45,7 @@ namespace UI.Models.Staff
         private IStaffAuthorizationService _staffAuthorizationService;
         private IEmailService _emailService;
         private IPhoneService _phoneService;
-        private IAuthorizationService _authorizationService;
+       
         #endregion
 
         #region Dtos
@@ -64,11 +64,20 @@ namespace UI.Models.Staff
         }
         public List<StaffEmailDto> ListStaffEmail { get; set; }
         public List<StaffPhoneDto> ListStaffPhone { get; set; }
-        
+
 
         #endregion
-        
-        public Staff() :base()
+
+        public List<StaffAuthorization> StaffAuthorizations { get; set; }
+        public string StaffAuthorizationString
+        {
+            get { return JsonConvert.SerializeObject(StaffAuthorizations); }
+            set { StaffAuthorizations = JsonConvert.DeserializeObject<List<StaffAuthorization>>(value); }
+        }
+        public List<StaffAuthorization> ListStaffAuthorizations { get; set; }
+
+
+        public Staff() : base()
         {
             CustomerId = 0;
             DepartmentId = 0;
@@ -83,7 +92,7 @@ namespace UI.Models.Staff
             LeavingDate = DateTime.UtcNow;
             IsSendMail = false;
             Photo = string.Empty;
-            
+
             RootPath = string.Empty;
             IsStandartUser = false;
             IsSuperAdmin = false;
@@ -105,17 +114,23 @@ namespace UI.Models.Staff
             ListStaffPhone = new List<StaffPhoneDto>();
 
             #endregion
+
+            #region Authorization
+
+            StaffAuthorizations = new List<StaffAuthorization>();
+            ListStaffAuthorizations = new List<StaffAuthorization>();
+
+            #endregion
         }
 
-        public Staff(HttpRequest request, Entities.Concrete.Staff staff, IStringLocalizer _localizerShared, string rootPath, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService, IAuthorizationService authorizationService) : base(request)
+        public Staff(HttpRequest request, Entities.Concrete.Staff staff, IStringLocalizer _localizerShared, string rootPath, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService) : base(request)
         {
-           
+
             _staffEmailService = staffEmailService;
             _staffPhoneService = staffPhoneService;
             _staffAuthorizationService = staffAuthorizationService;
             _emailService = emailService;
             _phoneService = phoneService;
-            _authorizationService = authorizationService;
 
             RootPath = rootPath;
 
@@ -232,10 +247,23 @@ namespace UI.Models.Staff
             SubPhone.SetHeader("CountryCode", _localizerShared.GetString("CountryCode"));
             SubPhone.SetHeader("AreaCode", _localizerShared.GetString("AreaCode"));
             SubPhone.SetHeader("PhoneNumber", _localizerShared.GetString("PhoneNumber"));
-            
+
             foreach (StaffPhoneDto staffPhone in ListStaffPhone)
             {
                 this.SubPhone.data.Add(staffPhone);
+            }
+            #endregion
+
+            #region StaffAuthorization
+
+            ListStaffAuthorizations = _staffAuthorizationService.GetAll().Data;
+            this.StaffAuthorizations = new List<StaffAuthorization>();
+            foreach (var staffAuthorization in ListStaffAuthorizations)
+            {
+                if (staffAuthorization != null)
+                {
+                    this.StaffAuthorizations.Add(staffAuthorization);
+                }
             }
             #endregion
         }
@@ -243,7 +271,7 @@ namespace UI.Models.Staff
         public Entities.Concrete.Staff GetBusinessModel()
         {
             Entities.Concrete.Staff staff = new Entities.Concrete.Staff();
-            if (EntityId>0)
+            if (EntityId > 0)
             {
                 staff.Id = EntityId;
             }
@@ -337,6 +365,27 @@ namespace UI.Models.Staff
                 ListStaffPhone.Add(phone);
             }
 
+            #endregion
+
+            #region StaffAuthorization
+
+            ListStaffAuthorizations = new List<StaffAuthorization>();
+            foreach (var item in StaffAuthorizations)
+            {
+                StaffAuthorization staffAuthorizations = new StaffAuthorization();
+
+
+                var service = _staffAuthorizationService.GetById(item.AuthorizationId);
+                if (service != null)
+                {
+                    staffAuthorizations.Id = service.Data.Id;
+                }
+
+                staffAuthorizations.StaffId = this.EntityId;
+                staffAuthorizations.AuthorizationId = item.AuthorizationId;
+                ListStaffAuthorizations.Add(staffAuthorizations);
+
+            }
             #endregion
 
             return staff;

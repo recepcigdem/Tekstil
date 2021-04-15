@@ -15,10 +15,12 @@ namespace Business.Concrete
     public class StaffEmailManager : IStaffEmailService
     {
         private IStaffEmailDal _staffEmailDal;
+        private IEmailService _emailService;
 
-        public StaffEmailManager(IStaffEmailDal staffEmailDal)
+        public StaffEmailManager(IStaffEmailDal staffEmailDal, IEmailService emailService)
         {
             _staffEmailDal = staffEmailDal;
+            _emailService = emailService;
         }
 
         public IDataResult<List<StaffEmail>> GetAll()
@@ -79,6 +81,20 @@ namespace Business.Concrete
                 new ErrorResult("EmailAlreadyExists");
 
             return new SuccessResult();
+        }
+        [SecuredOperation("admin,staff.deleted")]
+        [TransactionScopeAspect]
+        public IResult DeleteByStaffIdWithEmail(int staffId)
+        {
+            var result = _staffEmailDal.Get(se => se.StaffId == staffId);
+            if (result == null)
+                new ErrorResult("EmailNotFound");
+
+            _staffEmailDal.DeleteByFilter(sp => sp.StaffId == staffId);
+
+            _emailService.DeleteByEmailId(result.EmailId);
+
+            return new SuccessResult("Deleted");
         }
     }
 }

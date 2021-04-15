@@ -15,5 +15,6 @@ namespace Business.Abstract
         IResult Add(StaffAuthorization staffAuthorization);
         IResult Update(StaffAuthorization staffAuthorization);
         IResult Delete(StaffAuthorization staffAuthorization);
+        IResult DeleteByStaffId(int staffId);
     }
 }

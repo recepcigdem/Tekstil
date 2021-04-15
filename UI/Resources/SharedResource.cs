@@ -1,4 +1,4 @@
-﻿namespace UI.Resouces
+﻿namespace UI.Resources
 {
     public class SharedResource
     {

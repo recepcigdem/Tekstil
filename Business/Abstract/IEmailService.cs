@@ -15,5 +15,7 @@ namespace Business.Abstract
         IResult Add(Email email);
         IResult Update(Email email);
         IResult Delete(Email email);
+        IResult DeleteByEmailId(int emailId);
+
     }
 }

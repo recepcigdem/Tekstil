@@ -15,10 +15,12 @@ namespace Business.Concrete
     public class StaffPhoneManager : IStaffPhoneService
     {
         private IStaffPhoneDal _staffPhoneDal;
+        private IPhoneService _phoneService;
 
-        public StaffPhoneManager(IStaffPhoneDal staffPhoneDal)
+        public StaffPhoneManager(IStaffPhoneDal staffPhoneDal, IPhoneService phoneService)
         {
             _staffPhoneDal = staffPhoneDal;
+            _phoneService = phoneService;
         }
 
         public IDataResult<List<StaffPhone>> GetAll()
@@ -79,6 +81,20 @@ namespace Business.Concrete
                 new ErrorResult("PhoneAlreadyExists");
 
             return new SuccessResult();
+        }
+        [SecuredOperation("admin,staff.deleted")]
+        [TransactionScopeAspect]
+        public IResult DeleteByStaffIdWithPhone(int staffId)
+        {
+            var result = _staffPhoneDal.Get(sp => sp.StaffId == staffId);
+            if (result==null)
+                new ErrorResult("PhoneNotFound");
+
+            _staffPhoneDal.DeleteByFilter(sp=>sp.StaffId==staffId);
+
+            _phoneService.DeleteByPhoneId(result.PhoneId);
+
+            return new SuccessResult("Deleted");
         }
     }
 }

@@ -15,10 +15,16 @@ namespace Business.Concrete
     public class StaffManager : IStaffService
     {
         private IStaffDal _staffDal;
+        private IStaffAuthorizationService _staffAuthorizationService;
+        private IStaffEmailService _staffEmailService;
+        private IStaffPhoneService _staffPhoneService;
 
-        public StaffManager(IStaffDal staffDal)
+        public StaffManager(IStaffDal staffDal, IStaffAuthorizationService staffAuthorizationService, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService)
         {
             _staffDal = staffDal;
+            _staffAuthorizationService = staffAuthorizationService;
+            _staffEmailService = staffEmailService;
+            _staffPhoneService = staffPhoneService;
         }
 
         public IDataResult<List<Staff>> GetAll()
@@ -67,6 +73,19 @@ namespace Business.Concrete
         public IResult Delete(Staff staff)
         {
             _staffDal.Delete(staff);
+
+            return new SuccessResult("Deleted");
+        }
+
+        [SecuredOperation("admin,staff.deleted")]
+        [TransactionScopeAspect]
+        public IResult DeleteAll(int staffId)
+        {
+            _staffPhoneService.DeleteByStaffIdWithPhone(staffId);
+            _staffEmailService.DeleteByStaffIdWithEmail(staffId);
+            _staffAuthorizationService.DeleteByStaffId(staffId);
+
+            _staffDal.DeleteByFilter(s => s.Id == staffId);
 
             return new SuccessResult("Deleted");
         }

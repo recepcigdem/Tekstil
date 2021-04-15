@@ -80,5 +80,13 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
+        [SecuredOperation("admin,staff.deleted")]
+        [TransactionScopeAspect]
+        public IResult DeleteByEmailId(int emailId)
+        {
+            _emailDal.DeleteByFilter(e=>e.Id==emailId);
+
+            return new SuccessResult("Deleted");
+        }
     }
 }

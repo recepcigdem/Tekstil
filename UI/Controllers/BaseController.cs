@@ -22,7 +22,7 @@ namespace UI.Controllers
 
         public BaseController(IStringLocalizerFactory factory, IWebHostEnvironment env)
         {
-            var type = typeof(Resouces.SharedResource);
+            var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
             _env = env;

@@ -15,6 +15,7 @@ namespace Business.Concrete
     public class StaffAuthorizationManager : IStaffAuthorizationService
     {
         private IStaffAuthorizationDal _staffAuthorizationDal;
+        
 
         public StaffAuthorizationManager(IStaffAuthorizationDal staffAuthorizationDal)
         {
@@ -79,6 +80,15 @@ namespace Business.Concrete
                 new ErrorResult("AuthorizationAlreadyExists");
 
             return new SuccessResult();
+        }
+
+        [SecuredOperation("admin,staff.deleted")]
+        [TransactionScopeAspect]
+        public IResult DeleteByStaffId(int staffId)
+        {
+            _staffAuthorizationDal.DeleteByFilter(sp => sp.StaffId == staffId);
+
+            return new SuccessResult("Deleted");
         }
     }
 }

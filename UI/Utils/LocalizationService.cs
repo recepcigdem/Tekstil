@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Localization;
 using System.Reflection;
-using UI.Resouces;
+using UI.Resources;
 
 namespace UI.Utils
 {

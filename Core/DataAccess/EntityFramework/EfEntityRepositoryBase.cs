@@ -66,5 +66,15 @@ namespace Core.DataAccess.EntityFramework
 
             }
         }
+        public void DeleteByFilter(Expression<Func<TEntity, bool>> filter)
+        {
+            using (TContext context = new TContext())
+            {
+                var deletedEntity = context.Entry(filter);
+                deletedEntity.State = EntityState.Deleted;
+                context.SaveChanges();
+
+            }
+        }
     }
 }
