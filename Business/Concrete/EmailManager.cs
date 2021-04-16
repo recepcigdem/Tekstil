@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
@@ -43,7 +44,7 @@ namespace Business.Concrete
 
             _emailDal.Add(email);
 
-            return new SuccessResult("Added");
+            return new SuccessResult(true, "Added");
 
         }
 
@@ -57,9 +58,9 @@ namespace Business.Concrete
             if (result != null)
                 return result;
 
-            _emailDal.Add(email);
+            _emailDal.Update(email);
 
-            return new SuccessResult("Updated");
+            return new SuccessResult(true, "Updated");
         }
 
         [SecuredOperation("admin,staff.deleted")]
@@ -68,7 +69,7 @@ namespace Business.Concrete
         {
             _emailDal.Delete(email);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
         }
 
         private IResult CheckIfDescriptionExists(Email email)
@@ -86,7 +87,22 @@ namespace Business.Concrete
         {
             _emailDal.DeleteByFilter(e=>e.Id==emailId);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
+        }
+        [SecuredOperation("admin,staff.saved")]
+        [ValidationAspect(typeof(EmailValidator))]
+        [TransactionScopeAspect]
+        public IResult Save(Email email)
+        {
+            if (email.Id>0)
+            {
+                Update(email);
+            }
+            else
+            {
+                Add(email);
+            }
+            return new SuccessResult(true,"Updated");
         }
     }
 }

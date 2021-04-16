@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Utilities.Results;
 using Entities.Concrete;
+using Entities.Concrete.Dtos;
 
 namespace Business.Abstract
 {
@@ -16,5 +17,6 @@ namespace Business.Abstract
         IResult Update(Staff staff);
         IResult Delete(Staff staff);
         IResult DeleteAll(int staffId);
+        IDataResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations);
     }
 }

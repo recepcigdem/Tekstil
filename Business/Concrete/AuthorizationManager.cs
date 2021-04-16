@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
@@ -43,7 +44,7 @@ namespace Business.Concrete
 
             _authorizationDal.Add(authorization);
 
-            return new SuccessResult("Added");
+            return new SuccessResult(true, "Added");
 
         }
 
@@ -57,9 +58,9 @@ namespace Business.Concrete
             if (result != null)
                 return result;
 
-            _authorizationDal.Add(authorization);
+            _authorizationDal.Update(authorization);
 
-            return new SuccessResult("Updated");
+            return new SuccessResult(true, "Updated");
         }
 
         [SecuredOperation("admin")]
@@ -68,7 +69,7 @@ namespace Business.Concrete
         {
             _authorizationDal.Delete(authorization);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
         }
 
         private IResult CheckIfAuthorizationNameExists(Authorization authorization)
@@ -85,7 +86,23 @@ namespace Business.Concrete
         public IResult DeleteByAuthorizationId(int authorizationId)
         {
             _authorizationDal.DeleteByFilter(a=>a.Id==authorizationId);
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true,"Deleted");
+        }
+        [SecuredOperation("admin")]
+        [ValidationAspect(typeof(AuthorizationValidator))]
+        [TransactionScopeAspect]
+        public IResult Save(Authorization authorization)
+        {
+            if (authorization.Id>0)
+            {
+                Update(authorization);
+            }
+            else
+            {
+                Add(authorization);
+            }
+
+            return new SuccessResult(true,"Saved");
         }
     }
 }

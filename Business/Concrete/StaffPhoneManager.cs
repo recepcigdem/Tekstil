@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
@@ -9,6 +10,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Entities.Concrete.Dtos;
 
 namespace Business.Concrete
 {
@@ -45,7 +47,7 @@ namespace Business.Concrete
 
             _staffPhoneDal.Add(staffPhone);
 
-            return new SuccessResult("Added");
+            return new SuccessResult(true, "Added");
 
         }
 
@@ -59,9 +61,9 @@ namespace Business.Concrete
             if (result != null)
                 return result;
 
-            _staffPhoneDal.Add(staffPhone);
+            _staffPhoneDal.Update(staffPhone);
 
-            return new SuccessResult("Updated");
+            return new SuccessResult(true, "Updated");
         }
 
         [SecuredOperation("admin,staff.deleted")]
@@ -70,7 +72,7 @@ namespace Business.Concrete
         {
             _staffPhoneDal.Delete(staffPhone);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
         }
 
         private IResult CheckIfPhoneExists(StaffPhone staffPhone)
@@ -78,7 +80,7 @@ namespace Business.Concrete
             var result = _staffPhoneDal.GetAll(x => x.StaffId == staffPhone.StaffId && x.PhoneId == staffPhone.PhoneId).Any();
 
             if (result)
-                new ErrorResult("PhoneAlreadyExists");
+                new ErrorResult( "PhoneAlreadyExists");
 
             return new SuccessResult();
         }
@@ -88,13 +90,48 @@ namespace Business.Concrete
         {
             var result = _staffPhoneDal.Get(sp => sp.StaffId == staffId);
             if (result==null)
-                new ErrorResult("PhoneNotFound");
+                new ErrorResult(false, "PhoneNotFound");
 
             _staffPhoneDal.DeleteByFilter(sp=>sp.StaffId==staffId);
 
             _phoneService.DeleteByPhoneId(result.PhoneId);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
+        }
+        [SecuredOperation("admin,staff.saved")]
+        [ValidationAspect(typeof(StaffPhoneValidator))]
+        [TransactionScopeAspect]
+        public IResult Save(StaffPhoneDto staffPhoneDto)
+        {
+            StaffPhone staffPhone = new StaffPhone
+            {
+                Id=staffPhoneDto.Id,
+                StaffId = staffPhoneDto.StaffId,
+                PhoneId = staffPhoneDto.PhoneId,
+                IsMain = staffPhoneDto.IsMain
+            };
+
+            Phone phone = new Phone
+            {
+                Id = staffPhoneDto.PhoneId,
+                IsActive = staffPhoneDto.IsActive,
+                CountryCode = staffPhoneDto.CountryCode,
+                AreaCode = staffPhoneDto.AreaCode,
+                PhoneNumber = staffPhoneDto.PhoneNumber
+            };
+
+            if (staffPhone.Id>0)
+            {
+                Update(staffPhone);
+            }
+            else
+            {
+                Add(staffPhone);
+            }
+
+            _phoneService.Save(phone);
+
+            return new SuccessResult(true,"Saved");
         }
     }
 }

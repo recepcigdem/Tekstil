@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
@@ -9,6 +10,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Entities.Concrete.Dtos;
 
 namespace Business.Concrete
 {
@@ -45,7 +47,7 @@ namespace Business.Concrete
 
             _staffEmailDal.Add(staffEmail);
 
-            return new SuccessResult("Added");
+            return new SuccessResult(true, "Added");
 
         }
 
@@ -59,9 +61,9 @@ namespace Business.Concrete
             if (result != null)
                 return result;
 
-            _staffEmailDal.Add(staffEmail);
+            _staffEmailDal.Update(staffEmail);
 
-            return new SuccessResult("Updated");
+            return new SuccessResult(true, "Updated");
         }
 
         [SecuredOperation("admin,staff.deleted")]
@@ -70,7 +72,7 @@ namespace Business.Concrete
         {
             _staffEmailDal.Delete(staffEmail);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
         }
 
         private IResult CheckIfEmailExists(StaffEmail staffEmail)
@@ -94,7 +96,41 @@ namespace Business.Concrete
 
             _emailService.DeleteByEmailId(result.EmailId);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
+        }
+
+        [SecuredOperation("admin,staff.updated")]
+        [ValidationAspect(typeof(StaffEmailValidator))]
+        [TransactionScopeAspect]
+        public IResult Save(StaffEmailDto staffEmailDto)
+        {
+            StaffEmail staffEmail = new StaffEmail
+            {
+                Id = staffEmailDto.Id,
+                StaffId = staffEmailDto.StaffId,
+                EmailId = staffEmailDto.EmailId,
+                IsMain = staffEmailDto.IsMain
+            };
+
+            Email email = new Email
+            {
+                Id = staffEmail.EmailId,
+                IsActive = staffEmailDto.IsActive,
+                EmailAddress = staffEmailDto.EmailAddress
+            };
+
+            if (staffEmailDto.Id > 0)
+            {
+                Update(staffEmail);
+               
+            }
+            else
+            {
+                Add(staffEmail);
+            }
+            _emailService.Save(email);
+
+            return new SuccessResult(true, "Saved");
         }
     }
 }

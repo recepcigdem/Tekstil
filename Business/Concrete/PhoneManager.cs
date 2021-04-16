@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
@@ -43,7 +44,7 @@ namespace Business.Concrete
 
             _phoneDal.Add(phone);
 
-            return new SuccessResult("Added");
+            return new SuccessResult(true, "Added");
 
         }
 
@@ -52,14 +53,14 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IResult Update(Phone phone)
         {
-            IResult result = BusinessRules.Run( CheckIfPhoneNumberExists(phone));
+            IResult result = BusinessRules.Run(CheckIfPhoneNumberExists(phone));
 
             if (result != null)
                 return result;
 
-            _phoneDal.Add(phone);
+            _phoneDal.Update(phone);
 
-            return new SuccessResult("Updated");
+            return new SuccessResult(true, "Updated");
         }
 
         [SecuredOperation("admin,staff.deleted")]
@@ -68,7 +69,7 @@ namespace Business.Concrete
         {
             _phoneDal.Delete(phone);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
         }
 
         private IResult CheckIfPhoneNumberExists(Phone phone)
@@ -84,8 +85,23 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IResult DeleteByPhoneId(int phoneId)
         {
-            _phoneDal.DeleteByFilter(p=>p.Id==phoneId);
-            return new SuccessResult("Deleted");
+            _phoneDal.DeleteByFilter(p => p.Id == phoneId);
+            return new SuccessResult(true, "Deleted");
+        }
+        [SecuredOperation("admin,staff.saved")]
+        [ValidationAspect(typeof(PhoneValidator))]
+        [TransactionScopeAspect]
+        public IResult Save(Phone phone)
+        {
+            if (phone.Id > 0)
+            {
+                Update(phone);
+            }
+            else
+            {
+                Add(phone);
+            }
+            return new SuccessResult(true, "Saved");
         }
     }
 }

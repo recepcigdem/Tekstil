@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
@@ -44,7 +45,7 @@ namespace Business.Concrete
 
             _staffAuthorizationDal.Add(staffAuthorization);
 
-            return new SuccessResult("Added");
+            return new SuccessResult(true, "Added");
 
         }
 
@@ -58,9 +59,9 @@ namespace Business.Concrete
             if (result != null)
                 return result;
 
-            _staffAuthorizationDal.Add(staffAuthorization);
+            _staffAuthorizationDal.Update(staffAuthorization);
 
-            return new SuccessResult("Updated");
+            return new SuccessResult(true, "Updated");
         }
 
         [SecuredOperation("admin,staff.deleted")]
@@ -69,7 +70,7 @@ namespace Business.Concrete
         {
             _staffAuthorizationDal.Delete(staffAuthorization);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
         }
 
         private IResult CheckIfAuthorizationExists(StaffAuthorization staffAuthorization)
@@ -88,7 +89,22 @@ namespace Business.Concrete
         {
             _staffAuthorizationDal.DeleteByFilter(sp => sp.StaffId == staffId);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
+        }
+        [SecuredOperation("admin,staff.updated")]
+        [ValidationAspect(typeof(StaffAuthorizationValidator))]
+        [TransactionScopeAspect]
+        public IResult Save(StaffAuthorization staffAuthorization)
+        {
+            if (staffAuthorization.Id>0)
+            {
+                Update(staffAuthorization);
+            }
+            else
+            {
+                Add(staffAuthorization);
+            }
+            return new SuccessResult(true,"Saved");
         }
     }
 }

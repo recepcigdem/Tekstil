@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Entities.Concrete.Dtos;
 
 namespace Business.Concrete
 {
@@ -88,6 +89,37 @@ namespace Business.Concrete
             _staffDal.DeleteByFilter(s => s.Id == staffId);
 
             return new SuccessResult("Deleted");
+        }
+        [SecuredOperation("admin,staff.saved")]
+        [ValidationAspect(typeof(StaffValidator))]
+        [TransactionScopeAspect]
+        public IDataResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations)
+        {
+            if (staff.Id > 0)
+            {
+                Update(staff);
+            }
+            else
+            {
+                Add(staff);
+            }
+
+            foreach (var staffEmailDto in staffEmailDtos)
+            {
+                _staffEmailService.Save(staffEmailDto);
+            }
+
+            foreach (var staffPhoneDto in staffPhoneDtos)
+            {
+                _staffPhoneService.Save(staffPhoneDto);
+            }
+
+            foreach (var staffAuthorization in staffAuthorizations)
+            {
+                _staffAuthorizationService.Save(staffAuthorization);
+            }
+
+            return new SuccessDataResult<Staff>(true,"Saved" ,staff);
         }
 
         private IResult CheckIfExists(Staff staff)
