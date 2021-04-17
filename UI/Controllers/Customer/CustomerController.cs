@@ -1,49 +1,49 @@
-﻿using System.Collections.Generic;
-using Business.Concrete;
+﻿using Business.Abstract;
+using Core.Utilities.Results;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Reflection;
-using Business.Abstract;
-using Core.Utilities.Results;
 using UI.Models;
-using UI.Models.AgeGroup;
+using UI.Models.Customer;
 
-namespace UI.Controllers.AgeGroup
+namespace UI.Controllers.Customer
 {
-    public class AgeGroupController : BaseController
+    public class CustomerController : BaseController
     {
-        private IAgeGroupService _ageGroupService;
+        private ICustomerService _customerService;
 
-        public AgeGroupController(IStringLocalizerFactory factory, IStringLocalizer<AgeGroupController> localizer, ILogger<AgeGroupController> logger, IWebHostEnvironment env, IAgeGroupService ageGroupService) : base(factory, env)
+        public CustomerController(IStringLocalizerFactory factory, IStringLocalizer<CustomerController> localizer, ILogger<CustomerController> logger, IWebHostEnvironment env, ICustomerService customerService) : base(factory, env)
         {
-            _ageGroupService = ageGroupService;
+            _customerService = customerService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
         }
+
         public IActionResult Index()
         {
             BaseModel model = new BaseModel(Request);
             return View(model);
         }
         [HttpPost]
-        public JsonResult AgeGroupList()
+        public JsonResult CustomerList()
         {
-            AgeGroupList list = new AgeGroupList(_ageGroupService);
+            CustomerList list = new CustomerList(_customerService);
             return Json(list);
         }
 
         public ActionResult Detail(int id)
         {
-            var serviceDetail = _ageGroupService.GetById(id).Data;
+            var serviceDetail = _customerService.GetById(id).Data;
             if (serviceDetail == null || serviceDetail.Id < 1)
-                serviceDetail = new Entities.Concrete.AgeGroup();
+                serviceDetail = new Entities.Concrete.Customer();
 
-            var model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
+            var model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
             return View(model);
         }
 
@@ -51,10 +51,10 @@ namespace UI.Controllers.AgeGroup
         {
             if (id > 0)
             {
-                var serviceDetail = _ageGroupService.GetById(id).Data;
+                var serviceDetail = _customerService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
-                    Models.AgeGroup.AgeGroup model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
+                    Models.Customer.Customer model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
                     return PartialView(model);
                 }
                 return null;
@@ -62,27 +62,27 @@ namespace UI.Controllers.AgeGroup
             return null;
         }
 
-        public JsonResult Delete(Models.AgeGroup.AgeGroup ageGroup)
+        public JsonResult Delete(Models.Customer.Customer customer)
         {
-            #region  AgeGroup Session Control
+            #region  Customer Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult( _localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
             }
             #endregion
-            
-            Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
+
+            Entities.Concrete.Customer entity = customer.GetBusinessModel();
             if (entity.Id > 0)
             {
-                var res = _ageGroupService.Delete(entity);
+                var res = _customerService.Delete(entity);
                 return Json(res);
             }
             return null;
         }
         [HttpPost]
-        public JsonResult Save(Models.AgeGroup.AgeGroup ageGroup)
+        public JsonResult Save(Models.Customer.Customer customer)
         {
             #region  Staff Session Control
 
@@ -93,23 +93,13 @@ namespace UI.Controllers.AgeGroup
             }
             #endregion
 
-            if (ageGroup != null)
+            if (customer != null)
             {
-                Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
+                Entities.Concrete.Customer entity = customer.GetBusinessModel();
                 if (entity == null)
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _ageGroupService.Add(entity);
-
-                if (ageGroup.EntityId > 0)
-                {
-                    result = _ageGroupService.Update(entity);
-                }
-                else
-                {
-                    result = _ageGroupService.Add(entity);
-                }
-
+                var result = _customerService.Save(entity);
                 if (result.Success == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
@@ -123,17 +113,17 @@ namespace UI.Controllers.AgeGroup
 
             return null;
         }
-
         public JsonResult ComboList()
         {
-            var ageGroupList = _ageGroupService.GetAll().Data;
+            var customerList = _customerService.GetAll().Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
-            foreach (Entities.Concrete.AgeGroup entity in ageGroupList)
+            foreach (Entities.Concrete.Customer entity in customerList)
             {
-                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.Description);
+                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.CustomerName);
                 data.Add(model);
             }
             return Json(data);
         }
+
     }
 }

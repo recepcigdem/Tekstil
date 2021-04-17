@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
@@ -43,7 +44,7 @@ namespace Business.Concrete
 
             _customerDal.Add(customer);
 
-            return new SuccessResult("Added");
+            return new SuccessResult(true, "Added");
 
         }
 
@@ -57,9 +58,9 @@ namespace Business.Concrete
             if (result != null)
                 return result;
 
-            _customerDal.Add(customer);
+            _customerDal.Update(customer);
 
-            return new SuccessResult("Updated");
+            return new SuccessResult(true, "Updated");
         }
 
         [SecuredOperation("admin,customer.deleted")]
@@ -68,7 +69,7 @@ namespace Business.Concrete
         {
             _customerDal.Delete(customer);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
         }
 
         private IResult CheckIfCustomerNameExists(Customer customer)
@@ -79,6 +80,22 @@ namespace Business.Concrete
                 new ErrorResult("DescriptionAlreadyExists");
 
             return new SuccessResult();
+        }
+        [SecuredOperation("admin,customer.Saved")]
+        [ValidationAspect(typeof(CustomerValidator))]
+        [TransactionScopeAspect]
+        public IDataResult<Customer> Save(Customer customer)
+        {
+            if (customer.Id>0)
+            {
+                Update(customer);
+            }
+            else
+            {
+                Add(customer);
+            }
+
+            return new SuccessDataResult<Customer>(true,"Saved", customer);
         }
     }
 }

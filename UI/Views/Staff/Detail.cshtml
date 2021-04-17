@@ -1,5 +1,813 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Staff.Staff
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
 @{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
+
+<link href="~/css/customerDetail.css" rel="stylesheet" />
+<link href="~/js/panel-structure.js" rel="stylesheet" />
+<link href="~/css/AccordionTables.css" rel="stylesheet" />
+
+@using (Html.BeginForm("Detail", "Staff", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+    @Html.HiddenFor(x => x.CustomerId)
+    @Html.HiddenFor(x => x.DepartmentId)
+
+
+    @Html.HiddenFor(x => x.StaffPhotoBase64)
+    @Html.HiddenFor(x => x.RootPath)
+
+    <div class="page-header page-header-bordered">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Home/Index">@Localizer["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Staff/Index">@Localizer["List"]</a></li>
+
+            @if (Model.EntityId == 0)
+            {
+                <li class="breadcrumb-item active">@Localizer["NewStaff"]</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active">@Model.FirstName @Model.LastName </li>
+            }
+        </ol>
+    </div>
+    <div class="page-content">
+        <div class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions"></div>
+                <h3 class="panel-title">@Localizer["PageTitle"]</h3>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-3" style="float:right;margin-bottom:20px;">
+                                            @Html.HiddenFor(x => x.IsActive)
+                                            <button type="button" class="btn btn-block" id="buttonIsActiveSave" onclick="SaveActiveStaff()">
+                                                @if (Model.IsActive == true)
+                                                {
+                                                    @Localizer["Passive"]
+                                                }
+                                                else
+                                                {
+                                                    @Localizer["Active"]
+                                                }
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Localizer["Photo"]
+                                            <input type="file" class="dropify" id="photo" data-default-file="@Model.Photo" data-height="300" data-show-remove="true" data-max-file-size="1M" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8" style="margin-top:20px;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Localizer["CustomerName"]
+                                                    <select id="comboCustomer" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Localizer["DepartmentName"]
+                                                    <select id="comboDepartment" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Localizer["Title"]
+                                                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Localizer["FirstName"]
+                                                    @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Localizer["LastName"]
+                                                    @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Localizer["Password"]
+                                                    @*@Html.TextBoxFor(x => x.Password, new { @class = "form-control", @type = "password" })*@
+                                                    <input type="password" class="form-control" id="password" name="password">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Localizer["ConfirmPassword"]
+                                                    @*@Html.TextBoxFor(new { @class = "form-control", @id="confirmPassword", @type = "password" })*@
+                                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                                                </div>
+                                            </div>
+                                            @{ if (Model.IsSuperAdminControl == true)
+                                                {
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                                                                @Html.CheckBoxFor(x => x.IsSuperAdmin, new { @id = "CheckBoxIsSuperAdmin", @class = "chb" })
+                                                                @Html.LabelFor(x => x.IsSuperAdmin, "") @Localizer["IsSuperAdmin"]
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                if (Model.IsCompanyAdminControl == true || Model.IsSuperAdminControl == true)
+                                                {
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                                                                @Html.CheckBoxFor(x => x.IsCompanyAdmin, new { @id = "checkBoxIsCompanyAdmin", @class = "chb" })
+                                                                @Html.LabelFor(x => x.IsCompanyAdmin, "") @Localizer["IsCompanyAdmin"]
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                                                                @Html.CheckBoxFor(x => x.IsStandartUser, new { @id = "checkBoxIsStandartUser", @class = "chb" })
+                                                                @Html.LabelFor(x => x.IsStandartUser, "") @Localizer["IsNormalUser"]
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Example Tabs Line Top -->
+                                    <div class="example-wrap col-md-12">
+                                        <div class="nav-tabs-horizontal" data-plugin="tabs">
+                                            <ul class="nav nav-tabs nav-tabs-line tabs-line-top" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link active" data-toggle="tab" href="#exampleTabsLineTopOne"
+                                                       aria-controls="exampleTabsLineTopOne" role="tab">@Localizer["Email"]</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" data-toggle="tab" href="#exampleTabsLineTopTwo"
+                                                       aria-controls="exampleTabsLineTopTwo" role="tab">@Localizer["Phone"]</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" data-toggle="tab" href="#exampleTabsLineTopThree"
+                                                       aria-controls="exampleTabsLineTopThree" role="tab">@Localizer["Authorization"]</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content pt-20">
+                                                <div class="tab-pane active" id="exampleTabsLineTopOne" role="tabpanel">
+                                                    @Html.HiddenFor(x => x.SubEmailString)
+                                                    <div class="col-md-12">
+                                                        <div class="panel panel-primary panel-line">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <h4 class="col mb-0 align-self-end">@Localizer["Email"]</h4>
+                                                                    <div class="col-md-auto text-right mt-2">
+                                                                        <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddEmail()">@Localizer["NewEmail"]</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <table id="mailGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th width="8%">@Localizer["IsMain"]</th>
+                                                                        <th width="82%">@Localizer["EmailAddress"]</th>
+                                                                        <th width="10%"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @for (int i = 0; i < Model.ListStaffEmail.Count; i++)
+                                                                    {
+                                                                        <tr class="dataSatir">
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom: 5px">
+                                                                                        @Html.CheckBoxFor(x => x.ListStaffEmail[i].IsMain, new { @class = "isMainCheck" })
+                                                                                        @Html.LabelFor(x => x.ListStaffEmail[i].IsMain, "")
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control" name="addressLine" value="@Model.ListStaffEmail[i].EmailAddress">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteMail(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListStaffEmail[i].Id) @Html.HiddenFor(x => x.ListStaffEmail[i].EmailId)</td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="exampleTabsLineTopTwo" role="tabpanel">
+                                                    @Html.HiddenFor(x => x.SubPhoneString)
+                                                    <div class="col-md-12">
+                                                        <div class="panel panel-primary panel-line">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <h4 class="col mb-0 align-self-end">@Localizer["Phone"]</h4>
+                                                                    <div class="col-md-auto text-right mt-2">
+                                                                        <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddPhone()">@Localizer["NewPhone"]</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <table id="phoneGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th width="10%">@Localizer["IsMain"]</th>
+                                                                        <th width="15%">@Localizer["CountryCode"]</th>
+                                                                        <th width="15%">@Localizer["AreaCode"]</th>
+                                                                        <th width="50%">@Localizer["PhoneNumber"]</th>
+                                                                        <th width="10%"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @for (int i = 0; i < Model.ListStaffPhone.Count; i++)
+                                                                    {
+                                                                        <tr class="dataSatir">
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom: 5px">
+                                                                                        @Html.CheckBoxFor(x => x.ListStaffPhone[i].IsMain, new { @class = "isMainCheck" })
+                                                                                        @Html.LabelFor(x => x.ListStaffPhone[i].IsMain, "")
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control numericField" name="countryCode" value="@Model.ListStaffPhone[i].CountryCode">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control numericField" name="areaCode" value="@Model.ListStaffPhone[i].AreaCode">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="text" class="form-control numericField" name="phoneNumber" value="@Model.ListStaffPhone[i].PhoneNumber">
+                                                                                </div>
+                                                                            </td>
+                                                                            <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deletePhone(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListStaffPhone[i].Id) @Html.HiddenFor(x => x.ListStaffPhone[i].PhoneId)</td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="exampleTabsLineTopThree" role="tabpanel">
+                                                    @Html.HiddenFor(x => x.SubAuthorizationString)
+                                                    <div class="col-md-8">
+                                                        <div class="form-group">
+                                                            <div id="toDoListWidget" class="card card-shadow card-lg col-md-11" style="margin-top:20px;margin-bottom:0px;padding-left: 0px;padding-right: 0px;">
+                                                                <div class="card-header card-header-transparent" style="padding-bottom:0px;padding-top:0px;padding-left:15px">
+                                                                    <div class="card-header-actions">
+                                                                    </div>
+                                                                    <h5 class="card-title" style="color:#757575">@Localizer["Authorization"]:</h5>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="input-search input-search-dark">
+                                                                        <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                                                        <input type="text" class="form-control col-md-11" autocomplete="off" id="search" name="" placeholder="Search...">
+                                                                    </div>
+                                                                </div>
+                                                                <ul class="listgroupAuthorization" id="listgroupAuthorization">
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Example Tabs Line Top -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-success" id="buttonSave" onclick="Save();">@Localizer["Save"]</button>
+                        </div>
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-danger" onclick="window.location.href='Index'">@Localizer["Cancel"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<link href="~/plugin/dropify/dropify.min.css" rel="stylesheet" />
+<script src="~/plugin/dropify/dropify.min.js"></script>
+
+<script type="text/javascript">
+    var LevelList = [];
+    var dataList = [];
+    var dataListMail = [];
+    var dataListPhone = [];
+    var dataListAuthorization = [];
+    var count = 0;
+
+
+    $(document).ready(function () {
+        dataList = [];
+        $('.dropify').dropify({
+            messages: {
+                'default': "@Localizer["FileUpload_DragDropFile"]",
+                'replace': "@Localizer["FileUpload_DragDropFile"]",
+                'remove':  "@Localizer["FileUpload_Remove"]",
+                'error':   "@Localizer["FileUpload_Remove"]"
+            }
+        });
+
+        var comboCustomerUrl = "@Url.Action("ComboList", "Customer")" + "?CustomerId=" + CustomerId;
+
+        $.ajax({
+            url: comboCustomerUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboCustomer").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectCustomer"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboCustomer').val($('#CustomerId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#comboCustomer').on('select2:select', function (evt) {
+            $('#CustomerId').val(this.value);
+        });
+
+        var comboDepartmentUrl = "@Url.Action("ComboList", "Department")" + "?DepartmentId=" + DepartmentId;
+
+        $.ajax({
+            url: comboDepartmentUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboDepartment").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectDepartment"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboDepartment').val($('#DepartmentId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#comboDepartment').on('select2:select', function (evt) {
+            $('#DepartmentId').val(this.value);
+        });
+
+        InitSubList($('#listGroupMail'), $('#SubEmailString').val());
+        InitSubList($('#listGroupPhone'), $('#SubPhoneString').val());
+
+        if ($('#IsActive').val() == 'True') {
+            $('#buttonIsActiveSave').addClass("btn-warning");
+        }
+        if ($('#IsActive').val() == 'False') {
+            $('#buttonIsActiveSave').addClass("btn-success");
+        }
+
+        //Authorization
+
+        $('#listgroupAuthorization').css('overflow-y', 'hidden').css('overflow-x', 'hidden');
+
+        $('#listgroupAuthorization').hover(function () {
+            $(this).css('overflow-y', 'scroll').css('max-height', '10').css('position', 'relative');
+        }, function () {
+            $(this).css('overflow-y', 'hidden').css('max-height', '');
+        });
+
+        var recordedAuthorization = JSON.parse($('#SubAuthorizationString').val());
+
+        if (recordedAuthorization != null) {
+            if (recordedAuthorization.length != null) {
+                recordedAuthorization.forEach(item => {
+                    if (item.id > 0) {
+                        var obj = {
+                            id: item.Id,
+                            staffId: item.staffId,
+                            authorizationId: item.authorizationId
+                        }
+                        SelectedItems.push(obj);
+                    }
+
+                    var obj2 = {
+                        id: item.authorizationId,
+                        text: "deneme",
+                        selected: true
+                    }
+                    selectedIds.push(obj2);
+                });
+            }
+        }
+
+        var comboAuthorizationUrl = "@Url.Action("ComboList", "Authorization")";
+        $.ajax({
+            url: comboAuthorizationUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                $.each(data,
+                    function(i) {
+                        var obj = {
+                            id: data[i].id,
+                            text: data[i].text,
+                            selected: false
+                        }
+                        fullData.push(obj);
+                    });
+
+                let selectData = fullData.filter(o1 => selectedIds.some(o2 => o1.id === o2.id));
+                selectData.forEach(item => {
+                    var obj = {
+                        id: item.id,
+                        text: item.text,
+                        selected: true
+                    }
+                    newList.push(obj);
+                });
+
+                let differentData = fullData.filter(o1 => !selectedIds.some(o2 => o1.id === o2.id));
+                differentData.forEach(item => {
+                    var obj = {
+                        id: item.id,
+                        text: item.text,
+                        selected: false
+                    }
+                    newList.push(obj);
+                });
+                var items = '';
+                if (newList.length != 0) {
+                    newList.forEach(item => {
+                        items += "<li class='list-group-item flex-column align-items-start' style='padding-top: 0px;padding-bottom:10px;border-top:0px;'><div class='checkbox-custom checkbox-success checkbox-lg'><input type='checkbox' id='lawCheck'  class='form-control authorizationCheckboxs' name='checkbox' value='" + item.id + "'><label for='checkbox' class='item-title'  style='padding-bottom: 0px;'>" + item.text + "</label></div></li>";
+                    })
+                    $('#listgroupAuthorization').html(items);
+                }
+
+                if (newList.length != 0) {
+                    newList.forEach(item => {
+                        if (item.selected == true) {
+                            $('input[value="' + item.id + '"]').attr('checked', 'checked').trigger("change");
+                        }
+                    });
+                }
+            }
+        });
+
+        //Authorization
+    });
+
+    $("#search").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $(".listgroupAuthorization li").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $(".listgroupAuthorization").on("change", "input[type='checkbox']", function () {
+
+        $(this).closest('li').toggleClass('highlight', this.checked);
+
+        $(':checkbox').not(this).closest('li').removeClass('highlight');
+
+        if ($(this).prop('checked') == true) {
+            authorizationId = $(this).val();
+            Add(authorizationId);
+        };
+
+        if ($(this).prop('checked') == false) {
+            authorizationId = $(this).val();
+            Remove(authorizationId);
+        };
+
+        function Remove(AuthorizationId) {
+            SelectedItems.forEach(item => {
+                if (item.authorizationId == AuthorizationId && item.authorizationId != null && item.authorizationId != undefined) {
+                    var removeIndex = SelectedItems.map(function (item) { return item.authorizationId; }).indexOf(item.authorizationId);
+                    SelectedItems.splice(removeIndex, 1);
+                }
+            });
+        }
+
+        function Add(AuthorizationId) {
+            var obj = {
+                id: 1,
+                staffId: 1,
+                authorizationId: AuthorizationId
+            }
+            SelectedItems.push(obj);
+        }
+    })
+
+     var countEmail = $('.dataSatir').length + 1;
+
+    function AddEmail() {
+        event.preventDefault();
+        var table = document.querySelector("#mailGrid tbody");
+        table.insertAdjacentHTML("beforeend",
+           "<tr>"
+           +"<td>"
+           + "<div class=\"input-group\">"
+           + "<div class=\"checkbox-custom checkbox-inline checkbox-success\"style=\"margin-bottom:5px\">"
+           + "<input type=\"checkbox\" class=\"isMainCheck\" name=\"ListStaffEmail[" + countEmail + "].IsMain\">"
+            + "<label></label>"
+            + "</div>"
+            + "</div>"
+           + "</td>"
+           + "<td>"
+           + "<div class=\"input-group\">"
+           + "<input type=\"text\" class=\"form-control\" name=\"ListStaffEmail[" + countEmail + "].EmailAddress\">"
+            + "</div>"
+           + "</td>"
+            + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteMail(this)\">@Localizer["Delete"]</button>"
+           + "<input type=\"hidden\" class=\"form-control\" name=\"id\" value=\"0\">"
+           + "<input type=\"hidden\" class=\"form-control\" name=\"emailId\" value=\"0\">"
+           +"</td>"
+           + "</tr>");
+        countEmail++;
+    }
+
+    var countAuthorization = $('.dataSatir').length + 1;
+
+    function AddAuthorization() {
+        event.preventDefault();
+        var table = document.querySelector("#authorizationGrid tbody");
+        table.insertAdjacentHTML("beforeend",
+            "<tr>"
+            +"<td>"
+            + "<div class=\"input-group\">"
+            + "<div class=\"checkbox-custom checkbox-inline checkbox-success\"style=\"margin-bottom:5px\">"
+            + "<input type=\"checkbox\" class=\"isMainCheck\" name=\"ListStaffAuthorization[" + countAuthorization + "].IsMain\">"
+            + "<label></label>"
+            + "</div>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control\" name=\"ListStaffEmail[" + countEmail + "].EmailAddress\">"
+            + "</div>"
+            + "</td>"
+            + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteMail(this)\">@Localizer["Delete"]</button>"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"id\" value=\"0\">"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"emailId\" value=\"0\">"
+            +"</td>"
+            + "</tr>");
+        countEmail++;
+    }
+
+    var countPhone = $('.dataSatir').length + 1;
+
+    function AddPhone() {
+        console.log("ok");
+        event.preventDefault();
+        var table = document.querySelector("#phoneGrid tbody");
+        table.insertAdjacentHTML("beforeend",
+            "<tr>"
+            +"<td>"
+            + "<div class=\"input-group\">"
+            + "<div class=\"checkbox-custom checkbox-inline checkbox-success\"style=\"margin-bottom:5px\">"
+            + "<input type=\"checkbox\" class=\"isMainCheck\" name=\"ListStaffPhone[" + countPhone + "].IsMain\">"
+            + "<label></label>"
+            + "</div>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" name=\"ListStaffPhone[" + countPhone + "].CountryCode\">"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" name=\"ListStaffPhone[" + countPhone + "].AreaCode\">"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" name=\"ListStaffPhone[" + countPhone + "].PhoneNumber\">"
+            + "</div>"
+            + "</td>"
+            + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deletePhone(this)\">@Localizer["Delete"]</button>"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"id\" value=\"0\">"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"phoneId\" value=\"0\">"
+            + "</td>"
+            + "</tr>");
+        countPhone++;
+                }
+
+
+    function deleteMail(button) {
+        button.closest("tr").remove();
+    }
+
+    function deletePhone(button) {
+        button.closest("tr").remove();
+    }
+
+    var newID = 0;
+    function Save() {
+
+        var images = $('.dropify-render').children("img");
+        if (images.length > 0) {
+            var base64 = images[0].src;
+            if (base64.includes("base64")) {
+                $('#StaffPhotoBase64').val(base64);
+            }
+        }
+        else {
+            $('#StaffPhotoBase64').val('');
+        }
+        dataList = [];
+        dataListMail = [];
+        dataListPhone = [];
+
+        $("#EmailGrid tbody tr").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            if (row.find(".isMainCheck").is(":checked")) {
+                data.isMain = true;
+            } else {
+                data.isMain = false;
+            }
+
+            data.mailAddress = row.find("td").find("input").eq(1).val();
+            data.id = row.find("td").find("input").eq(2).val();
+            data.emailId = row.find("td").find("input").eq(3).val();
+
+            dataListMail.push(data);
+
+        });
+
+        $("#phoneGrid tbody tr").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            if (row.find(".isMainCheck").is(":checked")) {
+                data.isMain = true;
+            } else {
+                data.isMain = false;
+            }
+
+            data.countryCode = row.find("td").find("input").eq(1).val();
+            data.areaCode = row.find("td").find("input").eq(2).val();
+            data.phoneNumber = row.find("td").find("input").eq(3).val();
+            data.id = row.find("td").find("input").eq(4).val();
+            data.phoneId = row.find("td").find("input").eq(5).val();
+
+            dataListPhone.push(data);
+
+        });
+
+        $('#SubEmailString').val(JSON.stringify(dataListMail));
+        $('#SubPhoneString').val(JSON.stringify(dataListPhone));
+        $('#SubAuthorizationString').val(JSON.stringify(SelectedItems));
+
+
+        if ( IsMainControl(dataListMail) == true && IsMainControl(dataListPhone) == true) {
+
+            var url = "@Url.Action("Save", "Staff")";
+            $.post(url,
+                $("form").serialize(), function (data) {
+                    console.log(data.result);
+                    if (data.result == false) {
+                        ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
+                        $('#SubEmailString').val(subListMail);
+                        $('#SubPhoneString').val(subListPhone);
+                        $('#SubAuthorizationString').val(subListAuthorization);
+                    }
+                    if (data.result == true) {
+                        newID = data.obj;
+                        ShowSuccess('@SharedLocaLizer.GetLocalizedHtmlString("SaveMessage")');
+                    }
+                });
+        }
+    }
+
+    function ShowError(title, message) {
+        Swal.fire({
+            position: 'top-end',
+            title: title,
+            text: message,
+            icon: 'error',
+            showCloseButton: true,
+            showConfirmButton: true,
+            padding: '4em'
+        });
+    }
+
+    function ShowSuccess(title, message) {
+
+        Swal.fire({
+            position: 'top-end',
+            title: title,
+            text: message,
+            icon: 'success',
+            showCloseButton: true,
+            showConfirmButton: true,
+            padding: '4em'
+        }).then(function () {
+            window.location.href = "@Url.Action("Index","Staff")";
+        });
+    }
+
+    function SaveActiveStaff() {
+
+        if ($('#IsActive').val() == 'True') {
+            $('#IsActive').val(false);
+            $('#buttonIsActiveSave').removeClass("btn-success").addClass("btn-warning");
+        }
+        if ($('IsActive').val() == 'False') {
+            $('#IsActive').val(true);
+        }
+        Save();
+    }
+
+    $(".chb").change(function () {
+        $(".chb").prop('checked', false);
+        $(this).prop('checked', true);
+    });
+
+    function IsMainControl(list) {
+        var countIsMain = 0;
+        if (list.length == 0) {
+            countIsMain = 1;
+        }
+                list.forEach(item => {
+                    if (item.isMain == true) {
+                        countIsMain++;
+                    }
+                });
+
+                if (countIsMain == 0) {
+                    ShowError('@Html.Raw(SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle"))', '@Html.Raw(SharedLocaLizer.GetLocalizedHtmlString("Error_IsMainIsNotNull"))');
+                    return false;
+                }
+                else if (countIsMain!=1) {
+                    ShowError('@Html.Raw(SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle"))', '@Html.Raw(SharedLocaLizer.GetLocalizedHtmlString("Error_IsMainIsNotMultiple"))');
+                    return false;
+                }
+                if (countIsMain == 1) {
+                    return true;
+                }
+    }
+</script>
+

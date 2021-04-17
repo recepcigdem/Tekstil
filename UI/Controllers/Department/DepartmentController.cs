@@ -1,49 +1,52 @@
-﻿using System.Collections.Generic;
-using Business.Concrete;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Business.Abstract;
 using Core.Utilities.Results;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using UI.Models;
-using UI.Models.AgeGroup;
+using UI.Models.Department;
 
-namespace UI.Controllers.AgeGroup
+namespace UI.Controllers.Department
 {
-    public class AgeGroupController : BaseController
+    public class DepartmentController : BaseController
     {
-        private IAgeGroupService _ageGroupService;
+        private IDepartmentService _departmentService;
 
-        public AgeGroupController(IStringLocalizerFactory factory, IStringLocalizer<AgeGroupController> localizer, ILogger<AgeGroupController> logger, IWebHostEnvironment env, IAgeGroupService ageGroupService) : base(factory, env)
+        public DepartmentController(IStringLocalizerFactory factory, IStringLocalizer<DepartmentController> localizer, ILogger<DepartmentController> logger, IWebHostEnvironment env, IDepartmentService departmentService) : base(factory, env)
         {
-            _ageGroupService = ageGroupService;
+            _departmentService = departmentService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
         }
+
         public IActionResult Index()
         {
             BaseModel model = new BaseModel(Request);
             return View(model);
         }
         [HttpPost]
-        public JsonResult AgeGroupList()
+        public JsonResult DepartmentList()
         {
-            AgeGroupList list = new AgeGroupList(_ageGroupService);
+            DepartmentList list = new DepartmentList(_departmentService);
             return Json(list);
         }
 
         public ActionResult Detail(int id)
         {
-            var serviceDetail = _ageGroupService.GetById(id).Data;
+            var serviceDetail = _departmentService.GetById(id).Data;
             if (serviceDetail == null || serviceDetail.Id < 1)
-                serviceDetail = new Entities.Concrete.AgeGroup();
+                serviceDetail = new Entities.Concrete.Department();
 
-            var model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
+            var model = new Models.Department.Department(Request, serviceDetail, _localizerShared);
             return View(model);
         }
 
@@ -51,10 +54,10 @@ namespace UI.Controllers.AgeGroup
         {
             if (id > 0)
             {
-                var serviceDetail = _ageGroupService.GetById(id).Data;
+                var serviceDetail = _departmentService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
-                    Models.AgeGroup.AgeGroup model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
+                    Models.Department.Department model = new Models.Department.Department(Request, serviceDetail, _localizerShared);
                     return PartialView(model);
                 }
                 return null;
@@ -62,27 +65,27 @@ namespace UI.Controllers.AgeGroup
             return null;
         }
 
-        public JsonResult Delete(Models.AgeGroup.AgeGroup ageGroup)
+        public JsonResult Delete(Models.Department.Department department)
         {
-            #region  AgeGroup Session Control
+            #region  Department Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult( _localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
             }
             #endregion
-            
-            Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
+
+            Entities.Concrete.Department entity = department.GetBusinessModel();
             if (entity.Id > 0)
             {
-                var res = _ageGroupService.Delete(entity);
+                var res = _departmentService.Delete(entity);
                 return Json(res);
             }
             return null;
         }
         [HttpPost]
-        public JsonResult Save(Models.AgeGroup.AgeGroup ageGroup)
+        public JsonResult Save(Models.Department.Department department)
         {
             #region  Staff Session Control
 
@@ -93,23 +96,13 @@ namespace UI.Controllers.AgeGroup
             }
             #endregion
 
-            if (ageGroup != null)
+            if (department != null)
             {
-                Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
+                Entities.Concrete.Department entity = department.GetBusinessModel();
                 if (entity == null)
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _ageGroupService.Add(entity);
-
-                if (ageGroup.EntityId > 0)
-                {
-                    result = _ageGroupService.Update(entity);
-                }
-                else
-                {
-                    result = _ageGroupService.Add(entity);
-                }
-
+                var result = _departmentService.Save(entity);
                 if (result.Success == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
@@ -123,17 +116,17 @@ namespace UI.Controllers.AgeGroup
 
             return null;
         }
-
         public JsonResult ComboList()
         {
-            var ageGroupList = _ageGroupService.GetAll().Data;
+            var departmentList = _departmentService.GetAll().Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
-            foreach (Entities.Concrete.AgeGroup entity in ageGroupList)
+            foreach (Entities.Concrete.Department entity in departmentList)
             {
-                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.Description);
+                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.DepartmentName);
                 data.Add(model);
             }
             return Json(data);
         }
+
     }
 }

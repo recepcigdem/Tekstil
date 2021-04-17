@@ -1,10 +1,16 @@
 {
- 
+
   "Info": {
     "ProjectUrl": "https://localhost:44354/",
     "BaseURL": "https://localhost:44354/"
   },
   "Log": {
     "UseParameter": "false"
+  },
+  "Token": {
+    "ApplicationName": "Textile",
+    "TokenExpiryTime": "60",
+    "ConfigSecret": "MXEydzNlMVEyVzNF"
   }
+
 }

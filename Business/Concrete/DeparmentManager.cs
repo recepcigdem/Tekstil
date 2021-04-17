@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using System;
+using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
@@ -43,7 +44,7 @@ namespace Business.Concrete
 
             _departmentDal.Add(department);
 
-            return new SuccessResult("Added");
+            return new SuccessResult(true, "Added");
 
         }
 
@@ -57,9 +58,9 @@ namespace Business.Concrete
             if (result != null)
                 return result;
 
-            _departmentDal.Add(department);
+            _departmentDal.Update(department);
 
-            return new SuccessResult("Updated");
+            return new SuccessResult(true, "Updated");
         }
 
         [SecuredOperation("admin,department.deleted")]
@@ -68,7 +69,7 @@ namespace Business.Concrete
         {
             _departmentDal.Delete(department);
 
-            return new SuccessResult("Deleted");
+            return new SuccessResult(true, "Deleted");
         }
 
         private IResult CheckIfDepartmentNameExists(Department department)
@@ -79,6 +80,21 @@ namespace Business.Concrete
                 new ErrorResult("DescriptionAlreadyExists");
 
             return new SuccessResult();
+        }
+        [SecuredOperation("admin,department.saved")]
+        [ValidationAspect(typeof(DepartmentValidator))]
+        [TransactionScopeAspect]
+        public IDataResult<Department> Save(Department department)
+        {
+            if (department.Id>0)
+            {
+                Update(department);
+            }
+            else
+            {
+                Add(department);
+            }
+            return new SuccessDataResult<Department>(true,"Saved",department);
         }
     }
 }

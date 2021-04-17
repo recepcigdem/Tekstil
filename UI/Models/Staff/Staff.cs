@@ -36,7 +36,7 @@ namespace UI.Models.Staff
         public bool IsSuperAdminControl { get; set; }
         public bool IsCompanyAdminControl { get; set; }
 
-        public string UserPhotoBase64 { get; set; }
+        public string StaffPhotoBase64 { get; set; }
 
         #region Injections
 
@@ -45,6 +45,7 @@ namespace UI.Models.Staff
         private IStaffAuthorizationService _staffAuthorizationService;
         private IEmailService _emailService;
         private IPhoneService _phoneService;
+        private IAuthorizationService _authorizationService;
        
         #endregion
 
@@ -69,16 +70,17 @@ namespace UI.Models.Staff
         #endregion
 
         public List<StaffAuthorization> StaffAuthorizations { get; set; }
-        public string StaffAuthorizationString
+        public string SubAuthorizationString
         {
             get { return JsonConvert.SerializeObject(StaffAuthorizations); }
             set { StaffAuthorizations = JsonConvert.DeserializeObject<List<StaffAuthorization>>(value); }
         }
-        public List<StaffAuthorization> ListStaffAuthorizations { get; set; }
+        public List<Entities.Concrete.Authorization> ListAuthorizations { get; set; }
 
 
         public Staff() : base()
         {
+           
             CustomerId = 0;
             DepartmentId = 0;
             IsActive = false;
@@ -99,7 +101,7 @@ namespace UI.Models.Staff
             IsCompanyAdmin = false;
             IsSuperAdminControl = false;
             IsCompanyAdminControl = false;
-            UserPhotoBase64 = string.Empty;
+            StaffPhotoBase64 = string.Empty;
 
             #region Mail
 
@@ -118,12 +120,12 @@ namespace UI.Models.Staff
             #region Authorization
 
             StaffAuthorizations = new List<StaffAuthorization>();
-            ListStaffAuthorizations = new List<StaffAuthorization>();
+            ListAuthorizations = new List<Entities.Concrete.Authorization>();
 
             #endregion
         }
 
-        public Staff(HttpRequest request, Entities.Concrete.Staff staff, IStringLocalizer _localizerShared, string rootPath, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService) : base(request)
+        public Staff(HttpRequest request, Entities.Concrete.Staff staff, IStringLocalizer _localizerShared, string rootPath, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService, IAuthorizationService authorizationService) : base(request)
         {
 
             _staffEmailService = staffEmailService;
@@ -131,11 +133,14 @@ namespace UI.Models.Staff
             _staffAuthorizationService = staffAuthorizationService;
             _emailService = emailService;
             _phoneService = phoneService;
+            _authorizationService = authorizationService;
 
             RootPath = rootPath;
 
             ListStaffEmail = new List<StaffEmailDto>();
             ListStaffPhone = new List<StaffPhoneDto>();
+            ListAuthorizations = new List<Entities.Concrete.Authorization>();
+
             StaffSession resultStaffSession = Helpers.SessionHelper.GetStaff(request);
             if (resultStaffSession != null)
             {
@@ -166,12 +171,12 @@ namespace UI.Models.Staff
             {
                 string fileName = rootPath + Photo;
                 byte[] binaryContent = File.ReadAllBytes(fileName);
-                this.UserPhotoBase64 = Convert.ToBase64String(binaryContent, 0, binaryContent.Length);
+                this.StaffPhotoBase64 = Convert.ToBase64String(binaryContent, 0, binaryContent.Length);
             }
             else
             {
                 this.Photo = "/assets/images/placeholder.png";
-                this.UserPhotoBase64 = string.Empty;
+                this.StaffPhotoBase64 = string.Empty;
             }
 
             #region StaffEmail
@@ -256,12 +261,19 @@ namespace UI.Models.Staff
 
             #region StaffAuthorization
 
-            ListStaffAuthorizations = _staffAuthorizationService.GetAll().Data;
+            var staffAuthorizations= _staffAuthorizationService.GetAll().Data;
+
             this.StaffAuthorizations = new List<StaffAuthorization>();
-            foreach (var staffAuthorization in ListStaffAuthorizations)
+
+            foreach (var staffAuthorization in staffAuthorizations)
             {
                 if (staffAuthorization != null)
                 {
+                    var authorizationItem = _authorizationService.GetById(staffAuthorization.AuthorizationId).Data;
+                    if (authorizationItem!=null)
+                    {
+                        ListAuthorizations.Add(authorizationItem);
+                    }
                     this.StaffAuthorizations.Add(staffAuthorization);
                 }
             }
@@ -291,13 +303,13 @@ namespace UI.Models.Staff
             staff.IsSuperAdmin = IsSuperAdmin;
             staff.IsCompanyAdmin = IsCompanyAdmin;
 
-            if (!string.IsNullOrWhiteSpace(this.UserPhotoBase64))
+            if (!string.IsNullOrWhiteSpace(this.StaffPhotoBase64))
             {
                 var textBase64 = "data:image/jpeg;base64,";
-                bool IsContains = this.UserPhotoBase64.Contains(textBase64);
+                bool IsContains = this.StaffPhotoBase64.Contains(textBase64);
                 if (IsContains)
                 {
-                    var img = Helpers.ImageHelper.GetImageFromBase64(this.UserPhotoBase64);
+                    var img = Helpers.ImageHelper.GetImageFromBase64(this.StaffPhotoBase64);
                     if (img != null)
                     {
                         string fileName = RootPath + "\\assets\\photos\\" + img.FileName;
@@ -307,8 +319,8 @@ namespace UI.Models.Staff
                 }
                 else
                 {
-                    this.UserPhotoBase64 = textBase64 + this.UserPhotoBase64;
-                    var img = Helpers.ImageHelper.GetImageFromBase64(this.UserPhotoBase64);
+                    this.StaffPhotoBase64 = textBase64 + this.StaffPhotoBase64;
+                    var img = Helpers.ImageHelper.GetImageFromBase64(this.StaffPhotoBase64);
                     if (img != null)
                     {
                         string fileName = RootPath + "\\assets\\photos\\" + img.FileName;
@@ -369,7 +381,7 @@ namespace UI.Models.Staff
 
             #region StaffAuthorization
 
-            ListStaffAuthorizations = new List<StaffAuthorization>();
+            StaffAuthorizations = new List<StaffAuthorization>();
             foreach (var item in StaffAuthorizations)
             {
                 StaffAuthorization staffAuthorizations = new StaffAuthorization();
@@ -383,7 +395,7 @@ namespace UI.Models.Staff
 
                 staffAuthorizations.StaffId = this.EntityId;
                 staffAuthorizations.AuthorizationId = item.AuthorizationId;
-                ListStaffAuthorizations.Add(staffAuthorizations);
+                StaffAuthorizations.Add(staffAuthorizations);
 
             }
             #endregion

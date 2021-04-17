@@ -31,9 +31,10 @@ namespace UI.Controllers.Staff
         private IStaffAuthorizationService _staffAuthorizationService;
         private IEmailService _emailService;
         private IPhoneService _phoneService;
-       
+        private IAuthorizationService _authorizationService;
 
-        public StaffController(IStringLocalizerFactory factory, IStringLocalizer<StaffController> localizer, ILogger<StaffController> logger, IWebHostEnvironment env, IStaffService staffService, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService) : base(factory, env)
+
+        public StaffController(IStringLocalizerFactory factory, IStringLocalizer<StaffController> localizer, ILogger<StaffController> logger, IWebHostEnvironment env, IStaffService staffService, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService, IAuthorizationService authorizationService) : base(factory, env)
         {
             _staffService = staffService;
             _staffEmailService = staffEmailService;
@@ -41,6 +42,7 @@ namespace UI.Controllers.Staff
             _staffAuthorizationService = staffAuthorizationService;
             _emailService = emailService;
             _phoneService = phoneService;
+            _authorizationService = authorizationService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
@@ -66,7 +68,7 @@ namespace UI.Controllers.Staff
             if (staff == null || staff.Id < 1)
                 staff = new Entities.Concrete.Staff();
 
-            var model = new Models.Staff.Staff(Request, staff, _localizerShared,_env.WebRootPath, _staffEmailService,_staffPhoneService,_staffAuthorizationService,_emailService,_phoneService);
+            var model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService, _authorizationService);
             return View(model);
         }
 
@@ -77,7 +79,7 @@ namespace UI.Controllers.Staff
                 var staff = _staffService.GetById(id).Data;
                 if (staff != null)
                 {
-                    Models.Staff.Staff model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService);
+                    Models.Staff.Staff model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService, _authorizationService);
                     return PartialView(model);
                 }
                 return null;
@@ -113,14 +115,14 @@ namespace UI.Controllers.Staff
             var registerApiResult = string.Empty;
             var staffMail = staff.SubEmail.data.Where(x => x.IsMain == true && x.IsDeleted == false);
             if (staffMail.FirstOrDefault() == null)
-                return Json(new ErrorResult(false,_localizer.GetString("Error_UserIsMainIsNotNull")));
-            
+                return Json(new ErrorResult(false, _localizer.GetString("Error_UserIsMainIsNotNull")));
+
             if ((password == null || confirmPassword == null) && staff.EntityId == 0)
-                return Json(new ErrorResult(false,_localizer.GetString("Error_UserPasswordNull")));
-            
+                return Json(new ErrorResult(false, _localizer.GetString("Error_UserPasswordNull")));
+
             if (password != confirmPassword)
                 return Json(new ErrorResult(false, _localizer.GetString("Error_UserPasswordNotMatch")));
-            
+
             try
             {
 
@@ -177,7 +179,7 @@ namespace UI.Controllers.Staff
                     Response result1 = JsonConvert.DeserializeObject<Response>(response);
                     if (!result1.IsSuccess)
                         return Json(new ErrorResult(false, _localizer.GetString(result1.ErrorMessage)));
-                    
+
 
                     JObject parseValue = JObject.Parse(result1.ResultData.ToString());
                     JToken parseValue2 = parseValue["resultData"];
@@ -190,7 +192,7 @@ namespace UI.Controllers.Staff
 
                 List<StaffPhoneDto> staffPhoneDtos = staff.ListStaffPhone;
                 List<StaffEmailDto> staffEmailDtos = staff.ListStaffEmail;
-                List<StaffAuthorization> staffAuthorizations = staff.ListStaffAuthorizations;
+                List<StaffAuthorization> staffAuthorizations = staff.StaffAuthorizations;
 
                 var result = _staffService.SaveAll(entity, staffEmailDtos, staffPhoneDtos, staffAuthorizations);
                 if (result.Success == false)

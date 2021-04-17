@@ -85,15 +85,15 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IResult DeleteByAuthorizationId(int authorizationId)
         {
-            _authorizationDal.DeleteByFilter(a=>a.Id==authorizationId);
-            return new SuccessResult(true,"Deleted");
+            _authorizationDal.DeleteByFilter(a => a.Id == authorizationId);
+            return new SuccessResult(true, "Deleted");
         }
         [SecuredOperation("admin")]
         [ValidationAspect(typeof(AuthorizationValidator))]
         [TransactionScopeAspect]
-        public IResult Save(Authorization authorization)
+        public IDataResult<Authorization> Save(Authorization authorization)
         {
-            if (authorization.Id>0)
+            if (authorization.Id > 0)
             {
                 Update(authorization);
             }
@@ -102,7 +102,7 @@ namespace Business.Concrete
                 Add(authorization);
             }
 
-            return new SuccessResult(true,"Saved");
+            return new SuccessDataResult<Authorization>(true, "Saved", authorization);
         }
     }
 }

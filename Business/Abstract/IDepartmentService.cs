@@ -15,5 +15,6 @@ namespace Business.Abstract
         IResult Add(Department department);
         IResult Update(Department department);
         IResult Delete(Department department);
+        IDataResult<Department> Save(Department department);
     }
 }

@@ -9,14 +9,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link href="~/css/modalCustomerReadOnly.min.css" rel="stylesheet" />
-<link href="~/js/panel-structure.js" rel="stylesheet" />
-
 <script>
 
      $(document).ready(function () {
-         var urlData = "@Url.Action("StaffList", "Staff")";
-        var table= $('#StaffsGrid').DataTable({
+         var urlData = "@Url.Action("DepartmentList", "Department")";
+         var table = $('#DepartmentGrid').DataTable({
             "ajax": {
             "url": urlData,
              "type": "POST"
@@ -37,35 +34,23 @@
                       'orderable': false,
                      width: '4%',
                      mRender: function (data, type, full, row) {
-                         return '<a href="@Url.Action("Detail","Staff")?Id=' + data + '">' + '<span style="margin-left:5px" class="fa fa-pencil"></span>' + '</a>'
+                         return '<a href="@Url.Action("Detail", "Department")?Id=' + data + '">' + '<span style="margin-left:5px" class="fa fa-pencil"></span>' + '</a>'
               }
                  },
 
                  { "data": "id", "visible": false },
-                     {
-                     "data": "firstName",
-                     mRender: function (data, type, full, row) {
-                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>"+'<span>'+data+'</span>' + "</a>";
-                         }
-                      },
-                     {
-                     "data": "lastName",
-                     mRender: function (data, type, full, row) {
-                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>"+'<span>'+data+'</span>' + "</a>";
-                       }
-                 },
-                       {
-                     "data": "title",
-                     mRender: function (data, type, full, row) {
-                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>"+'<span>'+data+'</span>' + "</a>";
-                       }
-                 },
-                          {
+                    {
                      "data": "isActive",
                      mRender: function (data, type, full, row) {
-                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>"+'<span>'+GridAddBooleanColumn(data)+'</span>' + "</a>";
+                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>" + '<span>' + GridAddBooleanColumn(data)+'</span>' + "</a>";
                      }
-                 }
+                    },
+                     {
+                         "data": "departmentName",
+                     mRender: function (data, type, full, row) {
+                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>"+'<span>'+data+'</span>' + "</a>";
+                         },
+                     }
              ],
              "lengthMenu": [25, 50, 75, 100],
              "pagingType": "full_numbers",
@@ -129,7 +114,7 @@
             cancelButtonText: '@Html.Raw(@SharedLocalizer.GetLocalizedHtmlString("Cancel"))'
         }).then((result) => {
             if (result.value) {
-                var url = '@Url.Content("~/")' + '@Model.Culture' + "/Staff/Delete?Id=" + id;
+                var url = '@Url.Content("~/")' + '@Model.Culture' + "/Department/Delete?Id=" + id;
                 console.log("url" + url);
                 $.post(url,
                     $("form").serialize(), function (data) {
@@ -143,7 +128,7 @@
                                 text: '@Html.Raw(@SharedLocalizer.GetLocalizedHtmlString("DeleteMessage"))',
                                 type: "success"
                             }).then(function () {
-                                window.location.href = "@Url.Action("Index", "Staff")";
+                                window.location.href = "@Url.Action("Index", "Department")";
                             })
                         }
                     });
@@ -152,7 +137,7 @@
     }
 
     function ModalShow(id) {
-         var urlDetail = "@Url.Action("DetailReadOnly", "Staff")" +"?Id="+id;
+         var urlDetail = "@Url.Action("DetailReadOnly", "Department")" +"?Id="+id;
         $.get(urlDetail)
             .done(function (responsedata) {
                 $("#partialViewContent").html(responsedata);
@@ -176,27 +161,25 @@
             <div class="col-md-9">
                 <ol class="breadcrumb" style="margin-left:15px">
                     <li class="breadcrumb-item"><a href="/@Model.Culture/Home/Index">@Localizer["Home"]</a></li>
-                    <li class="breadcrumb-item"><a href="/@Model.Culture/Staff/Index">@Localizer["StaffList"]</a></li>
+                    <li class="breadcrumb-item"><a href="/@Model.Culture/Department/Index">@Localizer["DepartmentList"]</a></li>
                 </ol>
             </div>
             <div class="col-md-3">
-                <button onclick="location.href='@Url.Action("Detail", "Staff")'" style="margin-left:75px" id="addToTable" class="btn btn-success" type="button">
+                <button onclick="location.href='@Url.Action("Detail", "Department")'" style="margin-left:75px" id="addToTable" class="btn btn-success" type="button">
                     <i class="icon wb-plus" aria-hidden="true"></i> @Localizer["NewRecord"]
                 </button>
             </div>
         </div>
         <div class="panel-body" style="margin-top:-25px">
             @*bootstrap4 *@
-            <table id="StaffsGrid" class="table table-striped table-bordered table-hover" style="width:100%">
+            <table id="DepartmentGrid" class="table table-striped table-bordered table-hover" style="width:100%">
                 <thead>
                     <tr>
                         <th></th>
                         <th></th>
                         <th>Id</th>
-                        <th>@Localizer["FirstName"]</th>
-                        <th>@Localizer["LastName"]</th>
-                        <th>@Localizer["Title"]</th>
                         <th>@Localizer["IsActive"]</th>
+                        <th>@Localizer["DepartmentName"]</th>
                     </tr>
                 </thead>
             </table>
@@ -225,8 +208,3 @@
     </div>
 </div>
 <!-- End Modal -->
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}

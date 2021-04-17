@@ -1,49 +1,52 @@
-﻿using System.Collections.Generic;
-using Business.Concrete;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Business.Abstract;
 using Core.Utilities.Results;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using UI.Models;
-using UI.Models.AgeGroup;
+using UI.Models.Authorization;
 
-namespace UI.Controllers.AgeGroup
+namespace UI.Controllers.Authorization
 {
-    public class AgeGroupController : BaseController
+    public class AuthorizationController : BaseController
     {
-        private IAgeGroupService _ageGroupService;
+        private IAuthorizationService _authorizationService;
 
-        public AgeGroupController(IStringLocalizerFactory factory, IStringLocalizer<AgeGroupController> localizer, ILogger<AgeGroupController> logger, IWebHostEnvironment env, IAgeGroupService ageGroupService) : base(factory, env)
+        public AuthorizationController(IStringLocalizerFactory factory, IStringLocalizer<AuthorizationController> localizer, ILogger<AuthorizationController> logger, IWebHostEnvironment env, IAuthorizationService authorizationService) : base(factory, env)
         {
-            _ageGroupService = ageGroupService;
+            _authorizationService = authorizationService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
         }
+
         public IActionResult Index()
         {
             BaseModel model = new BaseModel(Request);
             return View(model);
         }
         [HttpPost]
-        public JsonResult AgeGroupList()
+        public JsonResult AuthorizationList()
         {
-            AgeGroupList list = new AgeGroupList(_ageGroupService);
+            AuthorizationList list = new AuthorizationList(_authorizationService);
             return Json(list);
         }
 
         public ActionResult Detail(int id)
         {
-            var serviceDetail = _ageGroupService.GetById(id).Data;
+            var serviceDetail = _authorizationService.GetById(id).Data;
             if (serviceDetail == null || serviceDetail.Id < 1)
-                serviceDetail = new Entities.Concrete.AgeGroup();
+                serviceDetail = new Entities.Concrete.Authorization();
 
-            var model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
+            var model = new Models.Authorization.Authorization(Request, serviceDetail, _localizerShared);
             return View(model);
         }
 
@@ -51,10 +54,10 @@ namespace UI.Controllers.AgeGroup
         {
             if (id > 0)
             {
-                var serviceDetail = _ageGroupService.GetById(id).Data;
+                var serviceDetail = _authorizationService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
-                    Models.AgeGroup.AgeGroup model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
+                    Models.Authorization.Authorization model = new Models.Authorization.Authorization(Request, serviceDetail, _localizerShared);
                     return PartialView(model);
                 }
                 return null;
@@ -62,27 +65,27 @@ namespace UI.Controllers.AgeGroup
             return null;
         }
 
-        public JsonResult Delete(Models.AgeGroup.AgeGroup ageGroup)
+        public JsonResult Delete(Models.Authorization.Authorization authorization)
         {
-            #region  AgeGroup Session Control
+            #region  Authorization Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult( _localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
             }
             #endregion
-            
-            Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
+
+            Entities.Concrete.Authorization entity = authorization.GetBusinessModel();
             if (entity.Id > 0)
             {
-                var res = _ageGroupService.Delete(entity);
+                var res = _authorizationService.Delete(entity);
                 return Json(res);
             }
             return null;
         }
         [HttpPost]
-        public JsonResult Save(Models.AgeGroup.AgeGroup ageGroup)
+        public JsonResult Save(Models.Authorization.Authorization authorization)
         {
             #region  Staff Session Control
 
@@ -93,23 +96,13 @@ namespace UI.Controllers.AgeGroup
             }
             #endregion
 
-            if (ageGroup != null)
+            if (authorization != null)
             {
-                Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
+                Entities.Concrete.Authorization entity = authorization.GetBusinessModel();
                 if (entity == null)
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _ageGroupService.Add(entity);
-
-                if (ageGroup.EntityId > 0)
-                {
-                    result = _ageGroupService.Update(entity);
-                }
-                else
-                {
-                    result = _ageGroupService.Add(entity);
-                }
-
+                var result = _authorizationService.Save(entity);
                 if (result.Success == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
@@ -123,17 +116,17 @@ namespace UI.Controllers.AgeGroup
 
             return null;
         }
-
         public JsonResult ComboList()
         {
-            var ageGroupList = _ageGroupService.GetAll().Data;
+            var authorizationList = _authorizationService.GetAll().Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
-            foreach (Entities.Concrete.AgeGroup entity in ageGroupList)
+            foreach (Entities.Concrete.Authorization entity in authorizationList)
             {
-                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.Description);
+                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.AuthorizationName);
                 data.Add(model);
             }
             return Json(data);
         }
+
     }
 }

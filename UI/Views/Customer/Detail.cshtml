@@ -1,0 +1,139 @@
+﻿
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Customer.Customer
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("Detail", "Customer", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+
+    <div class="page-header page-header-bordered">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Home/Index">@Localizer["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Customer/Index">@Localizer["List"]</a></li>
+
+            @if (Model.EntityId == 0)
+            {
+                <li class="breadcrumb-item active">@Localizer["NewCustomer"]</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active">@Model.CustomerName </li>
+            }
+        </ol>
+    </div>
+    <div class="page-content">
+        <div class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions"></div>
+                <h3 class="panel-title">@Localizer["PageTitle"]</h3>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top:20px;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
+                                                        @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive" })
+                                                        @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Localizer["CustomerName"]
+                                                    @Html.TextBoxFor(x => x.CustomerName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-success" id="buttonSave" onclick="Save();">@Localizer["Save"]</button>
+                        </div>
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-danger" onclick="window.location.href='Index'">@Localizer["Cancel"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<link href="~/css/team.css" rel="stylesheet" />
+
+<style>
+    .highlight {
+        background: #e7e7e7;
+    }
+</style>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+    });
+    var newID = 0;
+
+        function Save(){
+            var url = "@Url.Action("Save", "Customer")";
+            $.post(url,
+                $("form").serialize(),
+                function(data) {
+                    if (data.result == false) {
+                        ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
+                    }
+                    if (data.result == true) {
+                        newID = data.obj;
+                        ShowSuccess('@SharedLocaLizer.GetLocalizedHtmlString("SaveMessage")');
+                    }
+                });
+            };
+
+            function ShowError(title, message) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: 'error',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    padding: '4em'
+                });
+            }
+
+            function ShowSuccess(title, message) {
+
+                Swal.fire({
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: 'success',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    padding: '4em'
+                }).then(function() {
+                    window.location.href = "@Url.Action("Index", "Customer")";
+                });
+            }
+
+</script>
