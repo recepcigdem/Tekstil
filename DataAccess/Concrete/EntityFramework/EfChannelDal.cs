@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfChannelDal : EfEntityRepositoryBase<Channel, TekstilContext>, IChannelDal
+    public class EfChannelDal : EfEntityRepositoryBase<Channel, TextileContext>, IChannelDal
     {
     }
 }

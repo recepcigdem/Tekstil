@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfProductGroupDal : EfEntityRepositoryBase<ProductGroup, TekstilContext>, IProductGroupDal
+    public class EfProductGroupDal : EfEntityRepositoryBase<ProductGroup, TextileContext>, IProductGroupDal
     {
     }
 }

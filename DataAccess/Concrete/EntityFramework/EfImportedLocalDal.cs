@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfImportedLocalDal : EfEntityRepositoryBase<ImportedLocal, TekstilContext>, IImportedLocalDal
+    public class EfImportedLocalDal : EfEntityRepositoryBase<ImportedLocal, TextileContext>, IImportedLocalDal
     {
     }
 }

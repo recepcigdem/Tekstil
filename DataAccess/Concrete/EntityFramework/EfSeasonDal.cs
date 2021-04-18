@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfSeasonDal : EfEntityRepositoryBase<Season,TekstilContext>, ISeasonDal
+    public class EfSeasonDal : EfEntityRepositoryBase<Season,TextileContext>, ISeasonDal
     {
     }
 }

@@ -32,6 +32,12 @@ namespace Business.Concrete
             return new SuccessDataResult<Email>(true, "Listed", _emailDal.Get(p => p.Id == emailId));
         }
 
+        public IDataResult<Email> GetByEmail(string email)
+        {
+            var result = _emailDal.Get(e => e.EmailAddress == email);
+            return new SuccessDataResult<Email>(true, "Listed", result);
+        }
+
         [SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(EmailValidator))]
         [TransactionScopeAspect]

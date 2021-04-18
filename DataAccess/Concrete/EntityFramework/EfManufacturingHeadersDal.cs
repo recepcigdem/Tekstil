@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfManufacturingHeadersDal : EfEntityRepositoryBase<ManufacturingHeaders, TekstilContext>, IManufacturingHeadersDal
+    public class EfManufacturingHeadersDal : EfEntityRepositoryBase<ManufacturingHeaders, TextileContext>, IManufacturingHeadersDal
     {
     }
 }

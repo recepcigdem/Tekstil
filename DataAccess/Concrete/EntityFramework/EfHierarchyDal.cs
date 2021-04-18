@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfHierarchyDal : EfEntityRepositoryBase<Hierarchy, TekstilContext>, IHierarchyDal
+    public class EfHierarchyDal : EfEntityRepositoryBase<Hierarchy, TextileContext>, IHierarchyDal
     {
     }
 }

@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfShippingMethodDal : EfEntityRepositoryBase<ShippingMethod, TekstilContext>, IShippingMethodDal
+    public class EfShippingMethodDal : EfEntityRepositoryBase<ShippingMethod, TextileContext>, IShippingMethodDal
     {
     }
 }

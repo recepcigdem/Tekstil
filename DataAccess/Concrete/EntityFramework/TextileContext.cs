@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Core.Entities.Concrete;
+using System.Threading.Tasks;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class TekstilContext : DbContext
+    public class TextileContext :DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=Db_Tekstil;Trusted_Connection=true");
+            optionsBuilder.UseSqlServer(@"Server=.;Database=Textile;Trusted_Connection=true");
+            //optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Textile;User ID=sa;Password=1234Recep;TrustServerCertificate=False");
+        }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasAnnotation("Relational:Collation", "Turkish_CS_AI");
         }
 
         public DbSet<AgeGroup> AgeGroups { get; set; }
@@ -31,7 +37,7 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Detail> Details { get; set; }
-        public DbSet<Email> Emails { get; set; }
+        public DbSet<Email> Email { get; set; }
         public DbSet<Fit> Fits { get; set; }
         public DbSet<FoldedProduct> FoldedProducts { get; set; }
         public DbSet<Form> Forms { get; set; }

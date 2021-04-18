@@ -35,6 +35,11 @@ namespace Business.Concrete
             return new SuccessDataResult<StaffEmail>(true, "Listed", _staffEmailDal.Get(p => p.Id == staffEmailId));
         }
 
+        public IDataResult<StaffEmail> GetByEmailId(int emailId)
+        {
+            return new SuccessDataResult<StaffEmail>(true, "Listed", _staffEmailDal.Get(p => p.EmailId == emailId));
+        }
+
         [SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(StaffEmailValidator))]
         [TransactionScopeAspect]

@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfPatternDal : EfEntityRepositoryBase<Pattern, TekstilContext>, IPatternDal
+    public class EfPatternDal : EfEntityRepositoryBase<Pattern, TextileContext>, IPatternDal
     {
     }
 }

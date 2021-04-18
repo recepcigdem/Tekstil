@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfStaffAuthorizationDal : EfEntityRepositoryBase<StaffAuthorization,TekstilContext>, IStaffAuthorizationDal
+    public class EfStaffAuthorizationDal : EfEntityRepositoryBase<StaffAuthorization,TextileContext>, IStaffAuthorizationDal
     {
     }
 }

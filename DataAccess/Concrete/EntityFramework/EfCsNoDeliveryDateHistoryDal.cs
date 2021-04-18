@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCsNoDeliveryDateHistoryDal : EfEntityRepositoryBase<CsNoDeliveryDateHistory, TekstilContext>, ICsNoDeliveryDateHistoryDal
+    public class EfCsNoDeliveryDateHistoryDal : EfEntityRepositoryBase<CsNoDeliveryDateHistory, TextileContext>, ICsNoDeliveryDateHistoryDal
     {
     }
 }

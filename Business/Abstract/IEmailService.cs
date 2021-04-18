@@ -12,6 +12,7 @@ namespace Business.Abstract
     {
         IDataResult<List<Email>> GetAll();
         IDataResult<Email> GetById(int emailId);
+        IDataResult<Email> GetByEmail(string email);
         IResult Add(Email email);
         IResult Update(Email email);
         IResult Delete(Email email);

@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfWidthDal : EfEntityRepositoryBase<Width, TekstilContext>, IWidthDal
+    public class EfWidthDal : EfEntityRepositoryBase<Width, TextileContext>, IWidthDal
     {
     }
 }

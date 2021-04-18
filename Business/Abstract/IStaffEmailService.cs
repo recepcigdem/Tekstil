@@ -13,6 +13,7 @@ namespace Business.Abstract
     {
         IDataResult<List<StaffEmail>> GetAll();
         IDataResult<StaffEmail> GetById(int staffEmailId);
+        IDataResult<StaffEmail> GetByEmailId(int emailId);
         IResult Add(StaffEmail staffEmail);
         IResult Update(StaffEmail staffEmail);
         IResult Delete(StaffEmail staffEmail);

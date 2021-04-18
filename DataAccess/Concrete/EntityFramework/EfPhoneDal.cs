@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfPhoneDal : EfEntityRepositoryBase<Phone, TekstilContext>, IPhoneDal
+    public class EfPhoneDal : EfEntityRepositoryBase<Phone, TextileContext>, IPhoneDal
     {
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using Business.Abstract;
 using Core.Utilities.Results;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +17,15 @@ namespace UI.Controllers.Login
 {
     public class LoginController : BaseController
     {
-        public LoginController(IStringLocalizerFactory factory, IStringLocalizer<LoginController> localizer, ILogger<LoginController> logger, IWebHostEnvironment env) : base(factory, env)
+        private IEmailService _emailService;
+        private IStaffEmailService _staffEmailService;
+        private IStaffService _staffService;
+
+        public LoginController(IStringLocalizerFactory factory, IStringLocalizer<LoginController> localizer, ILogger<LoginController> logger, IWebHostEnvironment env, IEmailService emailService, IStaffEmailService staffEmailService, IStaffService staffService) : base(factory, env)
         {
+            _emailService = emailService;
+            _staffEmailService = staffEmailService;
+            _staffService = staffService;
             _localizer = localizer;
             _logger = logger;
         }
@@ -49,44 +57,41 @@ namespace UI.Controllers.Login
             if (loginRequest.Password.Length < 6)
                 return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
 
-            loginRequest.Password = Core.Helper.StringHelper.Base64Encode(loginRequest.Password);
-            var token = TokenHelper.CreateLoginToken(loginRequest.UserName);
-            if (string.IsNullOrEmpty(token))
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.TokenNotFound")));
+            #region PasswordHash
 
-            using (WebClient client = new WebClient())
+            //Kullanıcının girdiği password encode ve salt işlemlerinden sonra hashlaniyor.
+            string salt = Core.Helper.PasswordHashSaltHelper.CreateSalt(4);
+            var encodePassword = Core.Helper.StringHelper.Base64Encode(loginRequest.Password) + salt;
+            var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(encodePassword);
+
+            #endregion
+
+            var dbEmail = _emailService.GetByEmail(loginRequest.UserName);
+            if (dbEmail.Success != true)
+                return BadRequest(dbEmail);
+           // return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
+
+            var dbStaffEmail = _staffEmailService.GetByEmailId(dbEmail.Data.Id);
+            if (dbStaffEmail.Success != true)
+                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
+
+            var dbStaff = _staffService.GetById(dbStaffEmail.Data.StaffId);
+            if (dbStaffEmail.Success != true)
+                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_StaffNotFound")));
+
+            if (dbStaff.Data.Password != hashPassword)
+                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
+
+            if (loginRequest.RememberMe == true)
             {
-                client.BaseAddress = Core.Helper.SettingsHelper.GetValue("Info", "BaseURL");
-                string url = "Login/login";
-                client.Headers.Add("AnonToken", token);
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                string data = JsonConvert.SerializeObject(loginRequest);
-                var response = client.UploadString(url, data);
-
-                // var result = JsonConvert.DeserializeObject(response);
-                Response result = JsonConvert.DeserializeObject<Response>(response);
-                if (!result.IsSuccess)
-                {
-                    ViewBag.Error = _localizer.GetString(result.ErrorMessage);
-
-                    return View("Index");
-                }
-                if (loginRequest.RememberMe == true)
-                {
-                    Response.Cookies.Append("user", loginRequest.UserName);
-                }
-                else
-                {
-                    Response.Cookies.Delete("user");
-                }
-                StaffSession resultStaffSession = JsonConvert.DeserializeObject<StaffSession>(result.ResultData.ToString());
-                Helpers.SessionHelper.SetStaff(Request, resultStaffSession);
+                Response.Cookies.Append("user", loginRequest.UserName);
+            }
+            else
+            {
+                Response.Cookies.Delete("user");
             }
 
-
             return RedirectToAction("Index", "Home");
-
-
         }
 
         public IActionResult ForgotPassword()
@@ -160,10 +165,10 @@ namespace UI.Controllers.Login
         {
             if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
                 return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongMail")));
-                
+
             if (password != confirmPassword)
                 return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_UserPasswordNotMatch")));
-            
+
 
             Models.Request.RequestPasswordChange request = new RequestPasswordChange() { Password = Core.Helper.StringHelper.Base64Encode(password), Token = Id };
             using (WebClient client = new WebClient())
@@ -185,7 +190,7 @@ namespace UI.Controllers.Login
                 }
 
             }
-            return Json(new SuccessResult( true, _localizer.GetString("Error_UserPasswordChanges")));
+            return Json(new SuccessResult(true, _localizer.GetString("Error_UserPasswordChanges")));
 
         }
     }

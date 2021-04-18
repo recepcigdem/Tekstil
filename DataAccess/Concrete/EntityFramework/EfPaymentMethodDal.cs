@@ -9,7 +9,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfPaymentMethodDal : EfEntityRepositoryBase<PaymentMethod, TekstilContext>, IPaymentMethodDal
+    public class EfPaymentMethodDal : EfEntityRepositoryBase<PaymentMethod, TextileContext>, IPaymentMethodDal
     {
     }
 }
