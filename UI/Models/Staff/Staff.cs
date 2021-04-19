@@ -26,7 +26,7 @@ namespace UI.Models.Staff
         public DateTime RegisterDate { get; set; }
         public bool IsLeaving { get; set; }
         public DateTime LeavingDate { get; set; }
-        public bool IsSendMail { get; set; }
+        public bool IsSendEmail { get; set; }
         public string Photo { get; set; }
 
         public string RootPath { get; set; }
@@ -92,7 +92,7 @@ namespace UI.Models.Staff
             RegisterDate = DateTime.UtcNow;
             IsLeaving = false;
             LeavingDate = DateTime.UtcNow;
-            IsSendMail = false;
+            IsSendEmail = false;
             Photo = string.Empty;
 
             RootPath = string.Empty;
@@ -158,7 +158,7 @@ namespace UI.Models.Staff
             RegisterDate = staff.RegisterDate;
             IsLeaving = staff.IsLeaving;
             LeavingDate = staff.LeavingDate;
-            IsSendMail = staff.IsSendMail;
+            IsSendEmail = staff.IsSendEmail;
             Photo = staff.Photo;
             IsSuperAdmin = staff.IsSuperAdmin;
             IsCompanyAdmin = staff.IsCompanyAdmin;
@@ -298,7 +298,7 @@ namespace UI.Models.Staff
             staff.RegisterDate = RegisterDate;
             staff.IsLeaving = IsLeaving;
             staff.LeavingDate = LeavingDate;
-            staff.IsSendMail = IsSendMail;
+            staff.IsSendEmail = IsSendEmail;
             staff.Photo = Photo;
             staff.IsSuperAdmin = IsSuperAdmin;
             staff.IsCompanyAdmin = IsCompanyAdmin;

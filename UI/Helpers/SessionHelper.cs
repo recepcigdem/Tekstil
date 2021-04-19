@@ -23,9 +23,9 @@ namespace UI.Helpers
             return value == null ? default(StaffSession) : JsonConvert.DeserializeObject<StaffSession>(value);
         }
 
-        static public void SetStaff(HttpRequest request, StaffSession user)
+        static public void SetStaff(HttpRequest request, StaffSession staff)
         {
-            request.HttpContext.Session.SetString("Staff", JsonConvert.SerializeObject(user));
+            request.HttpContext.Session.SetString("Staff", JsonConvert.SerializeObject(staff));
         }
 
         //static public List<Business.Role> GetRoles(HttpRequest request)

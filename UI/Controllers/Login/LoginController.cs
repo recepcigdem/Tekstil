@@ -60,20 +60,22 @@ namespace UI.Controllers.Login
             #region PasswordHash
 
             //Kullanıcının girdiği password encode ve salt işlemlerinden sonra hashlaniyor.
-            string salt = Core.Helper.PasswordHashSaltHelper.CreateSalt(4);
-            var encodePassword = Core.Helper.StringHelper.Base64Encode(loginRequest.Password) + salt;
+            //string salt = Core.Helper.PasswordHashSaltHelper.CreateSalt(4); 
+            var encodePassword =Core.Helper.StringHelper.Base64Encode(loginRequest.Password) ;
             var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(encodePassword);
 
             #endregion
 
             var dbEmail = _emailService.GetByEmail(loginRequest.UserName);
             if (dbEmail.Success != true)
-                return BadRequest(dbEmail);
-           // return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
+               return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
 
             var dbStaffEmail = _staffEmailService.GetByEmailId(dbEmail.Data.Id);
             if (dbStaffEmail.Success != true)
                 return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
+
+            if (dbStaffEmail.Data.IsMain == false)
+                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailIsNotIsMain")));
 
             var dbStaff = _staffService.GetById(dbStaffEmail.Data.StaffId);
             if (dbStaffEmail.Success != true)
@@ -90,6 +92,19 @@ namespace UI.Controllers.Login
             {
                 Response.Cookies.Delete("user");
             }
+
+            #region Session
+
+            StaffSession staffSession = new StaffSession();
+            staffSession.StaffId = dbStaff.Data.Id;
+            staffSession.FirstName = dbStaff.Data.FirstName;
+            staffSession.LastName = dbStaff.Data.LastName;
+            staffSession.IsCompanyAdmin = dbStaff.Data.IsCompanyAdmin;
+            staffSession.IsSuperAdmin = dbStaff.Data.IsSuperAdmin;
+
+            SessionHelper.SetStaff(Request, staffSession); 
+
+            #endregion
 
             return RedirectToAction("Index", "Home");
         }

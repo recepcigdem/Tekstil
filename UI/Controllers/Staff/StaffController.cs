@@ -160,7 +160,7 @@ namespace UI.Controllers.Staff
                     RegisterDate = DateTime.Now,
                     IsLeaving = staff.IsLeaving,
                     LeavingDate = staff.LeavingDate,
-                    IsSendMail = staff.IsSendMail,
+                    IsSendMail = staff.IsSendEmail,
                     Photo = staff.Photo,
                     IsSuperAdmin = staff.IsSuperAdmin,
                     IsCompanyAdmin = staff.IsCompanyAdmin

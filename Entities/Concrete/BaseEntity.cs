@@ -19,15 +19,15 @@ namespace Entities.Concrete
         [Column("dateLastModified")]
         public DateTime DateLastModified { get; set; }
 
-        public BaseEntity()
-        {
-            Id = 0;
-            IsDeleted = false;
-            CreatedBy = 0;
-            DateCreated = DateTime.UtcNow;
-            LastModifiedBy = 0;
-            DateLastModified = DateTime.UtcNow;
-        }
+        //public BaseEntity()
+        //{
+        //    Id = 0;
+        //    IsDeleted = false;
+        //    CreatedBy = 0;
+        //    DateCreated = DateTime.UtcNow;
+        //    LastModifiedBy = 0;
+        //    DateLastModified = DateTime.UtcNow;
+        //}
     }
 
 }

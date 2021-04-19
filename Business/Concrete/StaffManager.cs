@@ -35,7 +35,11 @@ namespace Business.Concrete
 
         public IDataResult<Staff> GetById(int staffId)
         {
-            return new SuccessDataResult<Staff>(true, "Listed", _staffDal.Get(p => p.Id == staffId));
+            var result = _staffDal.Get(s => s.Id == staffId);
+            if (result==null)
+                return new ErrorDataResult<Staff>("StaffNotFound");
+            
+            return new SuccessDataResult<Staff>(true, "Listed", result );
         }
 
         [SecuredOperation("admin,staff.add")]

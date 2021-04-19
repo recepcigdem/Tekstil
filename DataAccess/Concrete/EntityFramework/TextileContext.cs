@@ -66,7 +66,7 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<ShipmentMethod> ShipmentMethods { get; set; }
         public DbSet<ShippingMethod> ShippingMethods { get; set; }
         public DbSet<Size> Sizes { get; set; }
-        public DbSet<Staff> Staffs { get; set; }
+        public DbSet<Staff> Staff { get; set; }
         public DbSet<StaffAuthorization> StaffAuthorizations { get; set; }
         public DbSet<StaffEmail> StaffEmails { get; set; }
         public DbSet<StaffPhone> StaffPhones { get; set; }

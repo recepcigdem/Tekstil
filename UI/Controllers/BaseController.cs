@@ -27,15 +27,15 @@ namespace UI.Controllers
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
             _env = env;
         }
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            string controllerName = context.RouteData.Values["controller"].ToString();
-            string actionName = context.RouteData.Values["action"].ToString();
-            string ipAddress = context.HttpContext.Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            string method = context.HttpContext.Request.Method;
-            string staffId = "0";
-            bool UseParameter = Convert.ToBoolean(Core.Helper.SettingsHelper.GetValue("Log", "UseParameter"));
-            StaffSession resultStaffSession = Helpers.SessionHelper.GetStaff(context.HttpContext.Request);
+        //public override void OnActionExecuting(ActionExecutingContext context)
+        //{
+        //    string controllerName = context.RouteData.Values["controller"].ToString();
+        //    string actionName = context.RouteData.Values["action"].ToString();
+        //    string ipAddress = context.HttpContext.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+        //    string method = context.HttpContext.Request.Method;
+        //    string staffId = "0";
+        //    bool UseParameter = Convert.ToBoolean(Core.Helper.SettingsHelper.GetValue("Log", "UseParameter"));
+        //    StaffSession resultStaffSession = Helpers.SessionHelper.GetStaff(context.HttpContext.Request);
             //if (resultStaffSession != null)
             //{
             //    staffId = resultStaffSession.StaffId.ToString();
@@ -52,6 +52,6 @@ namespace UI.Controllers
 
             //Helpers.LogHelper.AddLog("StaffId=" + staffId + " IpAddress=" + ipAddress + " Controller=" + controllerName + " Action=" + actionName + " Method=" + method, param);
 
-        }
+        //}
     }
 }
