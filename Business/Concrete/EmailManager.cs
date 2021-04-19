@@ -108,7 +108,7 @@ namespace Business.Concrete
             {
                 Add(email);
             }
-            return new SuccessResult(true,"Updated");
+            return new SuccessResult(true,"SAved");
         }
     }
 }

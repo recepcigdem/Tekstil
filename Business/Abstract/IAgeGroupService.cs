@@ -14,6 +14,7 @@ namespace Business.Abstract
         IDataResult<AgeGroup> GetById(int ageGroupId);
         IDataResult<AgeGroup> Add(AgeGroup ageGroup);
         IDataResult<AgeGroup> Update(AgeGroup ageGroup);
+        IDataResult<AgeGroup> Save(AgeGroup ageGroup);
         IResult Delete(AgeGroup ageGroup);
     }
 }

@@ -86,11 +86,11 @@ namespace UI.Controllers.AgeGroup
         {
             #region  Staff Session Control
 
-            var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
-            if (!sessionHelper.IsSuccess)
-            {
-                return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
-            }
+            //var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
+            //if (!sessionHelper.IsSuccess)
+            //{
+            //    return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
+            //}
             #endregion
 
             if (ageGroup != null)
@@ -99,17 +99,7 @@ namespace UI.Controllers.AgeGroup
                 if (entity == null)
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _ageGroupService.Add(entity);
-
-                if (ageGroup.EntityId > 0)
-                {
-                    result = _ageGroupService.Update(entity);
-                }
-                else
-                {
-                    result = _ageGroupService.Add(entity);
-                }
-
+                var result = _ageGroupService.Save(entity);
                 if (result.Success == false)
                 {
                     result.Message = _localizer.GetString(result.Message);

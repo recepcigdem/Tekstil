@@ -34,7 +34,7 @@ namespace Business.Concrete
             return new SuccessDataResult<AgeGroup>(true, "Listed", _ageGroupDal.Get(p => p.Id == ageGroupId));
         }
 
-        [SecuredOperation("admin,definition.add")]
+        //[SecuredOperation("admin,definition.add")]
          //[LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
@@ -49,7 +49,7 @@ namespace Business.Concrete
 
         }
 
-        [SecuredOperation("admin,definition.updated")]
+        //[SecuredOperation("admin,definition.updated")]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
         public IDataResult<AgeGroup> Update(AgeGroup ageGroup)
@@ -60,6 +60,21 @@ namespace Business.Concrete
 
             return new SuccessDataResult<AgeGroup>(true, "Updated", _ageGroupDal.Update(ageGroup));
 
+        }
+        //[SecuredOperation("admin,definition.updated")]
+        [ValidationAspect(typeof(AgeGroupValidator))]
+        [TransactionScopeAspect]
+        public IDataResult<AgeGroup> Save(AgeGroup ageGroup)
+        {
+            if (ageGroup.Id>0)
+            {
+                Update(ageGroup);
+            }
+            else
+            {
+                Add(ageGroup);
+            }
+            return new SuccessDataResult<AgeGroup>(true, "Saved" , ageGroup);
         }
 
         [SecuredOperation("admin,definition.deleted")]

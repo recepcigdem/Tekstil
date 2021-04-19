@@ -7,7 +7,7 @@
 @inject UI.Utils.LocalizationService SharedLocalizer
  
 
-@if (Context.Session.GetString("User") == null)
+@if (Context.Session.GetString("Staff") == null)
 {
 <script>
       location.href='@Url.Action("Index", "Login")'

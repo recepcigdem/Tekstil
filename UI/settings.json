@@ -2,7 +2,12 @@
 
   "Info": {
     "ProjectUrl": "https://localhost:44354/",
-    "BaseURL": "https://localhost:44354/"
+    "BaseURL": "https://localhost:44354/",
+    "TokenExpiryTime": "60",
+    "LogoURL": "wwwroot/assets/images/logo.png",
+    "CompanyName": "RC Yazýlým",
+    "AddressLine1": "Ümraniye",
+    "AddressLine2": "Ýstanbul/TÜRKÝYE"
   },
   "Log": {
     "UseParameter": "false"
@@ -11,6 +16,16 @@
     "ApplicationName": "Textile",
     "TokenExpiryTime": "60",
     "ConfigSecret": "MXEydzNlMVEyVzNF"
+  },
+  "Mailingtemplate": {
+    "ForgotPassword": "forgotpasswordtemplate"
+  },
+  "Smtp": {
+    "SmtpServer": "smtp.gmail.com",
+    "SmtpSendPort": "587",
+    "SmtpUser": "recepcigdem24@gmail.com",
+    "SmtpPassword": "951456rcp",
+    "SmtpFrom": "recepcigdem24@gmail.com"
   }
 
 }
