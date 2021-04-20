@@ -101,7 +101,7 @@ namespace UI.Controllers.Staff
             Entities.Concrete.Staff entity = staff.GetBusinessModel();
             if (entity.Id > 0)
             {
-                var res = _staffService.DeleteAll(entity.Id);
+                var res = _staffService.Delete(entity);
                 res.Message = _localizer.GetString(res.Message);
                 return Json(res);
             }

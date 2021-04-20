@@ -87,14 +87,7 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
-        [SecuredOperation("admin,staff.deleted")]
-        [TransactionScopeAspect]
-        public IResult DeleteByEmailId(int emailId)
-        {
-            _emailDal.DeleteByFilter(e=>e.Id==emailId);
-
-            return new SuccessResult(true, "Deleted");
-        }
+        
         [SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(EmailValidator))]
         [TransactionScopeAspect]

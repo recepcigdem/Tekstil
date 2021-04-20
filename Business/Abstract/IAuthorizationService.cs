@@ -15,7 +15,6 @@ namespace Business.Abstract
         IResult Add(Authorization authorization);
         IResult Update(Authorization authorization);
         IResult Delete(Authorization authorization);
-        IResult DeleteByAuthorizationId(int authorizationId);
         IDataResult<Authorization> Save(Authorization authorization);
     }
 }

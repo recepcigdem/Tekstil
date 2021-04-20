@@ -66,6 +66,10 @@ namespace UI.Controllers.Login
 
             #endregion
 
+            var token = TokenHelper.CreateLoginToken(loginRequest.UserName);
+            if (string.IsNullOrEmpty(token))
+                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_TokenNotFound")));
+
             var dbEmail = _emailService.GetByEmail(loginRequest.UserName);
             if (dbEmail.Success != true)
                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
@@ -99,6 +103,7 @@ namespace UI.Controllers.Login
             staffSession.StaffId = dbStaff.Data.Id;
             staffSession.FirstName = dbStaff.Data.FirstName;
             staffSession.LastName = dbStaff.Data.LastName;
+            staffSession.Token = token;
             staffSession.IsCompanyAdmin = dbStaff.Data.IsCompanyAdmin;
             staffSession.IsSuperAdmin = dbStaff.Data.IsSuperAdmin;
 

@@ -81,13 +81,6 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
-        [SecuredOperation("admin,staff.deleted")]
-        [TransactionScopeAspect]
-        public IResult DeleteByAuthorizationId(int authorizationId)
-        {
-            _authorizationDal.DeleteByFilter(a => a.Id == authorizationId);
-            return new SuccessResult(true, "Deleted");
-        }
         [SecuredOperation("admin")]
         [ValidationAspect(typeof(AuthorizationValidator))]
         [TransactionScopeAspect]

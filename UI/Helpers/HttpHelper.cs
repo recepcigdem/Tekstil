@@ -42,15 +42,15 @@ namespace UI.Helpers
                 return new Response(false, "200", "Error_StaffNotFound", string.Empty);
 
             }
-            string url = "token/verifytoken";
+            //string url = "token/verifytoken";
 
-            var tokenResult = Helpers.HttpHelper.GetDataFromAPI(url, resultUserSession.Token,
-                new Entities.Concrete.Staff() { Id = resultUserSession.StaffId });
-            if (!tokenResult.IsSuccess)
-            {
-                return new Response(false, "200", tokenResult.ErrorMessage, string.Empty);
+            //var tokenResult = Helpers.HttpHelper.GetDataFromAPI(url, resultUserSession.Token,
+            //    new Entities.Concrete.Staff() { Id = resultUserSession.StaffId });
+            //if (!tokenResult.IsSuccess)
+            //{
+            //    return new Response(false, "200", tokenResult.ErrorMessage, string.Empty);
 
-            }
+            //}
             return new Response(true, "200", string.Empty, string.Empty);
         }
 

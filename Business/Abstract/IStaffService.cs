@@ -16,7 +16,6 @@ namespace Business.Abstract
         IResult Add(Staff staff);
         IResult Update(Staff staff);
         IResult Delete(Staff staff);
-        IResult DeleteAll(int staffId);
         IDataResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations);
     }
 }

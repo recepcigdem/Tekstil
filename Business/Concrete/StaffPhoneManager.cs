@@ -84,20 +84,7 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
-        [SecuredOperation("admin,staff.deleted")]
-        [TransactionScopeAspect]
-        public IResult DeleteByStaffIdWithPhone(int staffId)
-        {
-            var result = _staffPhoneDal.Get(sp => sp.StaffId == staffId);
-            if (result==null)
-                new ErrorResult(false, "PhoneNotFound");
-
-            _staffPhoneDal.DeleteByFilter(sp=>sp.StaffId==staffId);
-
-            _phoneService.DeleteByPhoneId(result.PhoneId);
-
-            return new SuccessResult(true, "Deleted");
-        }
+      
         [SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(StaffPhoneValidator))]
         [TransactionScopeAspect]

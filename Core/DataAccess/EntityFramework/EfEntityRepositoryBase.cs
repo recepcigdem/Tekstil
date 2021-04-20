@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.DataAccess.EntityFramework
 {
-    public class EfEntityRepositoryBase<TEntity, TContext> :IEntityRepository<TEntity>
+    public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity>
         where TEntity : class, IEntity, new()
-        where TContext : DbContext,new() 
+        where TContext : DbContext, new()
     {
         public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
@@ -27,7 +27,7 @@ namespace Core.DataAccess.EntityFramework
         {
             using (TContext context = new TContext())
             {
-                return context.Set<TEntity>().SingleOrDefault(filter);
+                return context.Set<TEntity>().FirstOrDefault(filter);
 
             }
         }
@@ -40,7 +40,7 @@ namespace Core.DataAccess.EntityFramework
                 addedEntity.State = EntityState.Added;
                 context.SaveChanges();
 
-                return context.Set<TEntity>().SingleOrDefault();
+                return context.Set<TEntity>().FirstOrDefault();
             }
         }
 
@@ -52,7 +52,7 @@ namespace Core.DataAccess.EntityFramework
                 updatedEntity.State = EntityState.Modified;
                 context.SaveChanges();
 
-                return context.Set<TEntity>().SingleOrDefault();
+                return context.Set<TEntity>().FirstOrDefault();
             }
         }
 
@@ -62,16 +62,7 @@ namespace Core.DataAccess.EntityFramework
             {
                 var deletedEntity = context.Entry(entity);
                 deletedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
 
-            }
-        }
-        public void DeleteByFilter(Expression<Func<TEntity, bool>> filter)
-        {
-            using (TContext context = new TContext())
-            {
-                var deletedEntity = context.Entry(filter);
-                deletedEntity.State = EntityState.Deleted;
                 context.SaveChanges();
 
             }

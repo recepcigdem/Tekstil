@@ -831,7 +831,7 @@ FastClick.prototype.onMouse = function(event) {
 		return true;
 	}
 
-	// Programmatically generated events targeting a specific element should be permitted
+	// Textileally generated events targeting a specific element should be permitted
 	if (!event.cancelable) {
 		return true;
 	}

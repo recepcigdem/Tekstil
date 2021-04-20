@@ -1,5 +1,18 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@*@model Textile.UI.Models.BaseModel*@
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+
 @{
+    ViewData["Title"] = @Localizer["PageTitle"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
+
+<div class="page-content">
+    <div class="text-center">
+        <h1 class="display-4">@Localizer["Welcome"]</h1>
+    </div>
+</div>

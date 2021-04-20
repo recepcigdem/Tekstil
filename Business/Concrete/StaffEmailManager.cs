@@ -89,20 +89,6 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
-        [SecuredOperation("admin,staff.deleted")]
-        [TransactionScopeAspect]
-        public IResult DeleteByStaffIdWithEmail(int staffId)
-        {
-            var result = _staffEmailDal.Get(se => se.StaffId == staffId);
-            if (result == null)
-                new ErrorResult("EmailNotFound");
-
-            _staffEmailDal.DeleteByFilter(sp => sp.StaffId == staffId);
-
-            _emailService.DeleteByEmailId(result.EmailId);
-
-            return new SuccessResult(true, "Deleted");
-        }
 
         [SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(StaffEmailValidator))]

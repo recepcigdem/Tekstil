@@ -17,7 +17,6 @@ namespace Business.Abstract
         IResult Add(StaffEmail staffEmail);
         IResult Update(StaffEmail staffEmail);
         IResult Delete(StaffEmail staffEmail);
-        IResult DeleteByStaffIdWithEmail(int staffId);
         IResult Save(StaffEmailDto staffEmailDto);
     }
 }

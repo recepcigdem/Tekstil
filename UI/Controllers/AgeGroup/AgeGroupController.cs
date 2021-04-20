@@ -62,19 +62,21 @@ namespace UI.Controllers.AgeGroup
             return null;
         }
 
-        public JsonResult Delete(Models.AgeGroup.AgeGroup ageGroup)
+        public JsonResult Delete(int Id)
         {
             #region  AgeGroup Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult( _localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorResult(_localizer.GetString("Error_StaffNotFound")));
             }
             #endregion
-            
-            Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
-            if (entity.Id > 0)
+
+            Entities.Concrete.AgeGroup entity = new Entities.Concrete.AgeGroup();
+            entity.Id = Id;
+
+            if (Id > 0)
             {
                 var res = _ageGroupService.Delete(entity);
                 return Json(res);
@@ -86,11 +88,11 @@ namespace UI.Controllers.AgeGroup
         {
             #region  Staff Session Control
 
-            //var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
-            //if (!sessionHelper.IsSuccess)
-            //{
-            //    return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
-            //}
+            var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
+            if (!sessionHelper.IsSuccess)
+            {
+                return Json(new ErrorResult(_localizer.GetString("Error_StaffNotFound")));
+            }
             #endregion
 
             if (ageGroup != null)

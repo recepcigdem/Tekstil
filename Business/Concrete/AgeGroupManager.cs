@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Business.Abstract;
 using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -35,7 +37,7 @@ namespace Business.Concrete
         }
 
         //[SecuredOperation("admin,definition.add")]
-         //[LogAspect(typeof(FileLogger))]
+        [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
         public IDataResult<AgeGroup> Add(AgeGroup ageGroup)
@@ -45,7 +47,7 @@ namespace Business.Concrete
             if (result != null)
                 return new ErrorDataResult<AgeGroup>("ControlErrorAdded");
 
-            return new SuccessDataResult<AgeGroup>(true,"Added", _ageGroupDal.Add(ageGroup));
+            return new SuccessDataResult<AgeGroup>(true, "Added", _ageGroupDal.Add(ageGroup));
 
         }
 
@@ -66,7 +68,7 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IDataResult<AgeGroup> Save(AgeGroup ageGroup)
         {
-            if (ageGroup.Id>0)
+            if (ageGroup.Id > 0)
             {
                 Update(ageGroup);
             }
@@ -74,10 +76,10 @@ namespace Business.Concrete
             {
                 Add(ageGroup);
             }
-            return new SuccessDataResult<AgeGroup>(true, "Saved" , ageGroup);
+            return new SuccessDataResult<AgeGroup>(true, "Saved", ageGroup);
         }
 
-        [SecuredOperation("admin,definition.deleted")]
+        //[SecuredOperation("admin,definition.deleted")]
         [TransactionScopeAspect]
         public IResult Delete(AgeGroup ageGroup)
         {
