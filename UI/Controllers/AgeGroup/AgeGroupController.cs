@@ -40,7 +40,7 @@ namespace UI.Controllers.AgeGroup
         public ActionResult Detail(int id)
         {
             var serviceDetail = _ageGroupService.GetById(id).Data;
-            if (serviceDetail == null || serviceDetail.Id < 1)
+            if (serviceDetail == null )
                 serviceDetail = new Entities.Concrete.AgeGroup();
 
             var model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
@@ -102,14 +102,14 @@ namespace UI.Controllers.AgeGroup
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
                 var result = _ageGroupService.Save(entity);
-                if (result.Success == false)
+                if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
                     return Json(result);
                 }
 
 
-                result.Data = entity;
+                result.Obj = entity.Id;
                 return Json(result);
             }
 

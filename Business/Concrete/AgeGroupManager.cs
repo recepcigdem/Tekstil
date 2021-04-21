@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Business.Abstract;
@@ -26,47 +27,47 @@ namespace Business.Concrete
             _ageGroupDal = ageGroupDal;
         }
 
-        public IDataResult<List<AgeGroup>> GetAll()
+        public IServiceResult<List<AgeGroup>> GetAll()
         {
-            return new SuccessDataResult<List<AgeGroup>>(true, "Listed", _ageGroupDal.GetAll());
+            return new SuccessServiceResult<List<AgeGroup>>(true, "Listed", _ageGroupDal.GetAll());
         }
 
-        public IDataResult<AgeGroup> GetById(int ageGroupId)
+        public IServiceResult<AgeGroup> GetById(int ageGroupId)
         {
-            return new SuccessDataResult<AgeGroup>(true, "Listed", _ageGroupDal.Get(p => p.Id == ageGroupId));
+            return new SuccessServiceResult<AgeGroup>(true, "Listed", _ageGroupDal.Get(p => p.Id == ageGroupId));
         }
 
         //[SecuredOperation("admin,definition.add")]
         [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
-        public IDataResult<AgeGroup> Add(AgeGroup ageGroup)
+        public IServiceResult<AgeGroup> Add(AgeGroup ageGroup)
         {
             IResult result = BusinessRules.Run(CheckIfCodeExists(ageGroup), CheckIfShortDescriptionExists(ageGroup), CheckIfDescriptionExists(ageGroup));
 
             if (result != null)
-                return new ErrorDataResult<AgeGroup>("ControlErrorAdded");
+                return new ErrorServiceResult<AgeGroup>(false,"ControlErrorAdded");
 
-            return new SuccessDataResult<AgeGroup>(true, "Added", _ageGroupDal.Add(ageGroup));
+            return new SuccessServiceResult<AgeGroup>(true, "Added", _ageGroupDal.Add(ageGroup));
 
         }
 
         //[SecuredOperation("admin,definition.updated")]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
-        public IDataResult<AgeGroup> Update(AgeGroup ageGroup)
+        public IServiceResult<AgeGroup> Update(AgeGroup ageGroup)
         {
             IResult result = BusinessRules.Run(CheckIfCodeExists(ageGroup), CheckIfShortDescriptionExists(ageGroup), CheckIfDescriptionExists(ageGroup));
             if (result != null)
-                return new ErrorDataResult<AgeGroup>("ControlErrorUpdated");
+                return new ErrorServiceResult<AgeGroup>(false,"ControlErrorUpdated");
 
-            return new SuccessDataResult<AgeGroup>(true, "Updated", _ageGroupDal.Update(ageGroup));
+            return new SuccessServiceResult<AgeGroup>(true, "Updated", _ageGroupDal.Update(ageGroup));
 
         }
         //[SecuredOperation("admin,definition.updated")]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
-        public IDataResult<AgeGroup> Save(AgeGroup ageGroup)
+        public IServiceResult<AgeGroup> Save(AgeGroup ageGroup)
         {
             if (ageGroup.Id > 0)
             {
@@ -76,16 +77,16 @@ namespace Business.Concrete
             {
                 Add(ageGroup);
             }
-            return new SuccessDataResult<AgeGroup>(true, "Saved", ageGroup);
+            return new SuccessServiceResult<AgeGroup>(true,"Saved",ageGroup);
         }
 
         //[SecuredOperation("admin,definition.deleted")]
         [TransactionScopeAspect]
-        public IResult Delete(AgeGroup ageGroup)
+        public IServiceResult<AgeGroup> Delete(AgeGroup ageGroup)
         {
             _ageGroupDal.Delete(ageGroup);
 
-            return new SuccessResult("Deleted");
+            return new SuccessServiceResult<AgeGroup>(true, "Delated");
         }
 
         private IResult CheckIfDescriptionExists(AgeGroup ageGroup)

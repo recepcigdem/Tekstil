@@ -1,5 +1,6 @@
 ﻿using System;
 using Castle.DynamicProxy;
+using Core.Utilities.Results;
 
 namespace Core.Utilities.Interceptors
 {
@@ -21,7 +22,8 @@ namespace Core.Utilities.Interceptors
             {
                 isSuccess = false;
                 OnException(invocation, e);
-                throw;
+                //throw;
+                new ErrorResult(e.Message);
             }
             finally
             {

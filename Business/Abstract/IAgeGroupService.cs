@@ -10,11 +10,11 @@ namespace Business.Abstract
 {
     public interface IAgeGroupService
     {
-        IDataResult<List<AgeGroup>> GetAll();
-        IDataResult<AgeGroup> GetById(int ageGroupId);
-        IDataResult<AgeGroup> Add(AgeGroup ageGroup);
-        IDataResult<AgeGroup> Update(AgeGroup ageGroup);
-        IDataResult<AgeGroup> Save(AgeGroup ageGroup);
-        IResult Delete(AgeGroup ageGroup);
+        IServiceResult<List<AgeGroup>> GetAll();
+        IServiceResult<AgeGroup> GetById(int ageGroupId);
+        IServiceResult<AgeGroup> Add(AgeGroup ageGroup);
+        IServiceResult<AgeGroup> Update(AgeGroup ageGroup);
+        IServiceResult<AgeGroup> Save(AgeGroup ageGroup);
+        IServiceResult<AgeGroup> Delete(AgeGroup ageGroup);
     }
 }

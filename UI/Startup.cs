@@ -35,7 +35,10 @@ namespace UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
+            services.AddDependencyResolvers(new ICoreModule[]
+            {
+                new CoreModule(),
+            });
             //services.AddSingleton<IAgeGroupService, AgeGroupManager>();
             //services.AddSingleton<IAgeGroupDal, EfAgeGroupDal>();
             //services.AddControllersWithViews();
@@ -60,10 +63,7 @@ namespace UI
             services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
             services.AddSession();
 
-            services.AddDependencyResolvers(new ICoreModule[]
-            {
-                new CoreModule(),
-            });
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,7 +79,7 @@ namespace UI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.ConfigureCustomExceptionMiddleware();
+            //app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
@@ -97,7 +97,7 @@ namespace UI
             };
 
             localizationOptions.RequestCultureProviders.Clear();
-            localizationOptions.RequestCultureProviders.Add(new Utils.CustomCultureProvider());
+            localizationOptions.RequestCultureProviders.Add(new CustomCultureProvider());
             app.UseRequestLocalization(localizationOptions);
 
             app.UseRouting();

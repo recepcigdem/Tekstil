@@ -9,8 +9,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link href="~/css/customerDetail.css" rel="stylesheet" />
-<link href="~/js/panel-structure.js" rel="stylesheet" />
 
 @using (Html.BeginForm("Detail", "AgeGroup", FormMethod.Post, new { id = "formDetail" }))
 {
@@ -48,22 +46,25 @@
                                 <div class="row">
                                     <div class="col-md-8" style="margin-top:20px;">
                                         <div class="row">
-                                            <div class="col-md-3">
+
+                                            <div class="col-md-4">
                                                 <div class="form-group">
-                                                    @Html.RadioButtonFor(x => x.IsActive, @Model.IsActive, new { @class = "form-control", @type = "radio", @name = "IsActive", @id = "radioIsActive" })
-                                                    @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                                                    <div class="checkbox-custom checkbox-inline checkbox-success">
+                                                        @Localizer["isActive"]
+                                                        @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive" })
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4" id="divCardCode">
                                                 <div class="form-group">
                                                     @Localizer["CardCode"]
-                                                    @Html.TextBoxFor(x => x.CardCode, new { @class = "form-control numericField" })
+                                                    @Html.TextBoxFor(x => x.CardCode, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                             <div class="col-md-4" id="divShortDescription">
                                                 <div class="form-group">
                                                     @Localizer["ShortDescription"]
-                                                    @Html.TextBoxFor(x => x.ShortDescription, new { @class = "form-control numericField" })
+                                                    @Html.TextBoxFor(x => x.ShortDescription, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                             <div class="col-md-12" id="divDescription">
@@ -115,7 +116,8 @@
             if (data.result == true)
             {
                 newID = data.obj;
-                ShowSuccess('@SharedLocaLizer.GetLocalizedHtmlString("SaveMessage")');
+                console.log(newID);
+                ShowSuccess('@SharedLocaLizer.GetLocalizedHtmlString("SaveMessage")')
               }
           });
     }
@@ -143,7 +145,7 @@
             showConfirmButton: true,
             padding: '4em'
         }).then(function() {
-            window.location.href = "@Url.Action("Detail", "AgeGroup")?Id=" + newID;
+            window.location.href = "@Url.Action("Index", "AgeGroup")";
         });
     }
 </script>
