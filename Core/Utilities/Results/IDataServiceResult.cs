@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace Core.Utilities.Results
 {
-    public interface IServiceResult
+    public interface IDataServiceResult<T> : IServiceResult
     {
-        public bool Result { get; set; }
-
-        public string Message { get; set; }
-
-        public object Obj { get; set; }
-
+        public T Data { get; set; }
     }
 }

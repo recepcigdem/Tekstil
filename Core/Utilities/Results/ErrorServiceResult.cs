@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Utilities.Results
 {
-    public class ErrorServiceResult<T> : ServiceResult<T>
+    public class ErrorServiceResult : ServiceResult
     {
         public ErrorServiceResult()
         {
@@ -17,7 +17,7 @@ namespace Core.Utilities.Results
             this.Result = result;
             this.Message = message;
             this.Obj = (object)null;
-            this.Data = default(T);
+           
         }
     }
 }

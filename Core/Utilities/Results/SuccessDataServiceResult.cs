@@ -6,28 +6,24 @@ using System.Threading.Tasks;
 
 namespace Core.Utilities.Results
 {
-    public class ServiceResult :IServiceResult
+    public class SuccessDataServiceResult<T> : DataServiceResult<T>
     {
-      
-        public ServiceResult()
+        public SuccessDataServiceResult()
         {
             this.Result = false;
-            this.Message = string.Empty;
-            this.Obj = (object)null;
         }
-
-        public ServiceResult(bool result, string message)
+        public SuccessDataServiceResult(bool result, string message)
         {
             this.Result = result;
             this.Message = message;
             this.Obj = (object)null;
-           
         }
-      
-
-        public bool Result { get; set; }
-        public string Message { get; set; }
-        public object Obj { get; set; }
-        
+        public SuccessDataServiceResult(T data, bool result, string message)
+        {
+            this.Result = result;
+            this.Message = message;
+            this.Obj = (object)null;
+            this.Data = data;
+        }
     }
 }

@@ -27,47 +27,64 @@ namespace Business.Concrete
             _ageGroupDal = ageGroupDal;
         }
 
-        public IServiceResult<List<AgeGroup>> GetAll()
+        public IDataServiceResult<List<AgeGroup>> GetAll()
         {
-            return new SuccessServiceResult<List<AgeGroup>>(true, "Listed", _ageGroupDal.GetAll());
+            var dbResult = _ageGroupDal.GetAll();
+
+            return new SuccessDataServiceResult<List<AgeGroup>>(dbResult,true, "Listed");
         }
 
-        public IServiceResult<AgeGroup> GetById(int ageGroupId)
+        public IDataServiceResult<AgeGroup> GetById(int ageGroupId)
         {
-            return new SuccessServiceResult<AgeGroup>(true, "Listed", _ageGroupDal.Get(p => p.Id == ageGroupId));
+            var dbResult = _ageGroupDal.Get(p => p.Id == ageGroupId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<AgeGroup>( false, "SystemError");
+
+            return new SuccessDataServiceResult<AgeGroup>(dbResult, true, "Listed" );
         }
 
         //[SecuredOperation("admin,definition.add")]
         [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
-        public IServiceResult<AgeGroup> Add(AgeGroup ageGroup)
+        public IServiceResult Add(AgeGroup ageGroup)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(ageGroup), CheckIfShortDescriptionExists(ageGroup), CheckIfDescriptionExists(ageGroup));
+            //IServiceResult result = BusinessRules.Run(CheckIfCodeExists(ageGroup), CheckIfShortDescriptionExists(ageGroup), CheckIfDescriptionExists(ageGroup));
+            
+            var result = CheckIfDescriptionExists(ageGroup);
+            if (result.Result == false)
+                return new ErrorServiceResult(false, "ControlErrorAdded");
 
-            if (result != null)
-                return new ErrorServiceResult<AgeGroup>(false,"ControlErrorAdded");
+            var dbResult = _ageGroupDal.Add(ageGroup);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessServiceResult<AgeGroup>(true, "Added", _ageGroupDal.Add(ageGroup));
+            return new ServiceResult( true, "Added");
 
         }
 
         //[SecuredOperation("admin,definition.updated")]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
-        public IServiceResult<AgeGroup> Update(AgeGroup ageGroup)
+        public IServiceResult Update(AgeGroup ageGroup)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(ageGroup), CheckIfShortDescriptionExists(ageGroup), CheckIfDescriptionExists(ageGroup));
-            if (result != null)
-                return new ErrorServiceResult<AgeGroup>(false,"ControlErrorUpdated");
+            //IServiceResult result = BusinessRules.Run(CheckIfCodeExists(ageGroup), CheckIfShortDescriptionExists(ageGroup), CheckIfDescriptionExists(ageGroup));
+            var result = CheckIfDescriptionExists(ageGroup);
 
-            return new SuccessServiceResult<AgeGroup>(true, "Updated", _ageGroupDal.Update(ageGroup));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, "ControlErrorUpdated");
+
+            var dbResult = _ageGroupDal.Update(ageGroup);
+            if (dbResult==null)
+                return new ErrorServiceResult(false, "SystemError");
+
+            return new ServiceResult(true, "Updated");
 
         }
         //[SecuredOperation("admin,definition.updated")]
         [ValidationAspect(typeof(AgeGroupValidator))]
         [TransactionScopeAspect]
-        public IServiceResult<AgeGroup> Save(AgeGroup ageGroup)
+        public IDataServiceResult<AgeGroup> Save(AgeGroup ageGroup)
         {
             if (ageGroup.Id > 0)
             {
@@ -77,44 +94,46 @@ namespace Business.Concrete
             {
                 Add(ageGroup);
             }
-            return new SuccessServiceResult<AgeGroup>(true,"Saved",ageGroup);
+            return new SuccessDataServiceResult<AgeGroup>(true,"Saved");
         }
 
         //[SecuredOperation("admin,definition.deleted")]
         [TransactionScopeAspect]
-        public IServiceResult<AgeGroup> Delete(AgeGroup ageGroup)
+        public IServiceResult Delete(AgeGroup ageGroup)
         {
             _ageGroupDal.Delete(ageGroup);
 
-            return new SuccessServiceResult<AgeGroup>(true, "Delated");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfDescriptionExists(AgeGroup ageGroup)
+        private IServiceResult CheckIfDescriptionExists(AgeGroup ageGroup)
         {
-            var result = _ageGroupDal.GetAll(x => x.Description == ageGroup.Description).Any();
+            var result = _ageGroupDal.GetAll(x => x.Description == ageGroup.Description);
 
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
+            if (result.Count>1)
+                new ErrorServiceResult(false,"DescriptionAlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult();
+            
         }
-        private IResult CheckIfShortDescriptionExists(AgeGroup ageGroup)
+
+        private IServiceResult CheckIfShortDescriptionExists(AgeGroup ageGroup)
         {
             var result = _ageGroupDal.GetAll(x => x.ShortDescription == ageGroup.ShortDescription).Any();
 
             if (result)
-                new ErrorResult("ShortDescriptionAlreadyExists");
+                new ErrorServiceResult(false,"ShortDescriptionAlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult(true, "");
         }
-        private IResult CheckIfCodeExists(AgeGroup ageGroup)
+        private IServiceResult CheckIfCodeExists(AgeGroup ageGroup)
         {
             var result = _ageGroupDal.GetAll(x => x.CardCode == ageGroup.CardCode).Any();
 
             if (result)
-                new ErrorResult("CodeAlreadyExists");
+                new ErrorServiceResult(false,"CodeAlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult(true, "");
         }
     }
 }
