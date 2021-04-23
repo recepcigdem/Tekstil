@@ -44,18 +44,18 @@ namespace UI.Controllers.Login
         {
 
             if (loginRequest.UserName == null)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongMail")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongMail")));
 
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             Match match = regex.Match(loginRequest.UserName);
             if (!match.Success)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongMail")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongMail")));
 
             if (loginRequest.Password == null)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
 
             if (loginRequest.Password.Length < 6)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
 
             #region PasswordHash
 
@@ -68,25 +68,25 @@ namespace UI.Controllers.Login
 
             var token = TokenHelper.CreateLoginToken(loginRequest.UserName);
             if (string.IsNullOrEmpty(token))
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_TokenNotFound")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_TokenNotFound")));
 
             var dbEmail = _emailService.GetByEmail(loginRequest.UserName);
             if (dbEmail.Success != true)
-               return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
+               return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
 
             var dbStaffEmail = _staffEmailService.GetByEmailId(dbEmail.Data.Id);
             if (dbStaffEmail.Success != true)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
 
             if (dbStaffEmail.Data.IsMain == false)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_EmailIsNotIsMain")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_EmailIsNotIsMain")));
 
             var dbStaff = _staffService.GetById(dbStaffEmail.Data.StaffId);
             if (dbStaffEmail.Success != true)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_StaffNotFound")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_StaffNotFound")));
 
             if (dbStaff.Data.Password != hashPassword)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
 
             if (loginRequest.RememberMe == true)
             {

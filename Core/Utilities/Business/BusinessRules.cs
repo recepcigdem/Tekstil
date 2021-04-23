@@ -18,5 +18,18 @@ namespace Core.Utilities.Business
             }
             return null;
         }
+        public static ServiceResult Run(params ServiceResult[] logics)
+        {
+            foreach (var logic in logics)
+            {
+                if (!logic.Result)
+                {
+                    return logic;
+                }
+
+              
+            }
+            return new ServiceResult(true, "Ok");
+        }
     }
 }

@@ -56,7 +56,7 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public void Delete(TEntity entity)
+        public bool Delete(TEntity entity)
         {
             using (TContext context = new TContext())
             {
@@ -65,7 +65,10 @@ namespace Core.DataAccess.EntityFramework
 
                 context.SaveChanges();
 
+                return true;
             }
+
+            return false;
         }
     }
 }
