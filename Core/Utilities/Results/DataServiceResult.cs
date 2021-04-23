@@ -30,7 +30,13 @@ namespace Core.Utilities.Results
            this.Obj = (object)null;
            this.Data = data;
        }
+       public DataServiceResult(T data, object obj,bool result, string message)
+       {
+           this.Result = result;
+           this.Message = message;
+           this.Obj =obj;
+           this.Data = data;
+       }
 
-     
     }
 }

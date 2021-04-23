@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using Business.Abstract;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 using Newtonsoft.Json;
 using UI.Helpers;
 using UI.Models.Common;
@@ -17,15 +20,11 @@ namespace UI.Controllers.Login
 {
     public class LoginController : BaseController
     {
-        private IEmailService _emailService;
-        private IStaffEmailService _staffEmailService;
-        private IStaffService _staffService;
+        private ILoginService _loginService;
 
-        public LoginController(IStringLocalizerFactory factory, IStringLocalizer<LoginController> localizer, ILogger<LoginController> logger, IWebHostEnvironment env, IEmailService emailService, IStaffEmailService staffEmailService, IStaffService staffService) : base(factory, env)
+        public LoginController(IStringLocalizerFactory factory, IStringLocalizer<LoginController> localizer, ILogger<LoginController> logger, IWebHostEnvironment env, ILoginService loginService) : base(factory, env)
         {
-            _emailService = emailService;
-            _staffEmailService = staffEmailService;
-            _staffService = staffService;
+            _loginService = loginService;
             _localizer = localizer;
             _logger = logger;
         }
@@ -43,71 +42,33 @@ namespace UI.Controllers.Login
         public IActionResult Login(LoginRequest loginRequest)
         {
 
-            if (loginRequest.UserName == null)
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongMail")));
+            var login = _loginService.Login(loginRequest.UserName, loginRequest.Password);
+            if (login.Result == false)
+            {
+                ViewBag.Error = _localizer.GetString(login.Message);
+                return View("Index");
+            }
 
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            Match match = regex.Match(loginRequest.UserName);
-            if (!match.Success)
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongMail")));
-
-            if (loginRequest.Password == null)
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
-
-            if (loginRequest.Password.Length < 6)
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
-
-            #region PasswordHash
-
-            //Kullanıcının girdiği password encode ve salt işlemlerinden sonra hashlaniyor.
-            //string salt = Core.Helper.PasswordHashSaltHelper.CreateSalt(4); 
-            var encodePassword =Core.Helper.StringHelper.Base64Encode(loginRequest.Password) ;
-            var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(encodePassword);
-
-            #endregion
-
-            var token = TokenHelper.CreateLoginToken(loginRequest.UserName);
-            if (string.IsNullOrEmpty(token))
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_TokenNotFound")));
-
-            var dbEmail = _emailService.GetByEmail(loginRequest.UserName);
-            if (dbEmail.Success != true)
-               return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
-
-            var dbStaffEmail = _staffEmailService.GetByEmailId(dbEmail.Data.Id);
-            if (dbStaffEmail.Success != true)
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_EmailNotFound")));
-
-            if (dbStaffEmail.Data.IsMain == false)
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_EmailIsNotIsMain")));
-
-            var dbStaff = _staffService.GetById(dbStaffEmail.Data.StaffId);
-            if (dbStaffEmail.Success != true)
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_StaffNotFound")));
-
-            if (dbStaff.Data.Password != hashPassword)
-                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error.Login_WrongPassword")));
+            #region RememberMe
 
             if (loginRequest.RememberMe == true)
-            {
-                Response.Cookies.Append("user", loginRequest.UserName);
-            }
+                Response.Cookies.Append("staff", loginRequest.UserName);
             else
-            {
-                Response.Cookies.Delete("user");
-            }
+                Response.Cookies.Delete("staff");
+
+            #endregion
 
             #region Session
 
             StaffSession staffSession = new StaffSession();
-            staffSession.StaffId = dbStaff.Data.Id;
-            staffSession.FirstName = dbStaff.Data.FirstName;
-            staffSession.LastName = dbStaff.Data.LastName;
-            staffSession.Token = token;
-            staffSession.IsCompanyAdmin = dbStaff.Data.IsCompanyAdmin;
-            staffSession.IsSuperAdmin = dbStaff.Data.IsSuperAdmin;
+            staffSession.StaffId = login.Data.Id;
+            staffSession.FirstName = login.Data.FirstName;
+            staffSession.LastName = login.Data.LastName;
+            staffSession.Token = login.Obj.ToString();
+            staffSession.IsCompanyAdmin = login.Data.IsCompanyAdmin;
+            staffSession.IsSuperAdmin = login.Data.IsSuperAdmin;
 
-            SessionHelper.SetStaff(Request, staffSession); 
+            SessionHelper.SetStaff(Request, staffSession);
 
             #endregion
 
@@ -121,24 +82,13 @@ namespace UI.Controllers.Login
 
         public IActionResult PasswordResetSendMail(LoginRequest loginRequest)
         {
-            if (string.IsNullOrEmpty(loginRequest.UserName))
-            {
-                ViewBag.Error = _localizerShared.GetString("Error.Login_WrongMail");
-                return View("ForgotPassword");
-            }
-            try
-            {
-                var m = new MailAddress(loginRequest.UserName);
-            }
-            catch
-            {
-                ViewBag.Error = _localizerShared.GetString("Error.Login_WrongMail");
-                return View("ForgotPassword");
-            }
 
-            var token = TokenHelper.CreateLoginToken(loginRequest.UserName);
-            if (string.IsNullOrEmpty(token))
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.TokenNotFound")));
+            var forgotPassword = _loginService.ForgotPassword(loginRequest.UserName);
+            if (forgotPassword.Result == false)
+            {
+                ViewBag.Error = _localizer.GetString(forgotPassword.Message);
+                return View("ForgotPassword");
+            }
 
             RequestMail requestMail = new RequestMail();
             requestMail.BaseUrl = Core.Helper.SettingsHelper.GetValue("Info", "ProjectUrl");
@@ -148,30 +98,38 @@ namespace UI.Controllers.Login
             requestMail.MailHeader = _localizerShared["ForgotPassword_MailHeader"];
             requestMail.MailInfo = _localizerShared["ForgotPassword_MailInfo"];
             requestMail.ButtonText = _localizerShared["ForgotPassword_ButtonText"];
-            requestMail.ButtonUrl = requestMail.BaseUrl + loginRequest.Culture + "/Login/ResetPassword?Id=" + token;
+            requestMail.ButtonUrl = requestMail.BaseUrl + loginRequest.Culture + "/Login/ResetPassword?Id=" + forgotPassword.Obj;
             requestMail.AddressLine1 = Core.Helper.SettingsHelper.GetValue("Info", "AddressLine1");
             requestMail.AddressLine2 = Core.Helper.SettingsHelper.GetValue("Info", "AddressLine2");
             requestMail.MailAddress = loginRequest.UserName;
             requestMail.TemplateName = Core.Helper.SettingsHelper.GetValue("Mailingtemplate", "ForgotPassword");
 
+            var pathToFile = _env.WebRootPath
+                             + Path.DirectorySeparatorChar.ToString()
+                             + requestMail.TemplateName;
 
-            using (WebClient client = new WebClient())
+
+            var builder = new BodyBuilder();
+            using (StreamReader sourceReader = System.IO.File.OpenText(pathToFile))
             {
-                client.BaseAddress = Core.Helper.SettingsHelper.GetValue("Info", "BaseURL");
-                string url = "Login/forgotpassword";
-                client.Headers.Add("AnonToken", token);
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                string data = JsonConvert.SerializeObject(requestMail);
-                var response = client.UploadString(url, data);
-
-                Response result = JsonConvert.DeserializeObject<Response>(response);
-                if (!result.IsSuccess)
-                {
-                    ViewBag.Error = _localizer.GetString(result.ErrorMessage);
-
-                    return View("Index");
-                }
+                builder.HtmlBody = sourceReader.ReadToEnd();
             }
+
+            string messageBody = string.Format(builder.HtmlBody,
+                requestMail.LogoUrl,
+                requestMail.CompanyName,
+                requestMail.MailHeader,
+                requestMail.MailInfo,
+                requestMail.ButtonUrl,
+                requestMail.ButtonText,
+                requestMail.AddressLine1,
+                requestMail.AddressLine2
+            );
+
+            string subject = requestMail.MailHeader;
+            string logoUrl = requestMail.LogoUrl;
+
+            SendMail(subject, messageBody, requestMail.MailAddress);
 
             return View("ForgotPassword");
         }
@@ -213,5 +171,36 @@ namespace UI.Controllers.Login
             return Json(new SuccessResult(true, _localizer.GetString("Error_UserPasswordChanges")));
 
         }
+
+
+        public string SendMail(string konu, string mesaj, string eposta)
+        {
+            var smtpAddress = Core.Helper.SettingsHelper.GetValue("Smtp", "SmtpUser");
+            var smtpPassword = Core.Helper.SettingsHelper.GetValue("Smtp", "SmtpPassword");
+            var smtpSendPort = Convert.ToInt32(Core.Helper.SettingsHelper.GetValue("Smtp", "SmtpSendPort"));
+            var smtpHost = Core.Helper.SettingsHelper.GetValue("Smtp", "SmtpServer");
+
+
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress(smtpAddress);
+                mail.To.Add(eposta);
+                mail.Subject = konu;
+                mail.Body = mesaj;
+                mail.IsBodyHtml = true;
+
+                using (SmtpClient smtp = new SmtpClient(smtpHost, smtpSendPort))
+                {
+                    smtp.Credentials = new NetworkCredential(smtpAddress, smtpPassword);
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                }
+            }
+
+          
+            return "basarili";
+        }
+
     }
 }
+
