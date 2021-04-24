@@ -13,9 +13,10 @@ namespace Business.Abstract
     {
         IDataResult<List<Staff>> GetAll();
         IDataResult<Staff> GetById(int staffId);
-        IResult Add(Staff staff);
-        IResult Update(Staff staff);
+        IServiceResult Add(Staff staff);
+        IServiceResult Update(Staff staff);
         IResult Delete(Staff staff);
+        IDataServiceResult<Staff> Save(Staff staff);
         IDataResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations);
     }
 }

@@ -11,11 +11,12 @@ namespace Business.Abstract
     public interface ILoginService
     {
         DataServiceResult<Staff> DbLoginControl(string email, string password);
-        ServiceResult CreateLoginToken(string email);
+        ServiceResult CreateToken(string email);
         DataServiceResult<Staff> Login(string email, string password);
         ServiceResult ForgotPassword(string email);
         ServiceResult EMailAddressControl(string email);
         ServiceResult PasswordControl(string password);
+        ServiceResult ResetPassword(string id, string password, string confirmPassword);
 
     }
 }

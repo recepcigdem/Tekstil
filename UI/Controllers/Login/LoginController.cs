@@ -92,7 +92,6 @@ namespace UI.Controllers.Login
 
             RequestMail requestMail = new RequestMail();
             requestMail.BaseUrl = Core.Helper.SettingsHelper.GetValue("Info", "ProjectUrl");
-            requestMail.ProjectName = Core.Helper.SettingsHelper.GetValue("Token", "ApplicationName");
             requestMail.LogoUrl = requestMail.BaseUrl + Core.Helper.SettingsHelper.GetValue("Info", "LogoURL");
             requestMail.CompanyName = Core.Helper.SettingsHelper.GetValue("Info", "CompanyName");
             requestMail.MailHeader = _localizerShared["ForgotPassword_MailHeader"];
@@ -129,7 +128,10 @@ namespace UI.Controllers.Login
             string subject = requestMail.MailHeader;
             string logoUrl = requestMail.LogoUrl;
 
-            SendMail(subject, messageBody, requestMail.MailAddress);
+            var emailReuslt = Core.Helper.SendMail.SendMailProcess(subject, messageBody, requestMail.MailAddress);
+            if (emailReuslt.Result != true)
+                ViewBag.Error = _localizer.GetString("MailError");
+            
 
             return View("ForgotPassword");
         }
@@ -141,64 +143,16 @@ namespace UI.Controllers.Login
         [HttpPost]
         public JsonResult CompleteResetPassword(string Id, string password, string confirmPassword)
         {
-            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_WrongMail")));
 
-            if (password != confirmPassword)
-                return Json(new ErrorResult(false, _localizerShared.GetString("Error.Login_UserPasswordNotMatch")));
-
-
-            Models.Request.RequestPasswordChange request = new RequestPasswordChange() { Password = Core.Helper.StringHelper.Base64Encode(password), Token = Id };
-            using (WebClient client = new WebClient())
+            var resetPassword = _loginService.ResetPassword(Id,password,confirmPassword);
+            if (resetPassword.Result == false)
             {
-                client.BaseAddress = Core.Helper.SettingsHelper.GetValue("Info", "BaseURL");
-                string url = "Login/passwordchange";
-                client.Headers.Add("AnonToken", Id);
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                string data = JsonConvert.SerializeObject(request);
-                var response = client.UploadString(url, data);
-
-                // var result = JsonConvert.DeserializeObject(response);
-                Response result = JsonConvert.DeserializeObject<Response>(response);
-                if (!result.IsSuccess)
-                {
-                    result.ErrorMessage = _localizerShared[result.ErrorMessage];
-
-                    return Json(new ErrorResult(false, result.ErrorMessage));
-                }
-
+               resetPassword.Message = _localizer.GetString(resetPassword.Message);
+                return Json(new SuccessResult(true, resetPassword.Message));
             }
+
             return Json(new SuccessResult(true, _localizer.GetString("Error_UserPasswordChanges")));
 
-        }
-
-
-        public string SendMail(string konu, string mesaj, string eposta)
-        {
-            var smtpAddress = Core.Helper.SettingsHelper.GetValue("Smtp", "SmtpUser");
-            var smtpPassword = Core.Helper.SettingsHelper.GetValue("Smtp", "SmtpPassword");
-            var smtpSendPort = Convert.ToInt32(Core.Helper.SettingsHelper.GetValue("Smtp", "SmtpSendPort"));
-            var smtpHost = Core.Helper.SettingsHelper.GetValue("Smtp", "SmtpServer");
-
-
-            using (MailMessage mail = new MailMessage())
-            {
-                mail.From = new MailAddress(smtpAddress);
-                mail.To.Add(eposta);
-                mail.Subject = konu;
-                mail.Body = mesaj;
-                mail.IsBodyHtml = true;
-
-                using (SmtpClient smtp = new SmtpClient(smtpHost, smtpSendPort))
-                {
-                    smtp.Credentials = new NetworkCredential(smtpAddress, smtpPassword);
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-                }
-            }
-
-          
-            return "basarili";
         }
 
     }

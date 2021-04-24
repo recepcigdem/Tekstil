@@ -45,32 +45,34 @@ namespace Business.Concrete
         [SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(StaffValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Staff staff)
+        public IServiceResult Add(Staff staff)
         {
-            IResult result = BusinessRules.Run(CheckIfExists(staff));
+            ServiceResult result = BusinessRules.Run(CheckIfExists(staff));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _staffDal.Add(staff);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _staffDal.Add(staff);
-
-            return new SuccessResult("Added");
+            return new ServiceResult(true, "Updated");
 
         }
 
         [SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(StaffValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Staff staff)
+        public IServiceResult Update(Staff staff)
         {
-            IResult result = BusinessRules.Run(CheckIfExists(staff));
+            ServiceResult result = BusinessRules.Run(CheckIfExists(staff));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _staffDal.Update(staff);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _staffDal.Add(staff);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
 
         [SecuredOperation("admin,staff.deleted")]
@@ -80,6 +82,24 @@ namespace Business.Concrete
             _staffDal.Delete(staff);
 
             return new SuccessResult("Deleted");
+        }
+
+        public IDataServiceResult<Staff> Save(Staff staff)
+        {
+            if (staff.Id > 0)
+            {
+                var result = Update(staff);
+                if (result.Result == false)
+                    return new DataServiceResult<Staff>(false, result.Message);
+            }
+            else
+            {
+                var result = Add(staff);
+                if (result.Result == false)
+                    return new DataServiceResult<Staff>(false, result.Message);
+            }
+
+            return new SuccessDataServiceResult<Staff>(true, "Saved");
         }
 
         [SecuredOperation("admin,staff.saved")]
@@ -114,14 +134,14 @@ namespace Business.Concrete
             return new SuccessDataResult<Staff>(true,"Saved" ,staff);
         }
 
-        private IResult CheckIfExists(Staff staff)
+        private ServiceResult CheckIfExists(Staff staff)
         {
-            var result = _staffDal.GetAll(x => x.FirstName == staff.FirstName && x.LastName == staff.LastName).Any();
+            var result = _staffDal.GetAll(x => x.FirstName == staff.FirstName && x.LastName == staff.LastName);
 
-            if (result)
-                new ErrorResult("AlreadyExists");
+            if (result.Count>1)
+                new ErrorServiceResult(false,"AlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult(true,"");
         }
     }
 }
