@@ -7,6 +7,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Business.Abstract;
+using Core.Aspects.Autofac.Logging;
+using Core.Aspects.Autofac.Transaction;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using Core.Utilities.Results;
 using Core.Helper.Login;
 using Core.Utilities.Business;
@@ -27,6 +30,8 @@ namespace Business.Concrete
             _staffService = staffService;
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public DataServiceResult<Staff> Login(string email, string password)
         {
             var emailControl = EMailAddressControl(email);
@@ -48,6 +53,8 @@ namespace Business.Concrete
             return new DataServiceResult<Staff>(dbLoginControl.Data, createLoginToken.Obj, true, "Login");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public DataServiceResult<Staff> DbLoginControl(string email, string password)
         {
             var passwordHashing = PasswordHashing(password);
@@ -67,6 +74,8 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Staff>(emailControl.Data, true, "ok");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public DataServiceResult<Staff> DbEmailControl(string email)
         {
             var dbEmail = _emailService.GetByEmail(email);
@@ -87,6 +96,8 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Staff>(dbStaff.Data, true, "ok");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public ServiceResult CreateToken(string email)
         {
             var token = TokenHelper.CreateLoginToken(email);
@@ -96,6 +107,8 @@ namespace Business.Concrete
             return new ServiceResult(true, "ok", token);
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public ServiceResult EMailAddressControl(string email)
         {
             if (email == null)
@@ -109,6 +122,8 @@ namespace Business.Concrete
             return new ServiceResult(true, "ok");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public ServiceResult PasswordControl(string password)
         {
             if (password == null)
@@ -129,6 +144,8 @@ namespace Business.Concrete
             return new ServiceResult(true, "ok");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public ServiceResult PasswordHashing(string password)
         {
             //Kullanıcının girdiği password encode ve salt işlemlerinden sonra hashlaniyor.
@@ -146,6 +163,8 @@ namespace Business.Concrete
             return new ServiceResult(true, "ok", passwordObj);
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public ServiceResult ForgotPassword(string email)
         {
             var emailControl = EMailAddressControl(email);
@@ -165,6 +184,8 @@ namespace Business.Concrete
             return new ServiceResult(true, "ok", createLoginToken.Obj);
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public DataServiceResult<Staff> DbForgotPasswordControl(string email)
         {
 
@@ -192,6 +213,8 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Staff>(dbStaff.Data, true, "ok");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public ServiceResult ResetPassword(string id, string password, string confirmPassword)
         {
             var passwordControl = PasswordControl(password);

@@ -28,18 +28,20 @@ namespace Business.Concrete
             _staffPhoneService = staffPhoneService;
         }
 
-        public IDataResult<List<Staff>> GetAll()
+        public IDataServiceResult<List<Staff>> GetAll()
         {
-            return new SuccessDataResult<List<Staff>>(true, "Listed", _staffDal.GetAll());
+            var dbResult = _staffDal.GetAll();
+
+            return new SuccessDataServiceResult<List<Staff>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Staff> GetById(int staffId)
+        public IDataServiceResult<Staff> GetById(int staffId)
         {
-            var result = _staffDal.Get(s => s.Id == staffId);
-            if (result==null)
-                return new ErrorDataResult<Staff>("StaffNotFound");
-            
-            return new SuccessDataResult<Staff>(true, "Listed", result );
+            var dbResult = _staffDal.Get(p => p.Id == staffId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Staff>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Staff>(dbResult, true, "Listed");
         }
 
         [SecuredOperation("admin,staff.add")]
@@ -77,11 +79,13 @@ namespace Business.Concrete
 
         [SecuredOperation("admin,staff.deleted")]
         [TransactionScopeAspect]
-        public IResult Delete(Staff staff)
+        public IServiceResult Delete(Staff staff)
         {
-            _staffDal.Delete(staff);
+            var result = _staffDal.Delete(staff);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
         public IDataServiceResult<Staff> Save(Staff staff)
