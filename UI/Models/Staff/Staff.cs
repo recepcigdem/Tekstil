@@ -69,13 +69,13 @@ namespace UI.Models.Staff
 
         #endregion
 
-        public List<StaffAuthorization> StaffAuthorizations { get; set; }
+        public List<Entities.Concrete.StaffAuthorization> StaffAuthorizations { get; set; }
         public string SubAuthorizationString
         {
             get { return JsonConvert.SerializeObject(StaffAuthorizations); }
-            set { StaffAuthorizations = JsonConvert.DeserializeObject<List<StaffAuthorization>>(value); }
+            set { StaffAuthorizations = JsonConvert.DeserializeObject<List<Entities.Concrete.StaffAuthorization>>(value); }
         }
-        public List<Entities.Concrete.Authorization> ListAuthorizations { get; set; }
+        public List<Entities.Concrete.StaffAuthorization> ListStaffAuthorizations { get; set; }
 
 
         public Staff() : base()
@@ -119,8 +119,8 @@ namespace UI.Models.Staff
 
             #region Authorization
 
-            StaffAuthorizations = new List<StaffAuthorization>();
-            ListAuthorizations = new List<Entities.Concrete.Authorization>();
+            StaffAuthorizations = new List<Entities.Concrete.StaffAuthorization>();
+            ListStaffAuthorizations = new List<Entities.Concrete.StaffAuthorization>();
 
             #endregion
         }
@@ -139,7 +139,7 @@ namespace UI.Models.Staff
 
             ListStaffEmail = new List<StaffEmailDto>();
             ListStaffPhone = new List<StaffPhoneDto>();
-            ListAuthorizations = new List<Entities.Concrete.Authorization>();
+            ListStaffAuthorizations = new List<Entities.Concrete.StaffAuthorization>();
 
             StaffSession resultStaffSession = Helpers.SessionHelper.GetStaff(request);
             if (resultStaffSession != null)
@@ -147,6 +147,8 @@ namespace UI.Models.Staff
                 this.IsSuperAdminControl = resultStaffSession.IsSuperAdmin;
                 this.IsCompanyAdminControl = resultStaffSession.IsCompanyAdmin;
             }
+
+            EntityId = staff.Id;
             CustomerId = staff.CustomerId;
             DepartmentId = staff.DepartmentId;
             IsActive = staff.IsActive;
@@ -167,7 +169,7 @@ namespace UI.Models.Staff
                 IsStandartUser = true;
             }
 
-            if (!string.IsNullOrWhiteSpace(Photo))
+            if (string.IsNullOrWhiteSpace(Photo)==true || Photo!=" ")
             {
                 string fileName = rootPath + Photo;
                 byte[] binaryContent = File.ReadAllBytes(fileName);
@@ -261,20 +263,16 @@ namespace UI.Models.Staff
 
             #region StaffAuthorization
 
-            var staffAuthorizations= _staffAuthorizationService.GetAll().Data;
+            ListStaffAuthorizations= _staffAuthorizationService.GetAll().Data;
 
-            this.StaffAuthorizations = new List<StaffAuthorization>();
+            this.StaffAuthorizations = new List<Entities.Concrete.StaffAuthorization>();
 
-            foreach (var staffAuthorization in staffAuthorizations)
+            foreach (var authorization in ListStaffAuthorizations)
             {
-                if (staffAuthorization != null)
+                if (authorization != null)
                 {
-                    var authorizationItem = _authorizationService.GetById(staffAuthorization.AuthorizationId).Data;
-                    if (authorizationItem!=null)
-                    {
-                        ListAuthorizations.Add(authorizationItem);
-                    }
-                    this.StaffAuthorizations.Add(staffAuthorization);
+                   
+                    this.StaffAuthorizations.Add(authorization);
                 }
             }
             #endregion
@@ -299,7 +297,6 @@ namespace UI.Models.Staff
             staff.IsLeaving = IsLeaving;
             staff.LeavingDate = LeavingDate;
             staff.IsSendEmail = IsSendEmail;
-            staff.Photo = Photo;
             staff.IsSuperAdmin = IsSuperAdmin;
             staff.IsCompanyAdmin = IsCompanyAdmin;
 
@@ -332,6 +329,8 @@ namespace UI.Models.Staff
             }
             else
                 Photo = string.Empty;
+
+            staff.Photo = Photo;
 
             #region Email
 
@@ -381,21 +380,19 @@ namespace UI.Models.Staff
 
             #region StaffAuthorization
 
-            StaffAuthorizations = new List<StaffAuthorization>();
+            ListStaffAuthorizations = new List<Entities.Concrete.StaffAuthorization>();
             foreach (var item in StaffAuthorizations)
             {
                 StaffAuthorization staffAuthorizations = new StaffAuthorization();
 
-
-                var service = _staffAuthorizationService.GetById(item.AuthorizationId);
-                if (service != null)
+                if (item != null)
                 {
-                    staffAuthorizations.Id = service.Data.Id;
+                    staffAuthorizations.Id = item.Id;
                 }
 
                 staffAuthorizations.StaffId = this.EntityId;
                 staffAuthorizations.AuthorizationId = item.AuthorizationId;
-                StaffAuthorizations.Add(staffAuthorizations);
+                ListStaffAuthorizations.Add(staffAuthorizations);
 
             }
             #endregion

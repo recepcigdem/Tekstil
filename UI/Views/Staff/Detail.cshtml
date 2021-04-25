@@ -19,6 +19,9 @@
     @Html.HiddenFor(x => x.EntityId)
     @Html.HiddenFor(x => x.CustomerId)
     @Html.HiddenFor(x => x.DepartmentId)
+    @Html.HiddenFor(x => x.SubAuthorizationString)
+    @Html.HiddenFor(x => x.SubEmailString)
+    @Html.HiddenFor(x => x.SubPhoneString)
 
 
     @Html.HiddenFor(x => x.StaffPhotoBase64)
@@ -217,7 +220,7 @@
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
-                                                                                    <input type="text" class="form-control" name="addressLine" value="@Model.ListStaffEmail[i].EmailAddress">
+                                                                                    <input type="text" class="form-control" name="mailAddress" value="@Model.ListStaffEmail[i].EmailAddress">
                                                                                 </div>
                                                                             </td>
                                                                             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteMail(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListStaffEmail[i].Id) @Html.HiddenFor(x => x.ListStaffEmail[i].EmailId)</td>
@@ -339,9 +342,12 @@
     var dataList = [];
     var dataListMail = [];
     var dataListPhone = [];
-    var dataListAuthorization = [];
     var count = 0;
 
+    var SelectedItems = [];
+    var fullData = [];
+    var selectedIds = [];
+    var newList = [];
 
     $(document).ready(function () {
         dataList = [];
@@ -440,14 +446,14 @@
                     if (item.id > 0) {
                         var obj = {
                             id: item.Id,
-                            staffId: item.staffId,
-                            authorizationId: item.authorizationId
+                            staffId: item.StaffId,
+                            authorizationId: item.AuthorizationId
                         }
                         SelectedItems.push(obj);
                     }
 
                     var obj2 = {
-                        id: item.authorizationId,
+                        id: item.AuthorizationId,
                         text: "deneme",
                         selected: true
                     }
@@ -464,8 +470,7 @@
             contentType: false,
             processData: false,
             success: function(data) {
-                $.each(data,
-                    function(i) {
+                $.each(data, function(i) {
                         var obj = {
                             id: data[i].id,
                             text: data[i].text,
@@ -483,7 +488,7 @@
                     }
                     newList.push(obj);
                 });
-
+                console.log(selectData);
                 let differentData = fullData.filter(o1 => !selectedIds.some(o2 => o1.id === o2.id));
                 differentData.forEach(item => {
                     var obj = {
@@ -521,40 +526,42 @@
         });
     });
 
-    $(".listgroupAuthorization").on("change", "input[type='checkbox']", function () {
+    $(".listgroupAuthorization").on("change",
+        "input[type='checkbox']",
+        function() {
 
-        $(this).closest('li').toggleClass('highlight', this.checked);
+            $(this).closest('li').toggleClass('highlight', this.checked);
 
-        $(':checkbox').not(this).closest('li').removeClass('highlight');
+            $(':checkbox').not(this).closest('li').removeClass('highlight');
 
-        if ($(this).prop('checked') == true) {
-            authorizationId = $(this).val();
-            Add(authorizationId);
-        };
+            if ($(this).prop('checked') == true) {
+                authorizationId = $(this).val();
+                Add(authorizationId);
+            };
 
-        if ($(this).prop('checked') == false) {
-            authorizationId = $(this).val();
-            Remove(authorizationId);
-        };
+            if ($(this).prop('checked') == false) {
+                authorizationId = $(this).val();
+                Remove(authorizationId);
+            };
 
-        function Remove(AuthorizationId) {
-            SelectedItems.forEach(item => {
-                if (item.authorizationId == AuthorizationId && item.authorizationId != null && item.authorizationId != undefined) {
-                    var removeIndex = SelectedItems.map(function (item) { return item.authorizationId; }).indexOf(item.authorizationId);
-                    SelectedItems.splice(removeIndex, 1);
-                }
-            });
-        }
-
-        function Add(AuthorizationId) {
-            var obj = {
-                id: 1,
-                staffId: 1,
-                authorizationId: AuthorizationId
+            function Remove(AuthorizationId) {
+                SelectedItems.forEach(item => {
+                    if (item.authorizationId == AuthorizationId && item.authorizationId != null && item.authorizationId != undefined) {
+                        var removeIndex = SelectedItems.map(function(item) { return item.authorizationId; }).indexOf(item.authorizationId);
+                        SelectedItems.splice(removeIndex, 1);
+                    }
+                });
             }
-            SelectedItems.push(obj);
-        }
-    })
+
+            function Add(AuthorizationId) {
+                var obj = {
+                    id: 1,
+                    staffId: 1,
+                    authorizationId: AuthorizationId
+                }
+                SelectedItems.push(obj);
+            }
+        });
 
      var countEmail = $('.dataSatir').length + 1;
 
@@ -615,7 +622,7 @@
     var countPhone = $('.dataSatir').length + 1;
 
     function AddPhone() {
-        console.log("ok");
+       
         event.preventDefault();
         var table = document.querySelector("#phoneGrid tbody");
         table.insertAdjacentHTML("beforeend",
@@ -677,7 +684,7 @@
         dataListMail = [];
         dataListPhone = [];
 
-        $("#EmailGrid tbody tr").each(function () {
+        $("#mailGrid tbody tr").each(function () {
             var row = $(this);
 
             var data = {};
@@ -688,10 +695,11 @@
                 data.isMain = false;
             }
 
-            data.mailAddress = row.find("td").find("input").eq(1).val();
+            data.emailAddress = row.find("td").find("input").eq(1).val();
             data.id = row.find("td").find("input").eq(2).val();
             data.emailId = row.find("td").find("input").eq(3).val();
 
+          
             dataListMail.push(data);
 
         });
@@ -718,21 +726,22 @@
         });
 
         $('#SubEmailString').val(JSON.stringify(dataListMail));
+       
         $('#SubPhoneString').val(JSON.stringify(dataListPhone));
+       
         $('#SubAuthorizationString').val(JSON.stringify(SelectedItems));
-
+       
 
         if ( IsMainControl(dataListMail) == true && IsMainControl(dataListPhone) == true) {
 
             var url = "@Url.Action("Save", "Staff")";
             $.post(url,
                 $("form").serialize(), function (data) {
-                    console.log(data.result);
                     if (data.result == false) {
                         ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
-                        $('#SubEmailString').val(subListMail);
-                        $('#SubPhoneString').val(subListPhone);
-                        $('#SubAuthorizationString').val(subListAuthorization);
+                        $('#SubEmailString').val(dataListMail);
+                        $('#SubPhoneString').val(dataListPhone);
+                        $('#SubAuthorizationString').val(SelectedItems);
                     }
                     if (data.result == true) {
                         newID = data.obj;

@@ -79,18 +79,18 @@ namespace Business.Concrete
         public DataServiceResult<Staff> DbEmailControl(string email)
         {
             var dbEmail = _emailService.GetByEmail(email);
-            if (dbEmail.Success != true)
+            if (dbEmail.Result != true)
                 return new DataServiceResult<Staff>(false, "Error.Login_EmailNotFound");
 
             var dbStaffEmail = _staffEmailService.GetByEmailId(dbEmail.Data.Id);
-            if (dbStaffEmail.Success != true)
+            if (dbStaffEmail.Result != true)
                 return new DataServiceResult<Staff>(false, "Error.Login_EmailNotFound");
 
             if (dbStaffEmail.Data.IsMain == false)
                 return new DataServiceResult<Staff>(false, "Error.Login_EmailIsNotIsMain");
 
             var dbStaff = _staffService.GetById(dbStaffEmail.Data.StaffId);
-            if (dbStaffEmail.Success != true)
+            if (dbStaffEmail.Result != true)
                 return new DataServiceResult<Staff>(false, "Error.Login_StaffNotFound");
 
             return new SuccessDataServiceResult<Staff>(dbStaff.Data, true, "ok");
@@ -190,18 +190,18 @@ namespace Business.Concrete
         {
 
             var dbEmail = _emailService.GetByEmail(email);
-            if (dbEmail.Success != true)
+            if (dbEmail.Result != true)
                 return new DataServiceResult<Staff>(false, "Error.Login_EmailNotFound");
 
             var dbStaffEmail = _staffEmailService.GetByEmailId(dbEmail.Data.Id);
-            if (dbStaffEmail.Success != true)
+            if (dbStaffEmail.Result != true)
                 return new DataServiceResult<Staff>(false, "Error.Login_EmailNotFound");
 
             if (dbStaffEmail.Data.IsMain == false)
                 return new DataServiceResult<Staff>(false, "Error.Login_EmailIsNotIsMain");
 
             var dbStaff = _staffService.GetById(dbStaffEmail.Data.StaffId);
-            if (dbStaffEmail.Success != true)
+            if (dbStaffEmail.Result != true)
                 return new DataServiceResult<Staff>(false, "Error.Login_StaffNotFound");
 
             if (dbStaff.Data.IsActive != true)

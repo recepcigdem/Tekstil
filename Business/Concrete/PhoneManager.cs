@@ -22,79 +22,95 @@ namespace Business.Concrete
             _phoneDal = phoneDal;
         }
 
-        public IDataResult<List<Phone>> GetAll()
+        public IDataServiceResult<List<Phone>> GetAll()
         {
-            return new SuccessDataResult<List<Phone>>(true, "Listed", _phoneDal.GetAll());
+            var dbResult = _phoneDal.GetAll();
+
+            return new SuccessDataServiceResult<List<Phone>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Phone> GetById(int phoneId)
+        public IDataServiceResult<Phone> GetById(int phoneId)
         {
-            return new SuccessDataResult<Phone>(true, "Listed", _phoneDal.Get(p => p.Id == phoneId));
+            var dbResult = _phoneDal.Get(p => p.Id == phoneId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Phone>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Phone>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,staff.add")]
+        //[SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(PhoneValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Phone phone)
+        public IServiceResult Add(Phone phone)
         {
-            IResult result = BusinessRules.Run(CheckIfPhoneNumberExists(phone));
+            IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(phone));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _phoneDal.Add(phone);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _phoneDal.Add(phone);
-
-            return new SuccessResult(true, "Added");
+            return new ServiceResult(true, "Added");
 
         }
 
-        [SecuredOperation("admin,staff.updated")]
+       // [SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(PhoneValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Phone phone)
+        public IServiceResult Update(Phone phone)
         {
-            IResult result = BusinessRules.Run(CheckIfPhoneNumberExists(phone));
+            IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(phone));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _phoneDal.Update(phone);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _phoneDal.Update(phone);
+            return new ServiceResult(true, "Updated");
 
-            return new SuccessResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,staff.deleted")]
+       // [SecuredOperation("admin,staff.deleted")]
         [TransactionScopeAspect]
-        public IResult Delete(Phone phone)
+        public IServiceResult Delete(Phone phone)
         {
-            _phoneDal.Delete(phone);
+            var result = _phoneDal.Delete(phone);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult(true, "Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfPhoneNumberExists(Phone phone)
-        {
-            var result = _phoneDal.GetAll(x => x.PhoneNumber == phone.PhoneNumber).Any();
-
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
-
-            return new SuccessResult();
-        }
-        [SecuredOperation("admin,staff.saved")]
+        //[SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(PhoneValidator))]
         [TransactionScopeAspect]
-        public IResult Save(Phone phone)
+        public IDataServiceResult<Phone> Save(Phone phone)
         {
             if (phone.Id > 0)
             {
-                Update(phone);
+                var result = Update(phone);
+                if (result.Result == false)
+                    return new DataServiceResult<Phone>(false, result.Message);
             }
             else
             {
-                Add(phone);
+                var result = Add(phone);
+                if (result.Result == false)
+                    return new DataServiceResult<Phone>(false, result.Message);
             }
-            return new SuccessResult(true, "Saved");
+
+            return new SuccessDataServiceResult<Phone>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfPhoneExists(Phone phone)
+        {
+            var result = _phoneDal.GetAll(x => x.CountryCode == phone.CountryCode && x.AreaCode == phone.AreaCode && x.PhoneNumber == phone.PhoneNumber);
+            if (result.Count > 1)
+                return new ErrorServiceResult(false, "PhoneAlreadyExists");
+
+            return new ServiceResult(true, "");
         }
     }
 }

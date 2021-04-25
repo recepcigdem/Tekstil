@@ -5,6 +5,7 @@ using Core.Utilities.IoC;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Core.Utilities.Results;
 
 namespace Business.BusinessAspects.Autofac
 {
@@ -30,7 +31,8 @@ namespace Business.BusinessAspects.Autofac
                     return;
                 }
             }
-            throw new Exception("AuthorizationDenied!");
+            //throw new Exception("AuthorizationDenied!");
+            new ServiceResult(false, "AuthorizationDenied");
         }
     }
 }

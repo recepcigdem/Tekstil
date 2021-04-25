@@ -16,7 +16,8 @@ namespace Business.Abstract
         IServiceResult Add(Staff staff);
         IServiceResult Update(Staff staff);
         IServiceResult Delete(Staff staff);
+        IServiceResult DeleteAll(Staff staff);
         IDataServiceResult<Staff> Save(Staff staff);
-        IDataResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations);
+        IDataServiceResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations, string password);
     }
 }

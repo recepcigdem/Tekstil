@@ -65,7 +65,7 @@ namespace UI.Controllers.Authorization
             return null;
         }
 
-        public JsonResult Delete(Models.Authorization.Authorization authorization)
+        public JsonResult Delete(int Id)
         {
             #region  Authorization Session Control
 
@@ -76,8 +76,10 @@ namespace UI.Controllers.Authorization
             }
             #endregion
 
-            Entities.Concrete.Authorization entity = authorization.GetBusinessModel();
-            if (entity.Id > 0)
+            Entities.Concrete.Authorization entity = new Entities.Concrete.Authorization();
+            entity.Id = Id;
+
+            if (Id > 0)
             {
                 var res = _authorizationService.Delete(entity);
                 return Json(res);
@@ -103,7 +105,7 @@ namespace UI.Controllers.Authorization
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
                 var result = _authorizationService.Save(entity);
-                if (result.Success == false)
+                if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
                     return Json(result);

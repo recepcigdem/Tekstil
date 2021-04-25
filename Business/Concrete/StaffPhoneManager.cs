@@ -25,74 +25,127 @@ namespace Business.Concrete
             _phoneService = phoneService;
         }
 
-        public IDataResult<List<StaffPhone>> GetAll()
+        public IDataServiceResult<List<StaffPhone>> GetAll()
         {
-            return new SuccessDataResult<List<StaffPhone>>(true, "Listed", _staffPhoneDal.GetAll());
+            var dbResult = _staffPhoneDal.GetAll();
+
+            return new SuccessDataServiceResult<List<StaffPhone>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<StaffPhone> GetById(int staffPhoneId)
+        public IDataServiceResult<StaffPhone> GetById(int staffPhoneId)
         {
-            return new SuccessDataResult<StaffPhone>(true, "Listed", _staffPhoneDal.Get(p => p.Id == staffPhoneId));
+            var dbResult = _staffPhoneDal.Get(p => p.Id == staffPhoneId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<StaffPhone>(false, "SystemError");
+
+            return new SuccessDataServiceResult<StaffPhone>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,staff.add")]
+        public IDataServiceResult<StaffPhone> GetByPhoneId(int phoneId)
+        {
+            var dbResult = _staffPhoneDal.Get(p => p.PhoneId == phoneId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<StaffPhone>(false, "SystemError");
+
+            return new SuccessDataServiceResult<StaffPhone>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<StaffPhone>> GetAllByStaffId(int staffId)
+        {
+            var dbResult = _staffPhoneDal.GetAll(x => x.StaffId == staffId);
+
+            return new SuccessDataServiceResult<List<StaffPhone>>(dbResult, true, "Listed");
+        }
+
+        //[SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(StaffPhoneValidator))]
         [TransactionScopeAspect]
-        public IResult Add(StaffPhone staffPhone)
+        public IServiceResult Add(StaffPhone staffPhone)
         {
-            IResult result = BusinessRules.Run(CheckIfPhoneExists(staffPhone));
+            IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(staffPhone));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _staffPhoneDal.Add(staffPhone);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _staffPhoneDal.Add(staffPhone);
-
-            return new SuccessResult(true, "Added");
+            return new ServiceResult(true, "Added");
 
         }
 
-        [SecuredOperation("admin,staff.updated")]
+        //[SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(StaffPhoneValidator))]
         [TransactionScopeAspect]
-        public IResult Update(StaffPhone staffPhone)
+        public IServiceResult Update(StaffPhone staffPhone)
         {
-            IResult result = BusinessRules.Run(CheckIfPhoneExists(staffPhone));
+            IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(staffPhone));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _staffPhoneDal.Update(staffPhone);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _staffPhoneDal.Update(staffPhone);
+            return new ServiceResult(true, "Updated");
 
-            return new SuccessResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,staff.deleted")]
+        //[SecuredOperation("admin,staff.deleted")]
         [TransactionScopeAspect]
-        public IResult Delete(StaffPhone staffPhone)
+        public IServiceResult Delete(StaffPhone staffPhone)
         {
-            _staffPhoneDal.Delete(staffPhone);
+            var result = _staffPhoneDal.Delete(staffPhone);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult(true, "Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfPhoneExists(StaffPhone staffPhone)
+        //[SecuredOperation("admin,staff.deleted")]
+        [TransactionScopeAspect]
+        public IServiceResult DeleteByStaff(Staff staff)
         {
-            var result = _staffPhoneDal.GetAll(x => x.StaffId == staffPhone.StaffId && x.PhoneId == staffPhone.PhoneId).Any();
+            var staffPhoneList = GetAllByStaffId(staff.Id);
+            if (staffPhoneList.Result == false)
+                return new ErrorServiceResult(false, "StaffPhoneNotFound");
 
-            if (result)
-                new ErrorResult( "PhoneAlreadyExists");
+            foreach (var staffPhone in staffPhoneList.Data)
+            {
+                var phone = _phoneService.GetById(staffPhone.PhoneId);
+                if (phone.Result == false)
+                    return new ErrorServiceResult(false, "StaffPhoneNotFound");
 
-            return new SuccessResult();
+                var deletePhone = _phoneService.Delete(phone.Data);
+                if (deletePhone.Result == false)
+                    return new ErrorServiceResult(false, "StaffPhoneNotDeleted");
+
+                var deleteStaffPhone = Delete(staffPhone);
+                if (deleteStaffPhone.Result == false)
+                    return new ErrorServiceResult(false, "StaffPhoneNotDeleted");
+            }
+
+            return new ServiceResult(true, "Delated");
         }
-      
-        [SecuredOperation("admin,staff.saved")]
+
+        private ServiceResult CheckIfPhoneExists(StaffPhone staffPhone)
+        {
+            var result = _staffPhoneDal.GetAll(x => x.StaffId == staffPhone.StaffId && x.PhoneId == staffPhone.PhoneId);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "PhoneAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+       // [SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(StaffPhoneValidator))]
         [TransactionScopeAspect]
-        public IResult Save(StaffPhoneDto staffPhoneDto)
+        public IDataServiceResult<StaffPhone> Save(StaffPhoneDto staffPhoneDto)
         {
             StaffPhone staffPhone = new StaffPhone
             {
-                Id=staffPhoneDto.Id,
+                Id = staffPhoneDto.Id,
                 StaffId = staffPhoneDto.StaffId,
                 PhoneId = staffPhoneDto.PhoneId,
                 IsMain = staffPhoneDto.IsMain
@@ -100,25 +153,25 @@ namespace Business.Concrete
 
             Phone phone = new Phone
             {
-                Id = staffPhoneDto.PhoneId,
+                Id = staffPhone.PhoneId,
                 IsActive = staffPhoneDto.IsActive,
                 CountryCode = staffPhoneDto.CountryCode,
                 AreaCode = staffPhoneDto.AreaCode,
                 PhoneNumber = staffPhoneDto.PhoneNumber
             };
 
-            if (staffPhone.Id>0)
+            if (staffPhoneDto.Id > 0)
             {
                 Update(staffPhone);
+
             }
             else
             {
                 Add(staffPhone);
             }
-
             _phoneService.Save(phone);
 
-            return new SuccessResult(true,"Saved");
+            return new SuccessDataServiceResult<StaffPhone>(true, "Saved");
         }
     }
 }

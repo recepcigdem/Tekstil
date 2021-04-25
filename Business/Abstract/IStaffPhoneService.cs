@@ -11,11 +11,14 @@ namespace Business.Abstract
 {
     public interface IStaffPhoneService
     {
-        IDataResult<List<StaffPhone>> GetAll();
-        IDataResult<StaffPhone> GetById(int staffPhoneId);
-        IResult Add(StaffPhone staffPhone);
-        IResult Update(StaffPhone staffPhone);
-        IResult Delete(StaffPhone staffPhone);
-        IResult Save(StaffPhoneDto staffPhoneDto);
+        IDataServiceResult<List<StaffPhone>> GetAll();
+        IDataServiceResult<StaffPhone> GetById(int staffPhoneId);
+        IDataServiceResult<StaffPhone> GetByPhoneId(int phoneId);
+        IDataServiceResult<List<StaffPhone>> GetAllByStaffId(int staffId);
+        IServiceResult Add(StaffPhone staffPhone);
+        IServiceResult Update(StaffPhone staffPhone);
+        IServiceResult Delete(StaffPhone staffPhone);
+        IServiceResult DeleteByStaff(Staff staff);
+        IDataServiceResult<StaffPhone> Save(StaffPhoneDto staffPhoneDto);
     }
 }

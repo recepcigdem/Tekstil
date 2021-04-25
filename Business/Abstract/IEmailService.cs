@@ -10,12 +10,12 @@ namespace Business.Abstract
 {
     public interface IEmailService
     {
-        IDataResult<List<Email>> GetAll();
-        IDataResult<Email> GetById(int emailId);
-        IDataResult<Email> GetByEmail(string email);
-        IResult Add(Email email);
-        IResult Update(Email email);
-        IResult Delete(Email email);
-        IResult Save(Email email);
+        IDataServiceResult<List<Email>> GetAll();
+        IDataServiceResult<Email> GetById(int emailId);
+        IDataServiceResult<Email> GetByEmail(string email);
+        IServiceResult Add(Email email);
+        IServiceResult Update(Email email);
+        IServiceResult Delete(Email email);
+        IDataServiceResult<Email> Save(Email email);
     }
 }

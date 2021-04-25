@@ -65,7 +65,7 @@ namespace UI.Controllers.Department
             return null;
         }
 
-        public JsonResult Delete(Models.Department.Department department)
+        public JsonResult Delete(int Id)
         {
             #region  Department Session Control
 
@@ -76,8 +76,10 @@ namespace UI.Controllers.Department
             }
             #endregion
 
-            Entities.Concrete.Department entity = department.GetBusinessModel();
-            if (entity.Id > 0)
+            Entities.Concrete.Department entity = new Entities.Concrete.Department();
+            entity.Id = Id;
+
+            if (Id > 0)
             {
                 var res = _departmentService.Delete(entity);
                 return Json(res);
@@ -103,7 +105,7 @@ namespace UI.Controllers.Department
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
                 var result = _departmentService.Save(entity);
-                if (result.Success == false)
+                if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
                     return Json(result);
@@ -116,6 +118,7 @@ namespace UI.Controllers.Department
 
             return null;
         }
+       
         public JsonResult ComboList()
         {
             var departmentList = _departmentService.GetAll().Data;

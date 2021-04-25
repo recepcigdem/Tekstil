@@ -22,80 +22,96 @@ namespace Business.Concrete
             _authorizationDal = authorizationDal;
         }
 
-        public IDataResult<List<Authorization>> GetAll()
+        public IDataServiceResult<List<Authorization>> GetAll()
         {
-            return new SuccessDataResult<List<Authorization>>(true, "Listed", _authorizationDal.GetAll());
+            var dbResult = _authorizationDal.GetAll();
+
+            return new SuccessDataServiceResult<List<Authorization>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Authorization> GetById(int authorizationId)
+        public IDataServiceResult<Authorization> GetById(int authorizationId)
         {
-            return new SuccessDataResult<Authorization>(true, "Listed", _authorizationDal.Get(p => p.Id == authorizationId));
+            var dbResult = _authorizationDal.Get(p => p.Id == authorizationId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Authorization>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Authorization>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin")]
+       // [SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(AuthorizationValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Authorization authorization)
+        public IServiceResult Add(Authorization authorization)
         {
-            IResult result = BusinessRules.Run(CheckIfAuthorizationNameExists(authorization));
+            IServiceResult result = BusinessRules.Run(CheckIfAuthorizationExists(authorization));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _authorizationDal.Add(authorization);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _authorizationDal.Add(authorization);
-
-            return new SuccessResult(true, "Added");
+            return new ServiceResult(true, "Added");
 
         }
 
-        [SecuredOperation("admin")]
+       // [SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(AuthorizationValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Authorization authorization)
+        public IServiceResult Update(Authorization authorization)
         {
-            IResult result = BusinessRules.Run(CheckIfAuthorizationNameExists(authorization));
+            IServiceResult result = BusinessRules.Run(CheckIfAuthorizationExists(authorization));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _authorizationDal.Update(authorization);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _authorizationDal.Update(authorization);
+            return new ServiceResult(true, "Updated");
 
-            return new SuccessResult(true, "Updated");
         }
 
-        [SecuredOperation("admin")]
+       // [SecuredOperation("admin,staff.deleted")]
         [TransactionScopeAspect]
-        public IResult Delete(Authorization authorization)
+        public IServiceResult Delete(Authorization authorization)
         {
-            _authorizationDal.Delete(authorization);
+            var result = _authorizationDal.Delete(authorization);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult(true, "Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfAuthorizationNameExists(Authorization authorization)
-        {
-            var result = _authorizationDal.GetAll(x => x.AuthorizationName == authorization.AuthorizationName).Any();
-
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
-
-            return new SuccessResult();
-        }
-        [SecuredOperation("admin")]
+       // [SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(AuthorizationValidator))]
         [TransactionScopeAspect]
-        public IDataResult<Authorization> Save(Authorization authorization)
+        public IDataServiceResult<Authorization> Save(Authorization authorization)
         {
             if (authorization.Id > 0)
             {
-                Update(authorization);
+                var result = Update(authorization);
+                if (result.Result == false)
+                    return new DataServiceResult<Authorization>(false, result.Message);
             }
             else
             {
-                Add(authorization);
+                var result = Add(authorization);
+                if (result.Result == false)
+                    return new DataServiceResult<Authorization>(false, result.Message);
             }
 
-            return new SuccessDataResult<Authorization>(true, "Saved", authorization);
+            return new SuccessDataServiceResult<Authorization>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfAuthorizationExists(Authorization authorization)
+        {
+            var result = _authorizationDal.GetAll(x => x.AuthorizationName == authorization.AuthorizationName);
+            if (result.Count > 1)
+                return new ErrorServiceResult(false, "AuthorizationAlreadyExists");
+
+            return new ServiceResult(true, "");
         }
     }
 }
+

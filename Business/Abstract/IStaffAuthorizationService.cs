@@ -10,11 +10,13 @@ namespace Business.Abstract
 {
     public interface IStaffAuthorizationService
     {
-        IDataResult<List<StaffAuthorization>> GetAll();
-        IDataResult<StaffAuthorization> GetById(int staffAuthorizationId);
-        IResult Add(StaffAuthorization staffAuthorization);
-        IResult Update(StaffAuthorization staffAuthorization);
-        IResult Delete(StaffAuthorization staffAuthorization);
-        IResult Save(StaffAuthorization staffAuthorization);
+        IDataServiceResult<List<StaffAuthorization>> GetAll();
+        IDataServiceResult<List<StaffAuthorization>> GetAllByStaffId(int staffId);
+        IDataServiceResult<StaffAuthorization> GetById(int ageGroupId);
+        IServiceResult Add(StaffAuthorization staffAuthorization);
+        IServiceResult Update(StaffAuthorization staffAuthorization);
+        IServiceResult Delete(StaffAuthorization staffAuthorization);
+        IServiceResult DeleteByStaff(Staff staff);
+        IDataServiceResult<StaffAuthorization> Save(StaffAuthorization staffAuthorization);
     }
 }

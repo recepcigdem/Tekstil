@@ -16,86 +16,126 @@ namespace Business.Concrete
     public class StaffAuthorizationManager : IStaffAuthorizationService
     {
         private IStaffAuthorizationDal _staffAuthorizationDal;
-        
 
         public StaffAuthorizationManager(IStaffAuthorizationDal staffAuthorizationDal)
         {
             _staffAuthorizationDal = staffAuthorizationDal;
         }
 
-        public IDataResult<List<StaffAuthorization>> GetAll()
+        public IDataServiceResult<List<StaffAuthorization>> GetAll()
         {
-            return new SuccessDataResult<List<StaffAuthorization>>(true, "Listed", _staffAuthorizationDal.GetAll());
+            var dbResult = _staffAuthorizationDal.GetAll();
+
+            return new SuccessDataServiceResult<List<StaffAuthorization>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<StaffAuthorization> GetById(int staffAuthorizationId)
+        public IDataServiceResult<List<StaffAuthorization>> GetAllByStaffId(int staffId)
         {
-            return new SuccessDataResult<StaffAuthorization>(true, "Listed", _staffAuthorizationDal.Get(p => p.Id == staffAuthorizationId));
+            var dbResult = _staffAuthorizationDal.GetAll(x => x.StaffId == staffId);
+
+            return new SuccessDataServiceResult<List<StaffAuthorization>>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,staff.add")]
+
+        public IDataServiceResult<StaffAuthorization> GetById(int staffAuthorizationId)
+        {
+            var dbResult = _staffAuthorizationDal.Get(p => p.Id == staffAuthorizationId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<StaffAuthorization>(false, "SystemError");
+
+            return new SuccessDataServiceResult<StaffAuthorization>(dbResult, true, "Listed");
+        }
+
+        //[SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(StaffAuthorizationValidator))]
         [TransactionScopeAspect]
-        public IResult Add(StaffAuthorization staffAuthorization)
+        public IServiceResult Add(StaffAuthorization staffAuthorization)
         {
-            IResult result = BusinessRules.Run(CheckIfAuthorizationExists(staffAuthorization));
+            IServiceResult result = BusinessRules.Run(CheckIfAuthorizationExists(staffAuthorization));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _staffAuthorizationDal.Add(staffAuthorization);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _staffAuthorizationDal.Add(staffAuthorization);
-
-            return new SuccessResult(true, "Added");
+            return new ServiceResult(true, "Added");
 
         }
 
-        [SecuredOperation("admin,staff.updated")]
+        //[SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(StaffAuthorizationValidator))]
         [TransactionScopeAspect]
-        public IResult Update(StaffAuthorization staffAuthorization)
+        public IServiceResult Update(StaffAuthorization staffAuthorization)
         {
-            IResult result = BusinessRules.Run(CheckIfAuthorizationExists(staffAuthorization));
+            IServiceResult result = BusinessRules.Run(CheckIfAuthorizationExists(staffAuthorization));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _staffAuthorizationDal.Update(staffAuthorization);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _staffAuthorizationDal.Update(staffAuthorization);
+            return new ServiceResult(true, "Updated");
 
-            return new SuccessResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,staff.deleted")]
+        //[SecuredOperation("admin,staff.deleted")]
         [TransactionScopeAspect]
-        public IResult Delete(StaffAuthorization staffAuthorization)
+        public IServiceResult Delete(StaffAuthorization staffAuthorization)
         {
-            _staffAuthorizationDal.Delete(staffAuthorization);
+            var result = _staffAuthorizationDal.Delete(staffAuthorization);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult(true, "Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfAuthorizationExists(StaffAuthorization staffAuthorization)
+        public IServiceResult DeleteByStaff(Staff staff)
         {
-            var result = _staffAuthorizationDal.GetAll(x => x.StaffId == staffAuthorization.StaffId && x.AuthorizationId == staffAuthorization.AuthorizationId).Any();
+            var staffAuth = GetAllByStaffId(staff.Id);
+            if (staffAuth.Result == false)
+                return new ErrorServiceResult(false, "StaffAuthorizationNotFound");
 
-            if (result)
-                new ErrorResult("AuthorizationAlreadyExists");
-
-            return new SuccessResult();
-        }
-        [SecuredOperation("admin,staff.updated")]
-        [ValidationAspect(typeof(StaffAuthorizationValidator))]
-        [TransactionScopeAspect]
-        public IResult Save(StaffAuthorization staffAuthorization)
-        {
-            if (staffAuthorization.Id>0)
+            foreach (var authorization in staffAuth.Data)
             {
-                Update(staffAuthorization);
+                var delete = Delete(authorization);
+                if (delete.Result == false)
+                    return new ErrorServiceResult(false, "StaffAuthorizationNotFound");
+            }
+
+            return new ServiceResult(true, "Delated");
+        }
+
+        //[SecuredOperation("admin,staff.saved")]
+        [ValidationAspect(typeof(StaffAuthorizationValidator))]
+        [TransactionScopeAspect]
+        public IDataServiceResult<StaffAuthorization> Save(StaffAuthorization staffAuthorization)
+        {
+            if (staffAuthorization.Id > 0)
+            {
+                var result = Update(staffAuthorization);
+                if (result.Result == false)
+                    return new DataServiceResult<StaffAuthorization>(false, result.Message);
             }
             else
             {
-                Add(staffAuthorization);
+                var result = Add(staffAuthorization);
+                if (result.Result == false)
+                    return new DataServiceResult<StaffAuthorization>(false, result.Message);
             }
-            return new SuccessResult(true,"Saved");
+
+            return new SuccessDataServiceResult<StaffAuthorization>(true, "Saved");
         }
+
+        private ServiceResult CheckIfAuthorizationExists(StaffAuthorization staffAuthorization)
+        {
+            var result = _staffAuthorizationDal.GetAll(x => x.StaffId == staffAuthorization.StaffId && x.AuthorizationId == staffAuthorization.AuthorizationId);
+            if (result.Count > 1)
+                return new ErrorServiceResult(false, "AuthorizationAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
     }
 }

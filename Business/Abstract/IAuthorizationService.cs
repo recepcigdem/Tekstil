@@ -10,11 +10,11 @@ namespace Business.Abstract
 {
     public interface IAuthorizationService
     {
-        IDataResult<List<Authorization>> GetAll();
-        IDataResult<Authorization> GetById(int authorizationId);
-        IResult Add(Authorization authorization);
-        IResult Update(Authorization authorization);
-        IResult Delete(Authorization authorization);
-        IDataResult<Authorization> Save(Authorization authorization);
+        IDataServiceResult<List<Authorization>> GetAll();
+        IDataServiceResult<Authorization> GetById(int authorizationId);
+        IServiceResult Add(Authorization authorization);
+        IServiceResult Update(Authorization authorization);
+        IServiceResult Delete(Authorization authorization);
+        IDataServiceResult<Authorization> Save(Authorization authorization);
     }
 }

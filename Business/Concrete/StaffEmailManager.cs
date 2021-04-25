@@ -25,75 +25,123 @@ namespace Business.Concrete
             _emailService = emailService;
         }
 
-        public IDataResult<List<StaffEmail>> GetAll()
+        public IDataServiceResult<List<StaffEmail>> GetAll()
         {
-            return new SuccessDataResult<List<StaffEmail>>(true, "Listed", _staffEmailDal.GetAll());
+            var dbResult = _staffEmailDal.GetAll();
+
+            return new SuccessDataServiceResult<List<StaffEmail>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<StaffEmail> GetById(int staffEmailId)
+        public IDataServiceResult<StaffEmail> GetById(int staffEmailId)
         {
-            return new SuccessDataResult<StaffEmail>(true, "Listed", _staffEmailDal.Get(p => p.Id == staffEmailId));
+            var dbResult = _staffEmailDal.Get(p => p.Id == staffEmailId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<StaffEmail>(false, "SystemError");
+
+            return new SuccessDataServiceResult<StaffEmail>(dbResult, true, "Listed");
         }
 
-        public IDataResult<StaffEmail> GetByEmailId(int emailId)
+        public IDataServiceResult<StaffEmail> GetByEmailId(int emailId)
         {
-            return new SuccessDataResult<StaffEmail>(true, "Listed", _staffEmailDal.Get(p => p.EmailId == emailId));
+            var dbResult = _staffEmailDal.Get(p => p.EmailId == emailId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<StaffEmail>(false, "SystemError");
+
+            return new SuccessDataServiceResult<StaffEmail>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,staff.add")]
+        public IDataServiceResult<List<StaffEmail>> GetAllByStaffId(int staffId)
+        {
+            var dbResult = _staffEmailDal.GetAll(x => x.StaffId == staffId);
+
+            return new SuccessDataServiceResult<List<StaffEmail>>(dbResult, true, "Listed");
+        }
+
+        //[SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(StaffEmailValidator))]
         [TransactionScopeAspect]
-        public IResult Add(StaffEmail staffEmail)
+        public IServiceResult Add(StaffEmail staffEmail)
         {
-            IResult result = BusinessRules.Run(CheckIfEmailExists(staffEmail));
+            IServiceResult result = BusinessRules.Run(CheckIfEmailExists(staffEmail));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _staffEmailDal.Add(staffEmail);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _staffEmailDal.Add(staffEmail);
-
-            return new SuccessResult(true, "Added");
+            return new ServiceResult(true, "Added");
 
         }
 
-        [SecuredOperation("admin,staff.updated")]
+        //[SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(StaffEmailValidator))]
         [TransactionScopeAspect]
-        public IResult Update(StaffEmail staffEmail)
+        public IServiceResult Update(StaffEmail staffEmail)
         {
-            IResult result = BusinessRules.Run(CheckIfEmailExists(staffEmail));
+            IServiceResult result = BusinessRules.Run(CheckIfEmailExists(staffEmail));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _staffEmailDal.Update(staffEmail);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _staffEmailDal.Update(staffEmail);
+            return new ServiceResult(true, "Updated");
 
-            return new SuccessResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,staff.deleted")]
+        //[SecuredOperation("admin,staff.deleted")]
         [TransactionScopeAspect]
-        public IResult Delete(StaffEmail staffEmail)
+        public IServiceResult Delete(StaffEmail staffEmail)
         {
-            _staffEmailDal.Delete(staffEmail);
+            var result = _staffEmailDal.Delete(staffEmail);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult(true, "Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfEmailExists(StaffEmail staffEmail)
+       // [SecuredOperation("admin,staff.deleted")]
+        [TransactionScopeAspect]
+        public IServiceResult DeleteByStaff(Staff staff)
         {
-            var result = _staffEmailDal.GetAll(x => x.StaffId == staffEmail.StaffId && x.EmailId == staffEmail.EmailId).Any();
+            var staffEmailList = GetAllByStaffId(staff.Id);
+            if (staffEmailList.Result == false)
+                return new ErrorServiceResult(false, "StaffEmailNotFound");
 
-            if (result)
-                new ErrorResult("EmailAlreadyExists");
+            foreach (var staffEmail in staffEmailList.Data)
+            {
+                var email = _emailService.GetById(staffEmail.EmailId);
+                if (email.Result == false)
+                    return new ErrorServiceResult(false, "StaffEmailNotFound");
 
-            return new SuccessResult();
+                var deleteEmail = _emailService.Delete(email.Data);
+                if (deleteEmail.Result == false)
+                    return new ErrorServiceResult(false, "StaffEmailNotDeleted");
+
+                var deleteStaffEmail = Delete(staffEmail);
+                if (deleteStaffEmail.Result == false)
+                    return new ErrorServiceResult(false, "StaffEmailNotDeleted");
+            }
+
+            return new ServiceResult(true, "Delated");
         }
 
-        [SecuredOperation("admin,staff.updated")]
+        private ServiceResult CheckIfEmailExists(StaffEmail staffEmail)
+        {
+            var result = _staffEmailDal.GetAll(x => x.StaffId == staffEmail.StaffId && x.EmailId == staffEmail.EmailId);
+
+            if (result.Count>1)
+                new ErrorServiceResult(false,"EmailAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+       // [SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(StaffEmailValidator))]
         [TransactionScopeAspect]
-        public IResult Save(StaffEmailDto staffEmailDto)
+        public IDataServiceResult<StaffEmail> Save(StaffEmailDto staffEmailDto)
         {
             StaffEmail staffEmail = new StaffEmail
             {
@@ -121,7 +169,7 @@ namespace Business.Concrete
             }
             _emailService.Save(email);
 
-            return new SuccessResult(true, "Saved");
+            return new SuccessDataServiceResult<StaffEmail>(true, "Saved");
         }
     }
 }

@@ -23,6 +23,7 @@ namespace DataAccess.Concrete.EntityFramework
 
         public DbSet<AgeGroup> AgeGroup { get; set; }
         public DbSet<Arm> Arm { get; set; }
+        public DbSet<Authorization> Authorizations { get; set; }
         public DbSet<Belt> Belt { get; set; }
         public DbSet<Brand> Brand { get; set; }
         public DbSet<Buttoning> Buttoning { get; set; }
@@ -34,8 +35,8 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<CountryShippingMultiplier> CountryShippingMultiplier { get; set; }
         public DbSet<CsNoDeliveryDate> CsNoDeliveryDate { get; set; }
         public DbSet<CsNoDeliveryDateHistory> CsNoDeliveryDateHistory { get; set; }
-        public DbSet<Customer> Customer { get; set; }
-        public DbSet<Department> Department { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Department> Departments { get; set; }
         public DbSet<Detail> Detail { get; set; }
         public DbSet<Email> Email { get; set; }
         public DbSet<Fit> Fit { get; set; }

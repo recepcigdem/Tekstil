@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Entities.Concrete.Dtos;
 
 namespace Business.Concrete
@@ -44,7 +45,7 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Staff>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,staff.add")]
+     //   [SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(StaffValidator))]
         [TransactionScopeAspect]
         public IServiceResult Add(Staff staff)
@@ -61,7 +62,7 @@ namespace Business.Concrete
 
         }
 
-        [SecuredOperation("admin,staff.updated")]
+     //   [SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(StaffValidator))]
         [TransactionScopeAspect]
         public IServiceResult Update(Staff staff)
@@ -88,6 +89,31 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        public IServiceResult DeleteAll(Staff staff)
+        {
+
+            var staffAuth = _staffAuthorizationService.DeleteByStaff(staff);
+            if (staffAuth.Result == false)
+                return new ErrorServiceResult(false, "StaffAuthorizationNotFound");
+
+            var staffEmail = _staffEmailService.DeleteByStaff(staff);
+            if (staffEmail.Result == false)
+                return new ErrorServiceResult(false, "StaffEmailNotFound");
+
+            var staffPhone = _staffPhoneService.DeleteByStaff(staff);
+            if (staffPhone.Result == false)
+                return new ErrorServiceResult(false, "StaffPhoneNotFound");
+
+
+            var staffDelete = _staffDal.Delete(staff);
+            if (staffDelete == false)
+                return new ErrorServiceResult(false, "SystemError");
+
+
+
+            return new ServiceResult(true, "Delated");
+        }
+
         public IDataServiceResult<Staff> Save(Staff staff)
         {
             if (staff.Id > 0)
@@ -106,11 +132,26 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Staff>(true, "Saved");
         }
 
-        [SecuredOperation("admin,staff.saved")]
-        [ValidationAspect(typeof(StaffValidator))]
-        [TransactionScopeAspect]
-        public IDataResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations)
+        public IDataServiceResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations, string password)
         {
+            var encodePassword = Core.Helper.StringHelper.Base64Encode(password);
+            if (encodePassword == null)
+                return new DataServiceResult<Staff>(false, "SystemError");
+
+            var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(encodePassword);
+            if (hashPassword == null)
+                return new DataServiceResult<Staff>(false, "SystemError");
+
+            var dbStaff = GetById(staff.Id);
+            if (dbStaff.Result == false)
+                return new DataServiceResult<Staff>(false, "StaffNotFound");
+
+            if (dbStaff.Data.Password != hashPassword)
+                return new DataServiceResult<Staff>(false, "PasswordNotMatch");
+
+            staff.Password = hashPassword;
+            staff.PasswordSalt = encodePassword;
+
             if (staff.Id > 0)
             {
                 Update(staff);
@@ -135,17 +176,17 @@ namespace Business.Concrete
                 _staffAuthorizationService.Save(staffAuthorization);
             }
 
-            return new SuccessDataResult<Staff>(true,"Saved" ,staff);
+            return new SuccessDataServiceResult<Staff>(staff, true, "Saved");
         }
 
         private ServiceResult CheckIfExists(Staff staff)
         {
             var result = _staffDal.GetAll(x => x.FirstName == staff.FirstName && x.LastName == staff.LastName);
 
-            if (result.Count>1)
-                new ErrorServiceResult(false,"AlreadyExists");
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "AlreadyExists");
 
-            return new ServiceResult(true,"");
+            return new ServiceResult(true, "");
         }
     }
 }

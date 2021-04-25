@@ -22,79 +22,95 @@ namespace Business.Concrete
             _departmentDal = departmentDal;
         }
 
-        public IDataResult<List<Department>> GetAll()
+        public IDataServiceResult<List<Department>> GetAll()
         {
-            return new SuccessDataResult<List<Department>>(true, "Listed", _departmentDal.GetAll());
+            var dbResult = _departmentDal.GetAll();
+
+            return new SuccessDataServiceResult<List<Department>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Department> GetById(int departmentId)
+        public IDataServiceResult<Department> GetById(int departmentId)
         {
-            return new SuccessDataResult<Department>(true, "Listed", _departmentDal.Get(p => p.Id == departmentId));
+            var dbResult = _departmentDal.Get(p => p.Id == departmentId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Department>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Department>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,department.add")]
+        // [SecuredOperation("SuperAdmin")]
         [ValidationAspect(typeof(DepartmentValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Department department)
+        public IServiceResult Add(Department department)
         {
-            IResult result = BusinessRules.Run(CheckIfDepartmentNameExists(department));
+            IServiceResult result = BusinessRules.Run(CheckIfDepartmentExists(department));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _departmentDal.Add(department);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _departmentDal.Add(department);
-
-            return new SuccessResult(true, "Added");
+            return new ServiceResult(true, "Added");
 
         }
 
-        [SecuredOperation("admin,department.updated")]
+        // [SecuredOperation("SuperAdmin")]
         [ValidationAspect(typeof(DepartmentValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Department department)
+        public IServiceResult Update(Department department)
         {
-            IResult result = BusinessRules.Run(CheckIfDepartmentNameExists(department));
+            IServiceResult result = BusinessRules.Run(CheckIfDepartmentExists(department));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _departmentDal.Update(department);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _departmentDal.Update(department);
+            return new ServiceResult(true, "Updated");
 
-            return new SuccessResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,department.deleted")]
+        // [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
-        public IResult Delete(Department department)
+        public IServiceResult Delete(Department department)
         {
-            _departmentDal.Delete(department);
+            var result = _departmentDal.Delete(department);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult(true, "Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfDepartmentNameExists(Department department)
-        {
-            var result = _departmentDal.GetAll(x => x.DepartmentName == department.DepartmentName).Any();
-
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
-
-            return new SuccessResult();
-        }
-        [SecuredOperation("admin,department.saved")]
+        // [SecuredOperation("SuperAdmin")]
         [ValidationAspect(typeof(DepartmentValidator))]
         [TransactionScopeAspect]
-        public IDataResult<Department> Save(Department department)
+        public IDataServiceResult<Department> Save(Department department)
         {
-            if (department.Id>0)
+            if (department.Id > 0)
             {
-                Update(department);
+                var result = Update(department);
+                if (result.Result == false)
+                    return new DataServiceResult<Department>(false, result.Message);
             }
             else
             {
-                Add(department);
+                var result = Add(department);
+                if (result.Result == false)
+                    return new DataServiceResult<Department>(false, result.Message);
             }
-            return new SuccessDataResult<Department>(true,"Saved",department);
+
+            return new SuccessDataServiceResult<Department>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfDepartmentExists(Department department)
+        {
+            var result = _departmentDal.GetAll(x => x.DepartmentName == department.DepartmentName);
+            if (result.Count > 1)
+                return new ErrorServiceResult(false, "DepartmentAlreadyExists");
+
+            return new ServiceResult(true, "");
         }
     }
 }

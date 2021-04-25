@@ -22,80 +22,95 @@ namespace Business.Concrete
             _customerDal = customerDal;
         }
 
-        public IDataResult<List<Customer>> GetAll()
+        public IDataServiceResult<List<Customer>> GetAll()
         {
-            return new SuccessDataResult<List<Customer>>(true, "Listed", _customerDal.GetAll());
+            var dbResult = _customerDal.GetAll();
+
+            return new SuccessDataServiceResult<List<Customer>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Customer> GetById(int customerId)
+        public IDataServiceResult<Customer> GetById(int customerId)
         {
-            return new SuccessDataResult<Customer>(true, "Listed", _customerDal.Get(p => p.Id == customerId));
+            var dbResult = _customerDal.Get(p => p.Id == customerId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Customer>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Customer>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,customer.add")]
+        // [SecuredOperation("SuperAdmin")]
         [ValidationAspect(typeof(CustomerValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Customer customer)
+        public IServiceResult Add(Customer customer)
         {
-            IResult result = BusinessRules.Run(CheckIfCustomerNameExists(customer));
+            IServiceResult result = BusinessRules.Run(CheckIfCustomerExists(customer));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _customerDal.Add(customer);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _customerDal.Add(customer);
-
-            return new SuccessResult(true, "Added");
+            return new ServiceResult(true, "Added");
 
         }
 
-        [SecuredOperation("admin,customer.updated")]
+        // [SecuredOperation("SuperAdmin")]
         [ValidationAspect(typeof(CustomerValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Customer customer)
+        public IServiceResult Update(Customer customer)
         {
-            IResult result = BusinessRules.Run(CheckIfCustomerNameExists(customer));
+            IServiceResult result = BusinessRules.Run(CheckIfCustomerExists(customer));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _customerDal.Update(customer);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _customerDal.Update(customer);
+            return new ServiceResult(true, "Updated");
 
-            return new SuccessResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,customer.deleted")]
+        // [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
-        public IResult Delete(Customer customer)
+        public IServiceResult Delete(Customer customer)
         {
-            _customerDal.Delete(customer);
+            var result = _customerDal.Delete(customer);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult(true, "Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfCustomerNameExists(Customer customer)
-        {
-            var result = _customerDal.GetAll(x => x.CustomerName == customer.CustomerName).Any();
-
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
-
-            return new SuccessResult();
-        }
-        [SecuredOperation("admin,customer.Saved")]
+        // [SecuredOperation("SuperAdmin")]
         [ValidationAspect(typeof(CustomerValidator))]
         [TransactionScopeAspect]
-        public IDataResult<Customer> Save(Customer customer)
+        public IDataServiceResult<Customer> Save(Customer customer)
         {
-            if (customer.Id>0)
+            if (customer.Id > 0)
             {
-                Update(customer);
+                var result = Update(customer);
+                if (result.Result == false)
+                    return new DataServiceResult<Customer>(false, result.Message);
             }
             else
             {
-                Add(customer);
+                var result = Add(customer);
+                if (result.Result == false)
+                    return new DataServiceResult<Customer>(false, result.Message);
             }
 
-            return new SuccessDataResult<Customer>(true,"Saved", customer);
+            return new SuccessDataServiceResult<Customer>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfCustomerExists(Customer customer)
+        {
+            var result = _customerDal.GetAll(x => x.CustomerName == customer.CustomerName);
+            if (result.Count > 1)
+                return new ErrorServiceResult(false, "CustomerAlreadyExists");
+
+            return new ServiceResult(true, "");
         }
     }
 }

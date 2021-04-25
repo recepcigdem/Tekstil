@@ -52,7 +52,7 @@ namespace UI.Controllers.Staff
         public IActionResult Index()
         {
             BaseModel model = new BaseModel(Request);
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -101,7 +101,7 @@ namespace UI.Controllers.Staff
             Entities.Concrete.Staff entity = staff.GetBusinessModel();
             if (entity.Id > 0)
             {
-                var res = _staffService.Delete(entity);
+                var res = _staffService.DeleteAll(entity);
                 res.Message = _localizer.GetString(res.Message);
                 return Json(res);
             }
@@ -111,91 +111,28 @@ namespace UI.Controllers.Staff
         [HttpPost]
         public JsonResult Save(Models.Staff.Staff staff, string password, string confirmPassword)
         {
-            var token = string.Empty;
-            var registerApiResult = string.Empty;
-            var staffMail = staff.SubEmail.data.Where(x => x.IsMain == true && x.IsDeleted == false);
-            if (staffMail.FirstOrDefault() == null)
-                return Json(new ErrorResult(false, _localizer.GetString("Error_UserIsMainIsNotNull")));
-
-            if ((password == null || confirmPassword == null) && staff.EntityId == 0)
-                return Json(new ErrorResult(false, _localizer.GetString("Error_UserPasswordNull")));
-
-            if (password != confirmPassword)
-                return Json(new ErrorResult(false, _localizer.GetString("Error_UserPasswordNotMatch")));
-
-            try
-            {
-
-                token = TokenHelper.CreateLoginToken(staffMail.FirstOrDefault().EmailAddress);
-
-            }
-            catch (Exception e)
-            {
-                return Json(new ErrorResult(false, _localizer.GetString("Error_SystemError")));
-            }
-
-            var passwordhash = staff.Password == null || staff.Password == "" ? "" : Core.Helper.StringHelper.Base64Encode(staff.Password);
-
-
             if (staff != null)
             {
+                var staffMail = staff.SubEmail.data.Where(x => x.IsMain == true);
+                if (staffMail.FirstOrDefault() == null)
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffIsMainIsNotNull")));
+
+                if ((password == null || confirmPassword == null))
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNull")));
+
+                if (password != confirmPassword)
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNotMatch")));
+
                 Entities.Concrete.Staff entity = staff.GetBusinessModel();
-
                 if (entity == null)
-                {
-                    return Json(new ErrorResult(false, _localizer.GetString("Error_SystemError")));
-                }
-
-                Register registerData = new Register()
-                {
-                    StaffId = staff.EntityId,
-                    CustomerId = staff.CustomerId,
-                    DepartmentId = staff.DepartmentId,
-                    IsActive = staff.IsActive,
-                    Title = staff.Title == null || staff.Title == "" ? "" : staff.Title,
-                    FirstName = staff.FirstName,
-                    LastName = staff.LastName,
-                    Email = staffMail.First().EmailAddress,
-                    Password = passwordhash,
-                    RegisterDate = DateTime.Now,
-                    IsLeaving = staff.IsLeaving,
-                    LeavingDate = staff.LeavingDate,
-                    IsSendMail = staff.IsSendEmail,
-                    Photo = staff.Photo,
-                    IsSuperAdmin = staff.IsSuperAdmin,
-                    IsCompanyAdmin = staff.IsCompanyAdmin
-                };
-
-                using (WebClient client = new WebClient())
-                {
-                    client.BaseAddress = Core.Helper.SettingsHelper.GetValue("Info", "BaseURL");
-
-                    string url = "Register/Register";
-                    client.Headers.Add("AnonToken", token);
-                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    string data = JsonConvert.SerializeObject(registerData);
-                    var response = client.UploadString(url, data);
-
-                    Response result1 = JsonConvert.DeserializeObject<Response>(response);
-                    if (!result1.IsSuccess)
-                        return Json(new ErrorResult(false, _localizer.GetString(result1.ErrorMessage)));
-
-
-                    JObject parseValue = JObject.Parse(result1.ResultData.ToString());
-                    JToken parseValue2 = parseValue["resultData"];
-                    JObject result3 = JObject.Parse(parseValue2.ToString());
-                    JToken StaffId = result3["StaffId"];
-                    int staffId = Convert.ToInt32(StaffId.ToString());
-
-                    entity.Id = staffId;
-                }
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("Error_SystemError")));
 
                 List<StaffPhoneDto> staffPhoneDtos = staff.ListStaffPhone;
                 List<StaffEmailDto> staffEmailDtos = staff.ListStaffEmail;
                 List<StaffAuthorization> staffAuthorizations = staff.StaffAuthorizations;
 
-                var result = _staffService.SaveAll(entity, staffEmailDtos, staffPhoneDtos, staffAuthorizations);
-                if (result.Success == false)
+                var result = _staffService.SaveAll(entity, staffEmailDtos, staffPhoneDtos, staffAuthorizations, password);
+                if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
                     return Json(result);
@@ -204,6 +141,7 @@ namespace UI.Controllers.Staff
                 result.Data = entity;
                 return Json(result);
             }
+
             return null;
         }
     }

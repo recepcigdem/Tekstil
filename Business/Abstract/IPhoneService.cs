@@ -10,11 +10,11 @@ namespace Business.Abstract
 {
     public interface IPhoneService
     {
-        IDataResult<List<Phone>> GetAll();
-        IDataResult<Phone> GetById(int phoneId);
-        IResult Add(Phone phone);
-        IResult Update(Phone phone);
-        IResult Delete(Phone phone);
-        IResult Save(Phone phone);
+        IDataServiceResult<List<Phone>> GetAll();
+        IDataServiceResult<Phone> GetById(int phoneId);
+        IServiceResult Add(Phone phone);
+        IServiceResult Update(Phone phone);
+        IServiceResult Delete(Phone phone);
+        IDataServiceResult<Phone> Save(Phone phone);
     }
 }

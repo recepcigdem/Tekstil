@@ -62,7 +62,7 @@ namespace UI.Controllers.Customer
             return null;
         }
 
-        public JsonResult Delete(Models.Customer.Customer customer)
+        public JsonResult Delete(int Id)
         {
             #region  Customer Session Control
 
@@ -73,8 +73,10 @@ namespace UI.Controllers.Customer
             }
             #endregion
 
-            Entities.Concrete.Customer entity = customer.GetBusinessModel();
-            if (entity.Id > 0)
+            Entities.Concrete.Customer entity = new Entities.Concrete.Customer();
+            entity.Id = Id;
+
+            if (Id > 0)
             {
                 var res = _customerService.Delete(entity);
                 return Json(res);
@@ -100,7 +102,7 @@ namespace UI.Controllers.Customer
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
                 var result = _customerService.Save(entity);
-                if (result.Success == false)
+                if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
                     return Json(result);
@@ -113,6 +115,7 @@ namespace UI.Controllers.Customer
 
             return null;
         }
+       
         public JsonResult ComboList()
         {
             var customerList = _customerService.GetAll().Data;
