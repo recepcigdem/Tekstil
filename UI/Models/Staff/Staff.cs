@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Concrete;
@@ -46,7 +47,7 @@ namespace UI.Models.Staff
         private IEmailService _emailService;
         private IPhoneService _phoneService;
         private IAuthorizationService _authorizationService;
-       
+
         #endregion
 
         #region Dtos
@@ -80,7 +81,7 @@ namespace UI.Models.Staff
 
         public Staff() : base()
         {
-           
+
             CustomerId = 0;
             DepartmentId = 0;
             IsActive = false;
@@ -169,7 +170,7 @@ namespace UI.Models.Staff
                 IsStandartUser = true;
             }
 
-            if (string.IsNullOrWhiteSpace(Photo)==true || Photo!=" ")
+            if (!string.IsNullOrWhiteSpace(Photo))
             {
                 string fileName = rootPath + Photo;
                 byte[] binaryContent = File.ReadAllBytes(fileName);
@@ -183,7 +184,7 @@ namespace UI.Models.Staff
 
             #region StaffEmail
 
-            var staffMailList = _staffEmailService.GetAll();
+            var staffMailList = _staffEmailService.GetAllByStaffId(EntityId);
             foreach (StaffEmail staffMail in staffMailList.Data)
             {
                 var emailServiceList = _emailService.GetById(staffMail.EmailId);
@@ -219,7 +220,7 @@ namespace UI.Models.Staff
 
             #region StaffPhone
 
-            var staffPhoneList = _staffPhoneService.GetAll();
+            var staffPhoneList = _staffPhoneService.GetAllByStaffId(EntityId);
             foreach (StaffPhone staffPhone in staffPhoneList.Data)
             {
                 var phoneServiceList = _phoneService.GetById(staffPhone.PhoneId);
@@ -263,7 +264,7 @@ namespace UI.Models.Staff
 
             #region StaffAuthorization
 
-            ListStaffAuthorizations= _staffAuthorizationService.GetAll().Data;
+            ListStaffAuthorizations = _staffAuthorizationService.GetAllByStaffId(EntityId).Data;
 
             this.StaffAuthorizations = new List<Entities.Concrete.StaffAuthorization>();
 
@@ -271,7 +272,7 @@ namespace UI.Models.Staff
             {
                 if (authorization != null)
                 {
-                   
+
                     this.StaffAuthorizations.Add(authorization);
                 }
             }
@@ -344,9 +345,10 @@ namespace UI.Models.Staff
                     email.Id = item.Id;
                 }
 
-                email.StaffId = item.StaffId;
+                email.StaffId = this.EntityId;
                 email.EmailId = item.EmailId;
                 email.IsMain = item.IsMain;
+                email.IsActive = item.IsActive;
                 email.EmailAddress = item.EmailAddress;
 
                 ListStaffEmail.Add(email);
@@ -366,9 +368,10 @@ namespace UI.Models.Staff
                     phone.Id = item.Id;
                 }
 
-                phone.StaffId = item.StaffId;
+                phone.StaffId = this.EntityId;
                 phone.PhoneId = item.PhoneId;
                 phone.IsMain = item.IsMain;
+                phone.IsActive = item.IsActive;
                 phone.CountryCode = item.CountryCode;
                 phone.AreaCode = item.AreaCode;
                 phone.PhoneNumber = item.PhoneNumber;
@@ -385,13 +388,14 @@ namespace UI.Models.Staff
             {
                 StaffAuthorization staffAuthorizations = new StaffAuthorization();
 
-                if (item != null)
+                if (item.Id > 0)
                 {
                     staffAuthorizations.Id = item.Id;
                 }
 
                 staffAuthorizations.StaffId = this.EntityId;
                 staffAuthorizations.AuthorizationId = item.AuthorizationId;
+                
                 ListStaffAuthorizations.Add(staffAuthorizations);
 
             }

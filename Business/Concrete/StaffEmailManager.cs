@@ -102,7 +102,7 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-       // [SecuredOperation("admin,staff.deleted")]
+        //[SecuredOperation("admin,staff.deleted")]
         [TransactionScopeAspect]
         public IServiceResult DeleteByStaff(Staff staff)
         {
@@ -112,6 +112,10 @@ namespace Business.Concrete
 
             foreach (var staffEmail in staffEmailList.Data)
             {
+                var deleteStaffEmail = Delete(staffEmail);
+                if (deleteStaffEmail.Result == false)
+                    return new ErrorServiceResult(false, "StaffEmailNotDeleted");
+
                 var email = _emailService.GetById(staffEmail.EmailId);
                 if (email.Result == false)
                     return new ErrorServiceResult(false, "StaffEmailNotFound");
@@ -120,9 +124,6 @@ namespace Business.Concrete
                 if (deleteEmail.Result == false)
                     return new ErrorServiceResult(false, "StaffEmailNotDeleted");
 
-                var deleteStaffEmail = Delete(staffEmail);
-                if (deleteStaffEmail.Result == false)
-                    return new ErrorServiceResult(false, "StaffEmailNotDeleted");
             }
 
             return new ServiceResult(true, "Delated");
@@ -132,42 +133,39 @@ namespace Business.Concrete
         {
             var result = _staffEmailDal.GetAll(x => x.StaffId == staffEmail.StaffId && x.EmailId == staffEmail.EmailId);
 
-            if (result.Count>1)
-                new ErrorServiceResult(false,"EmailAlreadyExists");
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "EmailAlreadyExists");
 
             return new ServiceResult(true, "");
         }
 
-       // [SecuredOperation("admin,staff.saved")]
+        // [SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(StaffEmailValidator))]
         [TransactionScopeAspect]
-        public IDataServiceResult<StaffEmail> Save(StaffEmailDto staffEmailDto)
+        public IDataServiceResult<StaffEmail> Save(Staff staff, List<StaffEmailDto> staffEmailDtos)
         {
-            StaffEmail staffEmail = new StaffEmail
-            {
-                Id = staffEmailDto.Id,
-                StaffId = staffEmailDto.StaffId,
-                EmailId = staffEmailDto.EmailId,
-                IsMain = staffEmailDto.IsMain
-            };
+            DeleteByStaff(staff);
 
-            Email email = new Email
+            foreach (var staffEmailDto in staffEmailDtos)
             {
-                Id = staffEmail.EmailId,
-                IsActive = staffEmailDto.IsActive,
-                EmailAddress = staffEmailDto.EmailAddress
-            };
+                Email email = new Email
+                {
+                    IsActive = staffEmailDto.IsActive,
+                    EmailAddress = staffEmailDto.EmailAddress
+                };
 
-            if (staffEmailDto.Id > 0)
-            {
-                Update(staffEmail);
-               
-            }
-            else
-            {
+                _emailService.Add(email);
+
+                StaffEmail staffEmail = new StaffEmail
+                {
+                    StaffId = staffEmailDto.StaffId,
+                    EmailId = email.Id,
+                    IsMain = staffEmailDto.IsMain
+                };
+
                 Add(staffEmail);
             }
-            _emailService.Save(email);
+
 
             return new SuccessDataServiceResult<StaffEmail>(true, "Saved");
         }

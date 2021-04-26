@@ -45,7 +45,7 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Staff>(dbResult, true, "Listed");
         }
 
-     //   [SecuredOperation("admin,staff.add")]
+        //   [SecuredOperation("admin,staff.add")]
         [ValidationAspect(typeof(StaffValidator))]
         [TransactionScopeAspect]
         public IServiceResult Add(Staff staff)
@@ -62,7 +62,7 @@ namespace Business.Concrete
 
         }
 
-     //   [SecuredOperation("admin,staff.updated")]
+        //   [SecuredOperation("admin,staff.updated")]
         [ValidationAspect(typeof(StaffValidator))]
         [TransactionScopeAspect]
         public IServiceResult Update(Staff staff)
@@ -78,7 +78,7 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,staff.deleted")]
+        //[SecuredOperation("admin,staff.deleted")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Staff staff)
         {
@@ -161,20 +161,12 @@ namespace Business.Concrete
                 Add(staff);
             }
 
-            foreach (var staffEmailDto in staffEmailDtos)
-            {
-                _staffEmailService.Save(staffEmailDto);
-            }
+            _staffEmailService.Save(staff, staffEmailDtos);
 
-            foreach (var staffPhoneDto in staffPhoneDtos)
-            {
-                _staffPhoneService.Save(staffPhoneDto);
-            }
+            _staffPhoneService.Save(staff, staffPhoneDtos);
 
-            foreach (var staffAuthorization in staffAuthorizations)
-            {
-                _staffAuthorizationService.Save(staffAuthorization);
-            }
+            _staffAuthorizationService.Save(staff, staffAuthorizations);
+
 
             return new SuccessDataServiceResult<Staff>(staff, true, "Saved");
         }

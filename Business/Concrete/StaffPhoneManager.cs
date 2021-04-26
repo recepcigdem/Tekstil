@@ -112,16 +112,16 @@ namespace Business.Concrete
 
             foreach (var staffPhone in staffPhoneList.Data)
             {
+                var deleteStaffPhone = Delete(staffPhone);
+                if (deleteStaffPhone.Result == false)
+                    return new ErrorServiceResult(false, "StaffPhoneNotDeleted");
+
                 var phone = _phoneService.GetById(staffPhone.PhoneId);
                 if (phone.Result == false)
                     return new ErrorServiceResult(false, "StaffPhoneNotFound");
 
                 var deletePhone = _phoneService.Delete(phone.Data);
                 if (deletePhone.Result == false)
-                    return new ErrorServiceResult(false, "StaffPhoneNotDeleted");
-
-                var deleteStaffPhone = Delete(staffPhone);
-                if (deleteStaffPhone.Result == false)
                     return new ErrorServiceResult(false, "StaffPhoneNotDeleted");
             }
 
@@ -138,38 +138,35 @@ namespace Business.Concrete
             return new ServiceResult(true, "");
         }
 
-       // [SecuredOperation("admin,staff.saved")]
+        // [SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(StaffPhoneValidator))]
         [TransactionScopeAspect]
-        public IDataServiceResult<StaffPhone> Save(StaffPhoneDto staffPhoneDto)
+        public IDataServiceResult<StaffPhone> Save(Staff staff, List<StaffPhoneDto> staffPhoneDtos)
         {
-            StaffPhone staffPhone = new StaffPhone
-            {
-                Id = staffPhoneDto.Id,
-                StaffId = staffPhoneDto.StaffId,
-                PhoneId = staffPhoneDto.PhoneId,
-                IsMain = staffPhoneDto.IsMain
-            };
+            DeleteByStaff(staff);
 
-            Phone phone = new Phone
+            foreach (var staffPhoneDto in staffPhoneDtos)
             {
-                Id = staffPhone.PhoneId,
-                IsActive = staffPhoneDto.IsActive,
-                CountryCode = staffPhoneDto.CountryCode,
-                AreaCode = staffPhoneDto.AreaCode,
-                PhoneNumber = staffPhoneDto.PhoneNumber
-            };
+                Phone phone = new Phone
+                {
+                    IsActive = staffPhoneDto.IsActive,
+                    CountryCode = staffPhoneDto.CountryCode,
+                    AreaCode = staffPhoneDto.AreaCode,
+                    PhoneNumber = staffPhoneDto.PhoneNumber
+                };
 
-            if (staffPhoneDto.Id > 0)
-            {
-                Update(staffPhone);
+                _phoneService.Add(phone);
 
-            }
-            else
-            {
+                StaffPhone staffPhone = new StaffPhone
+                {
+                    StaffId = staffPhoneDto.StaffId,
+                    PhoneId = phone.Id,
+                    IsMain = staffPhoneDto.IsMain
+                };
+
                 Add(staffPhone);
             }
-            _phoneService.Save(phone);
+
 
             return new SuccessDataServiceResult<StaffPhone>(true, "Saved");
         }

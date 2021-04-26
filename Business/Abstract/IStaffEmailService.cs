@@ -19,6 +19,6 @@ namespace Business.Abstract
         IServiceResult Update(StaffEmail staffEmail);
         IServiceResult Delete(StaffEmail staffEmail);
         IServiceResult DeleteByStaff(Staff staff);
-        IDataServiceResult<StaffEmail> Save(StaffEmailDto staffEmailDto);
+        IDataServiceResult<StaffEmail> Save(Staff staff, List<StaffEmailDto> staffEmailDtos);
     }
 }

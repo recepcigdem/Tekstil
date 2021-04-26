@@ -87,7 +87,7 @@ namespace UI.Controllers.Staff
             return null;
         }
 
-        public JsonResult Delete(Models.Staff.Staff staff)
+        public JsonResult Delete(int Id)
         {
             #region  Staff Session Control
 
@@ -98,7 +98,8 @@ namespace UI.Controllers.Staff
             }
             #endregion
 
-            Entities.Concrete.Staff entity = staff.GetBusinessModel();
+            Entities.Concrete.Staff entity = new Entities.Concrete.Staff();
+            entity.Id = Id;
             if (entity.Id > 0)
             {
                 var res = _staffService.DeleteAll(entity);
@@ -129,7 +130,7 @@ namespace UI.Controllers.Staff
 
                 List<StaffPhoneDto> staffPhoneDtos = staff.ListStaffPhone;
                 List<StaffEmailDto> staffEmailDtos = staff.ListStaffEmail;
-                List<StaffAuthorization> staffAuthorizations = staff.StaffAuthorizations;
+                List<StaffAuthorization> staffAuthorizations = staff.ListStaffAuthorizations;
 
                 var result = _staffService.SaveAll(entity, staffEmailDtos, staffPhoneDtos, staffAuthorizations, password);
                 if (result.Result == false)

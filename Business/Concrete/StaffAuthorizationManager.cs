@@ -36,7 +36,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<StaffAuthorization>>(dbResult, true, "Listed");
         }
 
-
         public IDataServiceResult<StaffAuthorization> GetById(int staffAuthorizationId)
         {
             var dbResult = _staffAuthorizationDal.Get(p => p.Id == staffAuthorizationId);
@@ -44,6 +43,15 @@ namespace Business.Concrete
                 return new SuccessDataServiceResult<StaffAuthorization>(false, "SystemError");
 
             return new SuccessDataServiceResult<StaffAuthorization>(dbResult, true, "Listed");
+        }
+
+        public IServiceResult GetByStaffId(int staffId)
+        {
+            var dbResult = _staffAuthorizationDal.Get(p => p.StaffId == staffId);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
+
+            return new ServiceResult( true, "Listed", dbResult.Id);
         }
 
         //[SecuredOperation("admin,staff.add")]
@@ -110,19 +118,24 @@ namespace Business.Concrete
         //[SecuredOperation("admin,staff.saved")]
         [ValidationAspect(typeof(StaffAuthorizationValidator))]
         [TransactionScopeAspect]
-        public IDataServiceResult<StaffAuthorization> Save(StaffAuthorization staffAuthorization)
+        public IDataServiceResult<StaffAuthorization> Save(Staff staff, List<StaffAuthorization> staffAuthorizations)
         {
-            if (staffAuthorization.Id > 0)
+            // DeleteByStaff(staff);
+
+            foreach (var staffAuthorization in staffAuthorizations)
             {
-                var result = Update(staffAuthorization);
-                if (result.Result == false)
-                    return new DataServiceResult<StaffAuthorization>(false, result.Message);
-            }
-            else
-            {
-                var result = Add(staffAuthorization);
-                if (result.Result == false)
-                    return new DataServiceResult<StaffAuthorization>(false, result.Message);
+                if (staffAuthorization.Id > 0)
+                {
+                    var result = Update(staffAuthorization);
+                    if (result.Result == false)
+                        return new DataServiceResult<StaffAuthorization>(false, result.Message);
+                }
+                else
+                {
+                    var result = Add(staffAuthorization);
+                    if (result.Result == false)
+                        return new DataServiceResult<StaffAuthorization>(false, result.Message);
+                }
             }
 
             return new SuccessDataServiceResult<StaffAuthorization>(true, "Saved");
