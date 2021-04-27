@@ -159,7 +159,7 @@ namespace Business.Concrete
 
                 StaffPhone staffPhone = new StaffPhone
                 {
-                    StaffId = staffPhoneDto.StaffId,
+                    StaffId = staff.Id,
                     PhoneId = phone.Id,
                     IsMain = staffPhoneDto.IsMain
                 };

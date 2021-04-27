@@ -119,7 +119,7 @@
                                                 <div class="form-group">
                                                     @Localizer["Password"]
                                                     @*@Html.TextBoxFor(x => x.Password, new { @class = "form-control", @type = "password" })*@
-                                                    <input type="password" class="form-control" id="password" name="password">
+                                                    <input type="password" class="form-control" id="userPassword" name="userPassword">
                                                 </div>
                                             </div>
 
@@ -127,7 +127,7 @@
                                                 <div class="form-group">
                                                     @Localizer["ConfirmPassword"]
                                                     @*@Html.TextBoxFor(new { @class = "form-control", @id="confirmPassword", @type = "password" })*@
-                                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                                                    <input type="password" class="form-control" id="userConfirmPassword" name="userConfirmPassword">
                                                 </div>
                                             </div>
                                             @{ if (Model.IsSuperAdminControl == true)

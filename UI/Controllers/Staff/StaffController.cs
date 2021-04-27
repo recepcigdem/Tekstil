@@ -110,7 +110,7 @@ namespace UI.Controllers.Staff
         }
 
         [HttpPost]
-        public JsonResult Save(Models.Staff.Staff staff, string password, string confirmPassword)
+        public JsonResult Save(Models.Staff.Staff staff, string userPassword, string userConfirmPassword)
         {
             if (staff != null)
             {
@@ -118,11 +118,34 @@ namespace UI.Controllers.Staff
                 if (staffMail.FirstOrDefault() == null)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffIsMainIsNotNull")));
 
-                if ((password == null || confirmPassword == null))
+                if ((userPassword == null || userConfirmPassword == null))
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNull")));
 
-                if (password != confirmPassword)
+                if (userPassword != userConfirmPassword)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNotMatch")));
+
+                var session = SessionHelper.GetStaff(Request);
+
+                var encodePassword = Core.Helper.StringHelper.Base64Encode(userPassword);
+                if (encodePassword == null)
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("SystemError")));
+
+                var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(encodePassword);
+                if (hashPassword == null)
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("SystemError")));
+
+                var dbStaff = _staffService.GetById(session.StaffId);
+                if (dbStaff.Result == false)
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("StaffNotFound")));
+
+                if (dbStaff.Data.Password != hashPassword)
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNotMatch")));
+
+                if (string.IsNullOrEmpty(staff.Password))
+                {
+                    staff.Password = "1";
+                    staff.PasswordSalt = "1";
+                }
 
                 Entities.Concrete.Staff entity = staff.GetBusinessModel();
                 if (entity == null)
@@ -132,7 +155,7 @@ namespace UI.Controllers.Staff
                 List<StaffEmailDto> staffEmailDtos = staff.ListStaffEmail;
                 List<StaffAuthorization> staffAuthorizations = staff.ListStaffAuthorizations;
 
-                var result = _staffService.SaveAll(entity, staffEmailDtos, staffPhoneDtos, staffAuthorizations, password);
+                var result = _staffService.SaveAll(entity, staffEmailDtos, staffPhoneDtos, staffAuthorizations, userPassword);
                 if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);

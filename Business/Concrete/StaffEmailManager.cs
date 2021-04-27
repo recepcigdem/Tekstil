@@ -158,7 +158,7 @@ namespace Business.Concrete
 
                 StaffEmail staffEmail = new StaffEmail
                 {
-                    StaffId = staffEmailDto.StaffId,
+                    StaffId = staff.Id,
                     EmailId = email.Id,
                     IsMain = staffEmailDto.IsMain
                 };

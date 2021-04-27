@@ -120,10 +120,12 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IDataServiceResult<StaffAuthorization> Save(Staff staff, List<StaffAuthorization> staffAuthorizations)
         {
-            // DeleteByStaff(staff);
+             DeleteByStaff(staff);
 
             foreach (var staffAuthorization in staffAuthorizations)
             {
+                staffAuthorization.StaffId = staff.Id;
+
                 if (staffAuthorization.Id > 0)
                 {
                     var result = Update(staffAuthorization);

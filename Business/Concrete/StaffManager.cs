@@ -134,24 +134,6 @@ namespace Business.Concrete
 
         public IDataServiceResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations, string password)
         {
-            var encodePassword = Core.Helper.StringHelper.Base64Encode(password);
-            if (encodePassword == null)
-                return new DataServiceResult<Staff>(false, "SystemError");
-
-            var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(encodePassword);
-            if (hashPassword == null)
-                return new DataServiceResult<Staff>(false, "SystemError");
-
-            var dbStaff = GetById(staff.Id);
-            if (dbStaff.Result == false)
-                return new DataServiceResult<Staff>(false, "StaffNotFound");
-
-            if (dbStaff.Data.Password != hashPassword)
-                return new DataServiceResult<Staff>(false, "PasswordNotMatch");
-
-            staff.Password = hashPassword;
-            staff.PasswordSalt = encodePassword;
-
             if (staff.Id > 0)
             {
                 Update(staff);
