@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace UI.Models.Request
 {
-    public class RequestMail
+    public class RequestMail : BaseModel
     {
         public string TemplateName { get; set; }
         public string BaseUrl { get; set; }

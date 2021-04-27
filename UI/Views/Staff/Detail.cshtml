@@ -202,7 +202,8 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <th width="8%">@Localizer["IsMain"]</th>
-                                                                        <th width="82%">@Localizer["EmailAddress"]</th>
+                                                                        <th width="72%">@Localizer["EmailAddress"]</th>
+                                                                        <th width="10%"></th>
                                                                         <th width="10%"></th>
                                                                     </tr>
                                                                 </thead>
@@ -220,10 +221,12 @@
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
-                                                                                    <input type="text" class="form-control" name="mailAddress" value="@Model.ListStaffEmail[i].EmailAddress">
+                                                                                    <input type="text" class="form-control" name="mailAddress" id="mailAddress" value="@Model.ListStaffEmail[i].EmailAddress">
+
                                                                                 </div>
                                                                             </td>
                                                                             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteMail(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListStaffEmail[i].Id) @Html.HiddenFor(x => x.ListStaffEmail[i].EmailId)</td>
+                                                                            <td><button type="button" class="btn btn-sm btn-outline-primary" onclick="CreatePasswordSendMail(mailAddress.value)">@Localizer["SendEmail"]</button></td>
                                                                         </tr>
                                                                     }
                                                                 </tbody>
@@ -433,7 +436,7 @@
         $('#listgroupAuthorization').css('overflow-y', 'hidden').css('overflow-x', 'hidden');
 
         $('#listgroupAuthorization').hover(function () {
-            $(this).css('overflow-y', 'scroll').css('max-height', '10').css('position', 'relative');
+            $(this).css('overflow-y', 'scroll').css('position', 'relative');
         }, function () {
             $(this).css('overflow-y', 'hidden').css('max-height', '');
         });
@@ -488,7 +491,6 @@
                     }
                     newList.push(obj);
                 });
-                console.log(selectData);
                 let differentData = fullData.filter(o1 => !selectedIds.some(o2 => o1.id === o2.id));
                 differentData.forEach(item => {
                     var obj = {
@@ -586,7 +588,10 @@
             + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteMail(this)\">@Localizer["Delete"]</button>"
            + "<input type=\"hidden\" class=\"form-control\" name=\"id\" value=\"0\">"
            + "<input type=\"hidden\" class=\"form-control\" name=\"emailId\" value=\"0\">"
-           +"</td>"
+           + "</td>"
+           + "<td>"
+            + "<button type=\"button\" class=\"btn btn-sm btn-outline-primary\" onclick=\"CreatePasswordSendMail(mailAddress.value)\">@Localizer["SendEmail"]</button>"
+           + "</td>"
            + "</tr>");
         countEmail++;
     }
@@ -622,7 +627,7 @@
     var countPhone = $('.dataSatir').length + 1;
 
     function AddPhone() {
-       
+
         event.preventDefault();
         var table = document.querySelector("#phoneGrid tbody");
         table.insertAdjacentHTML("beforeend",
@@ -699,7 +704,7 @@
             data.id = row.find("td").find("input").eq(2).val();
             data.emailId = row.find("td").find("input").eq(3).val();
 
-          
+
             dataListMail.push(data);
 
         });
@@ -726,11 +731,11 @@
         });
 
         $('#SubEmailString').val(JSON.stringify(dataListMail));
-       
+
         $('#SubPhoneString').val(JSON.stringify(dataListPhone));
-       
+
         $('#SubAuthorizationString').val(JSON.stringify(SelectedItems));
-       
+
 
         if ( IsMainControl(dataListMail) == true && IsMainControl(dataListPhone) == true) {
 
@@ -749,6 +754,21 @@
                     }
                 });
         }
+    }
+
+    function CreatePasswordSendMail(email) {
+
+        console.log("ok");
+            var url = "@Url.Action("CreatePasswordSendMail", "Staff")"+ "?email=" + email;
+            $.post(url,
+                $("form").serialize(), function (data) {
+                    if (data.result == false) {
+                        ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
+                    }
+                    if (data.result == true) {
+                        ShowSuccessDetail('@SharedLocaLizer.GetLocalizedHtmlString("SendMail")');
+                    }
+                });
     }
 
     function ShowError(title, message) {
@@ -775,6 +795,21 @@
             padding: '4em'
         }).then(function () {
             window.location.href = "@Url.Action("Index","Staff")";
+        });
+    }
+
+    function ShowSuccessDetail(title, message) {
+
+        Swal.fire({
+            position: 'top-end',
+            title: title,
+            text: message,
+            icon: 'success',
+            showCloseButton: true,
+            showConfirmButton: true,
+            padding: '4em'
+        }).then(function () {
+            window.location.href = "@Url.Action("Detail","Staff")" + "?Detail="+id;
         });
     }
 

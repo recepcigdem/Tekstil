@@ -18,7 +18,8 @@
     "ConfigSecret": "MXEydzNlMVEyVzNF"
   },
   "Mailingtemplate": {
-    "ForgotPassword": "Templates\\MailTemplate\\ForgotPasswordTemplate\\Forgot_Password.html"
+    "ForgotPassword": "Templates\\MailTemplate\\ForgotPasswordTemplate\\Forgot_Password.html",
+    "CreatePassword": "Templates\\MailTemplate\\CreatePasswordTemplate\\CReate_Password.html"
   },
   "Smtp": {
     "SmtpServer": "smtp.gmail.com",

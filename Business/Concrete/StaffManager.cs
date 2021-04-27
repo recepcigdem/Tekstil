@@ -8,8 +8,6 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Entities.Concrete.Dtos;
 
 namespace Business.Concrete

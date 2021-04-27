@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -13,6 +14,7 @@ using Entities.Concrete.Dtos;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UI.Models;
@@ -114,10 +116,10 @@ namespace UI.Controllers.Staff
         {
             if (staff != null)
             {
-                var staffMail = staff.SubEmail.data.Where(x => x.IsMain == true);
-                if (staffMail.FirstOrDefault() == null)
+                var staffMails = staff.SubEmail.data.Where(x => x.IsMain == true).Select(x=>x.EmailAddress);
+                if (staffMails.FirstOrDefault() == null)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffIsMainIsNotNull")));
-
+                
                 if ((userPassword == null || userConfirmPassword == null))
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNull")));
 
@@ -141,7 +143,7 @@ namespace UI.Controllers.Staff
                 if (dbStaff.Data.Password != hashPassword)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNotMatch")));
 
-                if (string.IsNullOrEmpty(staff.Password))
+                if (staff.EntityId<1 && string.IsNullOrEmpty(staff.Password))
                 {
                     staff.Password = "1";
                     staff.PasswordSalt = "1";
@@ -162,9 +164,67 @@ namespace UI.Controllers.Staff
                     return Json(result);
                 }
 
+                if (staff.EntityId < 1)
+                {
+                    foreach (var staffEmailDto in staffMails)
+                    {
+                        CreatePasswordSendMail(staffEmailDto);
+                    }
+                }
+
                 result.Data = entity;
                 return Json(result);
             }
+
+            return null;
+        }
+
+        public JsonResult CreatePasswordSendMail(string email)
+        {
+            
+            var token = TokenHelper.CreateLoginToken(email);
+
+            RequestMail requestMail = new RequestMail();
+            requestMail.BaseUrl = Core.Helper.SettingsHelper.GetValue("Info", "ProjectUrl");
+            requestMail.LogoUrl = requestMail.BaseUrl + Core.Helper.SettingsHelper.GetValue("Info", "LogoURL");
+            requestMail.CompanyName = Core.Helper.SettingsHelper.GetValue("Info", "CompanyName");
+            requestMail.MailHeader = _localizerShared["CreatePassword_MailHeader"];
+            requestMail.MailInfo = _localizerShared["CreatePassword_MailInfo"];
+            requestMail.ButtonText = _localizerShared["CreatePassword_ButtonText"];
+            requestMail.ButtonUrl = requestMail.BaseUrl + requestMail.Culture + "/Login/ResetPassword?Id=" + token;
+            requestMail.AddressLine1 = Core.Helper.SettingsHelper.GetValue("Info", "AddressLine1");
+            requestMail.AddressLine2 = Core.Helper.SettingsHelper.GetValue("Info", "AddressLine2");
+            requestMail.MailAddress = email;
+            requestMail.TemplateName = Core.Helper.SettingsHelper.GetValue("Mailingtemplate", "CreatePassword");
+
+            var pathToFile = _env.WebRootPath
+                             + Path.DirectorySeparatorChar.ToString()
+                             + requestMail.TemplateName;
+
+
+            var builder = new BodyBuilder();
+            using (StreamReader sourceReader = System.IO.File.OpenText(pathToFile))
+            {
+                builder.HtmlBody = sourceReader.ReadToEnd();
+            }
+
+            string messageBody = string.Format(builder.HtmlBody,
+                requestMail.LogoUrl,
+                requestMail.CompanyName,
+                requestMail.MailHeader,
+                requestMail.MailInfo,
+                requestMail.ButtonUrl,
+                requestMail.ButtonText,
+                requestMail.AddressLine1,
+                requestMail.AddressLine2
+            );
+
+            string subject = requestMail.MailHeader;
+            string logoUrl = requestMail.LogoUrl;
+
+            var emailResult = Core.Helper.SendMail.SendMailProcess(subject, messageBody, requestMail.MailAddress);
+            if (emailResult.Result != true)
+                ViewBag.Error = _localizer.GetString("MailError");
 
             return null;
         }
