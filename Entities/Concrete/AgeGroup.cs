@@ -9,7 +9,7 @@ using Core.Entities;
 namespace Entities.Concrete
 {
     [Table("AgeGroup", Schema = "modelDefinition")]
-    public class AgeGroup : BaseEntity
+    public class AgeGroup : BaseCustomerEntity
     {
         [Column("isActive")]
         public bool IsActive { get; set; }

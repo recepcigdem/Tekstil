@@ -150,6 +150,7 @@ namespace Business.Concrete
             {
                 Email email = new Email
                 {
+                    CustomerId = staff.CustomerId,
                     IsActive = staffEmailDto.IsActive,
                     EmailAddress = staffEmailDto.EmailAddress
                 };
@@ -158,6 +159,7 @@ namespace Business.Concrete
 
                 StaffEmail staffEmail = new StaffEmail
                 {
+                    CustomerId = staff.CustomerId,
                     StaffId = staff.Id,
                     EmailId = email.Id,
                     IsMain = staffEmailDto.IsMain

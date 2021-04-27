@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 namespace Entities.Concrete
 {
     [Table("Staff", Schema = "staff")]
-    public class Staff : BaseEntity
+    public class Staff : BaseCustomerEntity
     {
-        [Column("customerId")]
-        public int CustomerId { get; set; }
         [Column("departmentId")]
         public int DepartmentId { get; set; }
         [Column("isActive")]
@@ -48,26 +46,25 @@ namespace Entities.Concrete
         public bool IsCompanyAdminControl { get; set; }
 
 
-        //public Staff()
-        //{
-        //    CustomerId = 0;
-        //    DepartmentId = 0;
-        //    IsActive = false;
-        //    Title = string.Empty;
-        //    FirstName = string.Empty;
-        //    LastName= string.Empty;
-        //    Password = string.Empty;
-        //    PasswordSalt = string.Empty;
-        //    RegisterDate =DateTime.UtcNow;
-        //    IsLeaving = false;
-        //    LeavingDate = DateTime.UtcNow;
-        //    IsSendEmail = false;
-        //    Photo = string.Empty;
-        //    IsSuperAdmin = false;
-        //    IsCompanyAdmin = false;
-        //    IsStandartUser = false;
-        //    IsSuperAdminControl = false;
-        //    IsCompanyAdminControl = false;
-        //}
+        public Staff()
+        {
+            DepartmentId = 0;
+            IsActive = false;
+            Title = string.Empty;
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            Password = string.Empty;
+            PasswordSalt = string.Empty;
+            RegisterDate = DateTime.UtcNow;
+            IsLeaving = false;
+            LeavingDate = DateTime.UtcNow;
+            IsSendEmail = false;
+            Photo = string.Empty;
+            IsSuperAdmin = false;
+            IsCompanyAdmin = false;
+            IsStandartUser = false;
+            IsSuperAdminControl = false;
+            IsCompanyAdminControl = false;
+        }
     }
 }

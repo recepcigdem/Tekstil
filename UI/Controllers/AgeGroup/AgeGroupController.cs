@@ -101,6 +101,8 @@ namespace UI.Controllers.AgeGroup
                 if (entity == null)
                     return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
 
+                entity.CustomerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
+
                 var result = _ageGroupService.Save(entity);
                 if (result.Result == false)
                 {

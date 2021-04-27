@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Entities.Concrete
 {
     [Table("StaffEmail",Schema = "staff")]
-    public class StaffEmail : BaseEntity
+    public class StaffEmail : BaseCustomerEntity
     {
         [Column("staffId")]
         public int StaffId { get; set; }

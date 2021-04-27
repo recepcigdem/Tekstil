@@ -149,6 +149,7 @@ namespace Business.Concrete
             {
                 Phone phone = new Phone
                 {
+                    CustomerId = staff.CustomerId,
                     IsActive = staffPhoneDto.IsActive,
                     CountryCode = staffPhoneDto.CountryCode,
                     AreaCode = staffPhoneDto.AreaCode,
@@ -159,6 +160,7 @@ namespace Business.Concrete
 
                 StaffPhone staffPhone = new StaffPhone
                 {
+                    CustomerId = staff.CustomerId,
                     StaffId = staff.Id,
                     PhoneId = phone.Id,
                     IsMain = staffPhoneDto.IsMain

@@ -16,7 +16,6 @@ namespace UI.Models.Staff
 {
     public class Staff : BaseModel
     {
-        public int CustomerId { get; set; }
         public int DepartmentId { get; set; }
         public bool IsActive { get; set; }
         public string Title { get; set; }

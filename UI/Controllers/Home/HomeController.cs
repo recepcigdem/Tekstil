@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Pozitif.Textile.UI.Models.RootModels;
+using UI.Models;
 
 namespace UI.Controllers.Home
 {

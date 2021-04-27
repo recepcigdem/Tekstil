@@ -9,7 +9,6 @@ namespace UI.Models.Department
 {
     public class Department : BaseModel
     {
-        public int EntityId { get; set; }
         public bool IsActive { get; set; }
         public string DepartmentName { get; set; }
 
@@ -21,6 +20,7 @@ namespace UI.Models.Department
         public Department(HttpRequest request, Entities.Concrete.Department department, IStringLocalizer _localizerShared) : base(request)
         {
             EntityId = department.Id;
+            //CustomerId = department.CustomerId;
             IsActive = department.IsActive;
             DepartmentName = department.DepartmentName;
         }
@@ -33,6 +33,7 @@ namespace UI.Models.Department
                 department.Id = EntityId;
             }
 
+            department.CustomerId = CustomerId;
             department.IsActive = IsActive;
             department.DepartmentName = DepartmentName;
 

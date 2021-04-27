@@ -124,6 +124,7 @@ namespace Business.Concrete
 
             foreach (var staffAuthorization in staffAuthorizations)
             {
+                staffAuthorization.CustomerId = staff.CustomerId;
                 staffAuthorization.StaffId = staff.Id;
 
                 if (staffAuthorization.Id > 0)

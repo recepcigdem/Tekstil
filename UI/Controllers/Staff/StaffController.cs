@@ -151,6 +151,8 @@ namespace UI.Controllers.Staff
                 if (entity == null)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_SystemError")));
 
+                entity.CustomerId = SessionHelper.GetStaff(Request).CustomerId;
+
                 entity.Password = staff.Password;
                 entity.PasswordSalt = staff.PasswordSalt;
 

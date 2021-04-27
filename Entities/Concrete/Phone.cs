@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Entities.Concrete
 {
     [Table("Phone", Schema = "staff")]
-    public class Phone : BaseEntity
+    public class Phone : BaseCustomerEntity
     {
         [Column("isActive")]
         public bool IsActive { get; set; }

@@ -10,26 +10,24 @@ namespace UI.Models
     {
         public string Culture { get; set; }
         public int EntityId { get; set; }
-
         public int CustomerId { get; set; }
 
         public string DateFormat { get; set; }
 
-
+        
         public BaseModel()
         {
-
             Culture = "tr";
 
         }
         public BaseModel(HttpRequest request)
         {
             Culture = Helpers.HttpHelper.GetRequestCulture(request);
+
             if (request.HttpContext.Session.GetString("Staff") != null)
             {
                 CustomerId = Helpers.SessionHelper.GetStaff(request).CustomerId;
             }
-
 
             if (Culture == "tr")
                 DateFormat = "DD.MM.YYYY";
