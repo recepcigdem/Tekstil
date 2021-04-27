@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Business.Abstract;
+﻿using Business.Abstract;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
 using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
-using Core.Utilities.Results;
 using Core.Helper.Login;
-using Core.Utilities.Business;
+using Core.Utilities.Results;
 using Entities.Concrete;
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Business.Concrete
 {
@@ -50,25 +45,24 @@ namespace Business.Concrete
             if (dbLoginControl.Result == false)
                 return new DataServiceResult<Staff>(false, dbLoginControl.Message);
 
-            return new DataServiceResult<Staff>(dbLoginControl.Data, createLoginToken.Obj, true, "Login");
+            return new DataServiceResult<Staff>(dbLoginControl.Data,createLoginToken.Obj ,true, "Login");
         }
 
         [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public DataServiceResult<Staff> DbLoginControl(string email, string password)
         {
-            var passwordHashing = PasswordHashing(password);
-            if (passwordHashing.Result == false)
-                return new DataServiceResult<Staff>(false, passwordHashing.Message);
-
-            string[] passwordObj = passwordHashing.Obj.ToString().Split("|");
-
             var emailControl = DbEmailControl(email);
             if (emailControl.Result == false)
                 return new DataServiceResult<Staff>(false, emailControl.Message);
 
+            var passwordHashing = PasswordHashing(password, emailControl.Data.PasswordSalt);
+            if (passwordHashing.Result == false)
+                return new DataServiceResult<Staff>(false, passwordHashing.Message);
 
-            if (emailControl.Data.Password != passwordObj[1])
+            string passwordObj = passwordHashing.Obj.ToString();
+
+            if (emailControl.Data.Password != passwordObj)
                 return new DataServiceResult<Staff>(false, "Error.Login_WrongPassword");
 
             return new SuccessDataServiceResult<Staff>(emailControl.Data, true, "ok");
@@ -78,6 +72,7 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public DataServiceResult<Staff> DbEmailControl(string email)
         {
+            
             var dbEmail = _emailService.GetByEmail(email);
             if (dbEmail.Result != true)
                 return new DataServiceResult<Staff>(false, "Error.Login_EmailNotFound");
@@ -90,10 +85,10 @@ namespace Business.Concrete
                 return new DataServiceResult<Staff>(false, "Error.Login_EmailIsNotIsMain");
 
             var dbStaff = _staffService.GetById(dbStaffEmail.Data.StaffId);
-            if (dbStaffEmail.Result != true)
+            if (dbStaff.Result != true)
                 return new DataServiceResult<Staff>(false, "Error.Login_StaffNotFound");
 
-            return new SuccessDataServiceResult<Staff>(dbStaff.Data, true, "ok");
+            return new SuccessDataServiceResult<Staff>(dbStaff.Data, dbStaff.Data.PasswordSalt, true, "ok");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -146,21 +141,19 @@ namespace Business.Concrete
 
         [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
-        public ServiceResult PasswordHashing(string password)
+        public ServiceResult PasswordHashing(string password, string userDbSalt)
         {
-            //Kullanıcının girdiği password encode ve salt işlemlerinden sonra hashlaniyor.
-            //string salt = Core.Helper.PasswordHashSaltHelper.CreateSalt(4); 
-            var encodePassword = Core.Helper.StringHelper.Base64Encode(password);
-            if (encodePassword == null)
-                return new ErrorServiceResult(false, "SystemError");
+            if (string.IsNullOrWhiteSpace(userDbSalt))
+            {
+                userDbSalt = Core.Helper.PasswordHashSaltHelper.CreateSalt(4);
+            }
+            var staffSalt = userDbSalt + password;
 
-            var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(encodePassword);
+            var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(staffSalt);
             if (hashPassword == null)
                 return new ErrorServiceResult(false, "SystemError");
 
-            var passwordObj = encodePassword + "|" + hashPassword;
-
-            return new ServiceResult(true, "ok", passwordObj);
+            return new ServiceResult(true, "ok", hashPassword);
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -246,10 +239,14 @@ namespace Business.Concrete
             if (emailControl.Result == false)
                 return new ServiceResult(false, emailControl.Message);
 
-            string[] passwordObj = PasswordHashing(password).Obj.ToString().Split("|");
+            if (string.IsNullOrWhiteSpace(emailControl.Data.PasswordSalt )||(emailControl.Data.PasswordSalt=="1"))
+            {
+                emailControl.Data.PasswordSalt = Core.Helper.PasswordHashSaltHelper.CreateSalt(4);
+            }
 
-            emailControl.Data.PasswordSalt = passwordObj[0];
-            emailControl.Data.Password = passwordObj[1];
+            string passwordObj = PasswordHashing(password, emailControl.Data.PasswordSalt).Obj.ToString();
+
+            emailControl.Data.Password = passwordObj;
 
             var staffSave = _staffService.Save(emailControl.Data);
             if (staffSave.Result == false)

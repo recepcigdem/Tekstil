@@ -10,6 +10,8 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 
 namespace Business.Concrete
 {
@@ -68,6 +70,7 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IServiceResult Update(Email email)
         {
+            
             IServiceResult result = BusinessRules.Run(CheckIfEmailExists(email));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);

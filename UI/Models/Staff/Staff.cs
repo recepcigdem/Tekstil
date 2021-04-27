@@ -41,12 +41,13 @@ namespace UI.Models.Staff
 
         #region Injections
 
+        private IStaffService _staffService;
         private IStaffEmailService _staffEmailService;
         private IStaffPhoneService _staffPhoneService;
         private IStaffAuthorizationService _staffAuthorizationService;
         private IEmailService _emailService;
         private IPhoneService _phoneService;
-        private IAuthorizationService _authorizationService;
+       
 
         #endregion
 
@@ -81,6 +82,7 @@ namespace UI.Models.Staff
 
         public Staff() : base()
         {
+            
 
             CustomerId = 0;
             DepartmentId = 0;
@@ -126,7 +128,7 @@ namespace UI.Models.Staff
             #endregion
         }
 
-        public Staff(HttpRequest request, Entities.Concrete.Staff staff, IStringLocalizer _localizerShared, string rootPath, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService, IAuthorizationService authorizationService) : base(request)
+        public Staff(HttpRequest request, Entities.Concrete.Staff staff, IStringLocalizer _localizerShared, string rootPath, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService, IStaffService staffService) : base(request)
         {
 
             _staffEmailService = staffEmailService;
@@ -134,7 +136,7 @@ namespace UI.Models.Staff
             _staffAuthorizationService = staffAuthorizationService;
             _emailService = emailService;
             _phoneService = phoneService;
-            _authorizationService = authorizationService;
+            _staffService = staffService;
 
             RootPath = rootPath;
 
@@ -148,6 +150,10 @@ namespace UI.Models.Staff
                 this.IsSuperAdminControl = resultStaffSession.IsSuperAdmin;
                 this.IsCompanyAdminControl = resultStaffSession.IsCompanyAdmin;
             }
+
+
+            
+            
 
             EntityId = staff.Id;
             CustomerId = staff.CustomerId;
@@ -279,8 +285,10 @@ namespace UI.Models.Staff
             #endregion
         }
 
-        public Entities.Concrete.Staff GetBusinessModel()
+        public Entities.Concrete.Staff GetBusinessModel(IStaffService staffService)
         {
+            _staffService = staffService;
+
             Entities.Concrete.Staff staff = new Entities.Concrete.Staff();
             if (EntityId > 0)
             {
@@ -294,6 +302,15 @@ namespace UI.Models.Staff
             staff.LastName = LastName;
             staff.Password = Password;
             staff.PasswordSalt = PasswordSalt;
+            if (staff.Id > 0)
+            {
+                var dbStaff = _staffService.GetById(staff.Id);
+                if (dbStaff != null)
+                {
+                    Password = dbStaff.Data.Password;
+                    PasswordSalt = dbStaff.Data.PasswordSalt;
+                }
+            }
             staff.RegisterDate = RegisterDate;
             staff.IsLeaving = IsLeaving;
             staff.LeavingDate = LeavingDate;

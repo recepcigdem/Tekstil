@@ -79,57 +79,6 @@
                                     </div>
                                     <div class="col-md-8" style="margin-top:20px;">
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    @Localizer["CustomerName"]
-                                                    <select id="comboCustomer" class="form-control">
-                                                        <option></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    @Localizer["DepartmentName"]
-                                                    <select id="comboDepartment" class="form-control">
-                                                        <option></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    @Localizer["Title"]
-                                                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    @Localizer["FirstName"]
-                                                    @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    @Localizer["LastName"]
-                                                    @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    @Localizer["Password"]
-                                                    @*@Html.TextBoxFor(x => x.Password, new { @class = "form-control", @type = "password" })*@
-                                                    <input type="password" class="form-control" id="userPassword" name="userPassword">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    @Localizer["ConfirmPassword"]
-                                                    @*@Html.TextBoxFor(new { @class = "form-control", @id="confirmPassword", @type = "password" })*@
-                                                    <input type="password" class="form-control" id="userConfirmPassword" name="userConfirmPassword">
-                                                </div>
-                                            </div>
                                             @{ if (Model.IsSuperAdminControl == true)
                                                 {
                                                     <div class="col-md-6">
@@ -138,6 +87,15 @@
                                                                 @Html.CheckBoxFor(x => x.IsSuperAdmin, new { @id = "CheckBoxIsSuperAdmin", @class = "chb" })
                                                                 @Html.LabelFor(x => x.IsSuperAdmin, "") @Localizer["IsSuperAdmin"]
                                                             </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Localizer["CustomerName"]
+                                                            <select id="comboCustomer" class="form-control">
+                                                                <option></option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 }
@@ -161,6 +119,49 @@
                                                     </div>
                                                 }
 
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        @Localizer["DepartmentName"]
+                                                        <select id="comboDepartment" class="form-control">
+                                                            <option></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        @Localizer["Title"]
+                                                        @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        @Localizer["FirstName"]
+                                                        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        @Localizer["LastName"]
+                                                        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        @Localizer["Password"]
+                                                        @*@Html.TextBoxFor(x => x.Password, new { @class = "form-control", @type = "password" })*@
+                                                        <input type="password" class="form-control" id="userPassword" name="userPassword">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        @Localizer["ConfirmPassword"]
+                                                        @*@Html.TextBoxFor(new { @class = "form-control", @id="confirmPassword", @type = "password" })*@
+                                                        <input type="password" class="form-control" id="userConfirmPassword" name="userConfirmPassword">
+                                                    </div>
+                                                </div>
                                             }
 
                                         </div>
@@ -280,7 +281,7 @@
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
-                                                                                    <input type="text" class="form-control numericField" name="phoneNumber" value="@Model.ListStaffPhone[i].PhoneNumber">
+                                                                                    <input type="text" class="form-control" name="phoneNumber" value="@Model.ListStaffPhone[i].PhoneNumber">
                                                                                 </div>
                                                                             </td>
                                                                             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deletePhone(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListStaffPhone[i].Id) @Html.HiddenFor(x => x.ListStaffPhone[i].PhoneId)</td>

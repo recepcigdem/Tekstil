@@ -33,10 +33,9 @@ namespace UI.Controllers.Staff
         private IStaffAuthorizationService _staffAuthorizationService;
         private IEmailService _emailService;
         private IPhoneService _phoneService;
-        private IAuthorizationService _authorizationService;
 
 
-        public StaffController(IStringLocalizerFactory factory, IStringLocalizer<StaffController> localizer, ILogger<StaffController> logger, IWebHostEnvironment env, IStaffService staffService, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService, IAuthorizationService authorizationService) : base(factory, env)
+        public StaffController(IStringLocalizerFactory factory, IStringLocalizer<StaffController> localizer, ILogger<StaffController> logger, IWebHostEnvironment env, IStaffService staffService, IStaffEmailService staffEmailService, IStaffPhoneService staffPhoneService, IStaffAuthorizationService staffAuthorizationService, IEmailService emailService, IPhoneService phoneService) : base(factory, env)
         {
             _staffService = staffService;
             _staffEmailService = staffEmailService;
@@ -44,7 +43,7 @@ namespace UI.Controllers.Staff
             _staffAuthorizationService = staffAuthorizationService;
             _emailService = emailService;
             _phoneService = phoneService;
-            _authorizationService = authorizationService;
+            
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
@@ -70,7 +69,7 @@ namespace UI.Controllers.Staff
             if (staff == null || staff.Id < 1)
                 staff = new Entities.Concrete.Staff();
 
-            var model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService, _authorizationService);
+            var model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService,_staffService);
             return View(model);
         }
 
@@ -81,7 +80,7 @@ namespace UI.Controllers.Staff
                 var staff = _staffService.GetById(id).Data;
                 if (staff != null)
                 {
-                    Models.Staff.Staff model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService, _authorizationService);
+                    Models.Staff.Staff model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService, _staffService);
                     return PartialView(model);
                 }
                 return null;
@@ -128,17 +127,16 @@ namespace UI.Controllers.Staff
 
                 var session = SessionHelper.GetStaff(Request);
 
-                var encodePassword = Core.Helper.StringHelper.Base64Encode(userPassword);
-                if (encodePassword == null)
-                    return Json(new ErrorServiceResult(false, _localizer.GetString("SystemError")));
-
-                var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(encodePassword);
-                if (hashPassword == null)
-                    return Json(new ErrorServiceResult(false, _localizer.GetString("SystemError")));
-
                 var dbStaff = _staffService.GetById(session.StaffId);
                 if (dbStaff.Result == false)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("StaffNotFound")));
+
+                var staffSalt = dbStaff.Data.PasswordSalt + userPassword;
+
+                var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(staffSalt);
+                if (hashPassword == null)
+                    return Json(new ErrorServiceResult(false, _localizer.GetString("SystemError")));
+
 
                 if (dbStaff.Data.Password != hashPassword)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNotMatch")));
@@ -149,9 +147,12 @@ namespace UI.Controllers.Staff
                     staff.PasswordSalt = "1";
                 }
 
-                Entities.Concrete.Staff entity = staff.GetBusinessModel();
+                Entities.Concrete.Staff entity = staff.GetBusinessModel(_staffService);
                 if (entity == null)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_SystemError")));
+
+                entity.Password = staff.Password;
+                entity.PasswordSalt = staff.PasswordSalt;
 
                 List<StaffPhoneDto> staffPhoneDtos = staff.ListStaffPhone;
                 List<StaffEmailDto> staffEmailDtos = staff.ListStaffEmail;

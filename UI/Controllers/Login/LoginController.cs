@@ -62,6 +62,7 @@ namespace UI.Controllers.Login
 
             StaffSession staffSession = new StaffSession();
             staffSession.StaffId = login.Data.Id;
+            staffSession.CustomerId = login.Data.CustomerId;
             staffSession.FirstName = login.Data.FirstName;
             staffSession.LastName = login.Data.LastName;
             staffSession.Token = login.Obj.ToString();

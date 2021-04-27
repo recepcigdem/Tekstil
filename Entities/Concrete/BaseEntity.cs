@@ -8,6 +8,8 @@ namespace Entities.Concrete
     {
         [Column("id")]
         public int Id { get; set; }
+        [Column("customerId")]
+        public int CustomerId { get; set; }
         [Column("isDeleted")]
         public bool IsDeleted { get; set; }
         [Column("createdBy")]
@@ -22,6 +24,7 @@ namespace Entities.Concrete
         public BaseEntity()
         {
             Id = 0;
+            CustomerId = 0;
             IsDeleted = false;
             CreatedBy = 0;
             DateCreated = DateTime.UtcNow;

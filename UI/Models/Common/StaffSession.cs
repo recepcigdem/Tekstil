@@ -8,6 +8,7 @@ namespace UI.Models.Common
     public class StaffSession
     {
         public int StaffId { get; set; }
+        public int CustomerId { get; set; }
         public string Token { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
