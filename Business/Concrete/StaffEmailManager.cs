@@ -25,9 +25,9 @@ namespace Business.Concrete
             _emailService = emailService;
         }
 
-        public IDataServiceResult<List<StaffEmail>> GetAll()
+        public IDataServiceResult<List<StaffEmail>> GetAll(int customerId)
         {
-            var dbResult = _staffEmailDal.GetAll();
+            var dbResult = _staffEmailDal.GetAll(x=>x.CustomerId==customerId);
 
             return new SuccessDataServiceResult<List<StaffEmail>>(dbResult, true, "Listed");
         }

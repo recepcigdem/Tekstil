@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
+using Microsoft.AspNetCore.Http;
 
 namespace UI.Models.Department
 {
@@ -12,11 +13,11 @@ namespace UI.Models.Department
 
         private IDepartmentService _departmentService;
 
-        public DepartmentList(IDepartmentService departmentService)
+        public DepartmentList(HttpRequest request,IDepartmentService departmentService)
         {
             _departmentService = departmentService;
-
-            var listGrid = _departmentService.GetAll().Data;
+            var customerId = Helpers.SessionHelper.GetStaff(request).CustomerId;
+            var listGrid = _departmentService.GetAll(customerId).Data;
             data = new List<DepartmentListLine>();
             foreach (var item in listGrid)
             {

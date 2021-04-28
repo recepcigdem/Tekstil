@@ -26,6 +26,7 @@ namespace UI.Controllers.Department
             var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
+
         }
 
         public IActionResult Index()
@@ -36,7 +37,7 @@ namespace UI.Controllers.Department
         [HttpPost]
         public JsonResult DepartmentList()
         {
-            DepartmentList list = new DepartmentList(_departmentService);
+            DepartmentList list = new DepartmentList(Request,_departmentService);
             return Json(list);
         }
 
@@ -125,7 +126,8 @@ namespace UI.Controllers.Department
        
         public JsonResult ComboList()
         {
-            var departmentList = _departmentService.GetAll().Data;
+            var customerId= Helpers.SessionHelper.GetStaff(Request).CustomerId;
+            var departmentList = _departmentService.GetAllByActiveCustomerId(customerId).Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
             foreach (Entities.Concrete.Department entity in departmentList)
             {

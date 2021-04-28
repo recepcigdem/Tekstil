@@ -22,9 +22,16 @@ namespace Business.Concrete
             _departmentDal = departmentDal;
         }
 
-        public IDataServiceResult<List<Department>> GetAll()
+        public IDataServiceResult<List<Department>> GetAll(int customerId)
         {
-            var dbResult = _departmentDal.GetAll();
+            var dbResult = _departmentDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<Department>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<Department>> GetAllByActiveCustomerId(int customerId)
+        {
+            var dbResult = _departmentDal.GetAll(x => x.CustomerId == customerId && x.IsActive == true);
 
             return new SuccessDataServiceResult<List<Department>>(dbResult, true, "Listed");
         }

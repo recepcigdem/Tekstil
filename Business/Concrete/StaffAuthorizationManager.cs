@@ -22,9 +22,9 @@ namespace Business.Concrete
             _staffAuthorizationDal = staffAuthorizationDal;
         }
 
-        public IDataServiceResult<List<StaffAuthorization>> GetAll()
+        public IDataServiceResult<List<StaffAuthorization>> GetAll(int customerId)
         {
-            var dbResult = _staffAuthorizationDal.GetAll();
+            var dbResult = _staffAuthorizationDal.GetAll(x=>x.CustomerId==customerId);
 
             return new SuccessDataServiceResult<List<StaffAuthorization>>(dbResult, true, "Listed");
         }

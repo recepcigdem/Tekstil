@@ -29,9 +29,9 @@ namespace Business.Concrete
             _staffPhoneService = staffPhoneService;
         }
 
-        public IDataServiceResult<List<Staff>> GetAll()
+        public IDataServiceResult<List<Staff>> GetAll(int customerId)
         {
-            var dbResult = _staffDal.GetAll();
+            var dbResult = _staffDal.GetAll(x=>x.CustomerId==customerId);
 
             return new SuccessDataServiceResult<List<Staff>>(dbResult, true, "Listed");
         }

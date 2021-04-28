@@ -10,6 +10,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Business.Concrete
 {
@@ -22,9 +23,9 @@ namespace Business.Concrete
             _phoneDal = phoneDal;
         }
 
-        public IDataServiceResult<List<Phone>> GetAll()
+        public IDataServiceResult<List<Phone>> GetAll(int customerId)
         {
-            var dbResult = _phoneDal.GetAll();
+            var dbResult = _phoneDal.GetAll(x=>x.CustomerId==customerId);
 
             return new SuccessDataServiceResult<List<Phone>>(dbResult, true, "Listed");
         }

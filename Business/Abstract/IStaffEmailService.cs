@@ -11,7 +11,7 @@ namespace Business.Abstract
 {
     public interface IStaffEmailService
     {
-        IDataServiceResult<List<StaffEmail>> GetAll();
+        IDataServiceResult<List<StaffEmail>> GetAll(int customerId);
         IDataServiceResult<StaffEmail> GetById(int staffEmailId);
         IDataServiceResult<StaffEmail> GetByEmailId(int emailId);
         IDataServiceResult<List<StaffEmail>> GetAllByStaffId(int staffId);

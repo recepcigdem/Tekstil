@@ -10,7 +10,7 @@ namespace Business.Abstract
 {
     public interface IStaffAuthorizationService
     {
-        IDataServiceResult<List<StaffAuthorization>> GetAll();
+        IDataServiceResult<List<StaffAuthorization>> GetAll(int customerId);
         IDataServiceResult<List<StaffAuthorization>> GetAllByStaffId(int staffId);
         IDataServiceResult<StaffAuthorization> GetById(int staffAuthorizationId);
         IServiceResult GetByStaffId(int staffId);

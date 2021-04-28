@@ -10,7 +10,8 @@ namespace Business.Abstract
 {
     public interface IDepartmentService
     {
-        IDataServiceResult<List<Department>> GetAll();
+        IDataServiceResult<List<Department>> GetAll(int customerId);
+        IDataServiceResult<List<Department>> GetAllByActiveCustomerId(int customerId);
         IDataServiceResult<Department> GetById(int departmentId);
         IServiceResult Add(Department department);
         IServiceResult Update(Department department);

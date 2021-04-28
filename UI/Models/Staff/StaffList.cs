@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
 using Business.Concrete;
+using Microsoft.AspNetCore.Http;
+using UI.Helpers;
 
 namespace UI.Models.Staff
 {
@@ -13,10 +15,11 @@ namespace UI.Models.Staff
 
         private IStaffService _staffService;
 
-        public StaffList(IStaffService staffService)
+        public StaffList(HttpRequest request ,IStaffService staffService)
         {
+            var customerId= SessionHelper.GetStaff(request).CustomerId;
             _staffService = staffService;
-            var listGrid = _staffService.GetAll().Data;
+            var listGrid = _staffService.GetAll(customerId).Data;
             data = new List<StaffListLine>();
             foreach (var item in listGrid)
             {

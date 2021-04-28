@@ -10,7 +10,7 @@ namespace Business.Abstract
 {
     public interface IEmailService
     {
-        IDataServiceResult<List<Email>> GetAll();
+        IDataServiceResult<List<Email>> GetAll(int customerId);
         IDataServiceResult<Email> GetById(int emailId);
         IDataServiceResult<Email> GetByEmail(string email);
         IServiceResult Add(Email email);

@@ -43,7 +43,7 @@ namespace UI.Controllers.Staff
             _staffAuthorizationService = staffAuthorizationService;
             _emailService = emailService;
             _phoneService = phoneService;
-            
+
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
@@ -59,7 +59,7 @@ namespace UI.Controllers.Staff
         [HttpPost]
         public JsonResult StaffList()
         {
-            StaffList list = new StaffList(_staffService);
+            StaffList list = new StaffList(Request, _staffService);
             return Json(list);
         }
 
@@ -69,7 +69,7 @@ namespace UI.Controllers.Staff
             if (staff == null || staff.Id < 1)
                 staff = new Entities.Concrete.Staff();
 
-            var model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService,_staffService);
+            var model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService, _staffService);
             return View(model);
         }
 
@@ -115,10 +115,10 @@ namespace UI.Controllers.Staff
         {
             if (staff != null)
             {
-                var staffMails = staff.SubEmail.data.Where(x => x.IsMain == true).Select(x=>x.EmailAddress);
+                var staffMails = staff.SubEmail.data.Where(x => x.IsMain == true).Select(x => x.EmailAddress);
                 if (staffMails.FirstOrDefault() == null)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffIsMainIsNotNull")));
-                
+
                 if ((userPassword == null || userConfirmPassword == null))
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNull")));
 
@@ -141,7 +141,7 @@ namespace UI.Controllers.Staff
                 if (dbStaff.Data.Password != hashPassword)
                     return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffPasswordNotMatch")));
 
-                if (staff.EntityId<1 && string.IsNullOrEmpty(staff.Password))
+                if (staff.EntityId < 1 && string.IsNullOrEmpty(staff.Password))
                 {
                     staff.Password = "1";
                     staff.PasswordSalt = "1";
@@ -184,7 +184,7 @@ namespace UI.Controllers.Staff
 
         public JsonResult CreatePasswordSendMail(string email)
         {
-            
+
             var token = TokenHelper.CreateLoginToken(email);
 
             RequestMail requestMail = new RequestMail();
