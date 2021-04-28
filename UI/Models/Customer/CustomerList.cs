@@ -17,11 +17,14 @@ namespace UI.Models.Customer
             _customerService = customerService;
 
             var listGrid = _customerService.GetAll().Data;
-            data = new List<CustomerListLine>();
-            foreach (var item in listGrid)
+            if (listGrid != null)
             {
-                CustomerListLine line = new CustomerListLine(item);
-                data.Add(line);
+                data = new List<CustomerListLine>();
+                foreach (var item in listGrid)
+                {
+                    CustomerListLine line = new CustomerListLine(item);
+                    data.Add(line);
+                }
             }
         }
     }

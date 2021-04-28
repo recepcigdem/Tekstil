@@ -18,11 +18,14 @@ namespace UI.Models.Department
             _departmentService = departmentService;
             var customerId = Helpers.SessionHelper.GetStaff(request).CustomerId;
             var listGrid = _departmentService.GetAll(customerId).Data;
-            data = new List<DepartmentListLine>();
-            foreach (var item in listGrid)
+            if (listGrid != null)
             {
-                DepartmentListLine line = new DepartmentListLine(item);
-                data.Add(line);
+                data = new List<DepartmentListLine>();
+                foreach (var item in listGrid)
+                {
+                    DepartmentListLine line = new DepartmentListLine(item);
+                    data.Add(line);
+                }
             }
         }
     }

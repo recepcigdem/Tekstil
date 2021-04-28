@@ -1,49 +1,53 @@
-﻿using Business.Abstract;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Business.Abstract;
 using Core.Utilities.Results;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Reflection;
 using UI.Models;
-using UI.Models.Customer;
+using UI.Models.Definition;
+using UI.Models.DefinitionTitle;
 
-namespace UI.Controllers.Customer
+namespace UI.Controllers.DefinitionTitle
 {
-    public class CustomerController : BaseController
+    public class DefinitionTitleController : BaseController
     {
-        private ICustomerService _customerService;
+        private IDefinitionTitleService _definitionTitleService;
 
-        public CustomerController(IStringLocalizerFactory factory, IStringLocalizer<CustomerController> localizer, ILogger<CustomerController> logger, IWebHostEnvironment env, ICustomerService customerService) : base(factory, env)
+        public DefinitionTitleController(IStringLocalizerFactory factory, IStringLocalizer<DefinitionTitleController> localizer, ILogger<DefinitionTitleController> logger, IWebHostEnvironment env, IDefinitionTitleService definitionTitleService) : base(factory, env)
         {
-            _customerService = customerService;
+            _definitionTitleService = definitionTitleService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
-        }
 
+        }
         public IActionResult Index()
         {
             BaseModel model = new BaseModel(Request);
             return View(model);
         }
         [HttpPost]
-        public JsonResult CustomerList()
+        public JsonResult DefinitionTitleList()
         {
-            CustomerList list = new CustomerList(_customerService);
+            DefinitionTitleList list = new DefinitionTitleList(Request, _definitionTitleService);
             return Json(list);
         }
 
         public ActionResult Detail(int id)
         {
-            Entities.Concrete.Customer serviceDetail = new Entities.Concrete.Customer();
+            Entities.Concrete.DefinitionTitle serviceDetail = new Entities.Concrete.DefinitionTitle();
             if (id > 0)
-                serviceDetail = _customerService.GetById(id).Data;
+                serviceDetail = _definitionTitleService.GetById(id).Data;
 
-            var model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
+            var model = new Models.DefinitionTitle.DefinitionTitle(Request, serviceDetail, _localizerShared);
             return View(model);
         }
 
@@ -51,10 +55,10 @@ namespace UI.Controllers.Customer
         {
             if (id > 0)
             {
-                var serviceDetail = _customerService.GetById(id).Data;
+                var serviceDetail = _definitionTitleService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
-                    Models.Customer.Customer model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
+                    Models.DefinitionTitle.DefinitionTitle model = new Models.DefinitionTitle.DefinitionTitle(Request, serviceDetail, _localizerShared);
                     return PartialView(model);
                 }
                 return null;
@@ -64,7 +68,7 @@ namespace UI.Controllers.Customer
 
         public JsonResult Delete(int Id)
         {
-            #region  Customer Session Control
+            #region  DefinitionTitle Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
@@ -73,18 +77,18 @@ namespace UI.Controllers.Customer
             }
             #endregion
 
-            Entities.Concrete.Customer entity = new Entities.Concrete.Customer();
+            Entities.Concrete.DefinitionTitle entity = new Entities.Concrete.DefinitionTitle();
             entity.Id = Id;
 
             if (Id > 0)
             {
-                var res = _customerService.Delete(entity);
+                var res = _definitionTitleService.Delete(entity);
                 return Json(res);
             }
             return null;
         }
         [HttpPost]
-        public JsonResult Save(Models.Customer.Customer customer)
+        public JsonResult Save(Models.DefinitionTitle.DefinitionTitle definitionTitle)
         {
             #region  Staff Session Control
 
@@ -95,13 +99,17 @@ namespace UI.Controllers.Customer
             }
             #endregion
 
-            if (customer != null)
+            if (definitionTitle != null)
             {
-                Entities.Concrete.Customer entity = customer.GetBusinessModel();
+
+
+                Entities.Concrete.DefinitionTitle entity = definitionTitle.GetBusinessModel();
                 if (entity == null)
                     return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _customerService.Save(entity);
+                entity.CustomerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
+
+                var result = _definitionTitleService.Save(entity);
                 if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
@@ -115,14 +123,15 @@ namespace UI.Controllers.Customer
 
             return null;
         }
-       
+
         public JsonResult ComboList()
         {
-            var customerList = _customerService.GetAll().Data;
+            var customerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
+            var definitionTitleList = _definitionTitleService.GetAll(customerId).Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
-            foreach (Entities.Concrete.Customer entity in customerList)
+            foreach (Entities.Concrete.DefinitionTitle entity in definitionTitleList)
             {
-                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.CustomerName);
+                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.Title);
                 data.Add(model);
             }
             return Json(data);

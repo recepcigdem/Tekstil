@@ -37,6 +37,8 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<CsNoDeliveryDateHistory> CsNoDeliveryDateHistory { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Definition> Definitions { get; set; }
+        public DbSet<DefinitionTitle> DefinitionTitles { get; set; }
         public DbSet<Detail> Detail { get; set; }
         public DbSet<Email> Email { get; set; }
         public DbSet<Fit> Fit { get; set; }

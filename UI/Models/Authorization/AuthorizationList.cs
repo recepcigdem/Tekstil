@@ -18,11 +18,14 @@ namespace UI.Models.Authorization
             _authorizationService = authorizationService;
 
             var listGrid = _authorizationService.GetAll().Data;
-            data = new List<AuthorizationListLine>();
-            foreach (var item in listGrid)
+            if (listGrid != null)
             {
-                AuthorizationListLine line = new AuthorizationListLine(item);
-                data.Add(line);
+                data = new List<AuthorizationListLine>();
+                foreach (var item in listGrid)
+                {
+                    AuthorizationListLine line = new AuthorizationListLine(item);
+                    data.Add(line);
+                }
             }
         }
     }

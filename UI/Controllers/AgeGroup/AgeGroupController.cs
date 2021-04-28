@@ -9,6 +9,7 @@ using Business.Abstract;
 using Core.Utilities.Results;
 using UI.Models;
 using UI.Models.AgeGroup;
+using UI.Models.DefinitionTitle;
 
 namespace UI.Controllers.AgeGroup
 {
@@ -39,9 +40,9 @@ namespace UI.Controllers.AgeGroup
 
         public ActionResult Detail(int id)
         {
-            var serviceDetail = _ageGroupService.GetById(id).Data;
-            if (serviceDetail == null )
-                serviceDetail = new Entities.Concrete.AgeGroup();
+            Entities.Concrete.AgeGroup serviceDetail = new Entities.Concrete.AgeGroup();
+            if (id > 0)
+                serviceDetail = _ageGroupService.GetById(id).Data;
 
             var model = new Models.AgeGroup.AgeGroup(Request, serviceDetail, _localizerShared);
             return View(model);
@@ -69,7 +70,7 @@ namespace UI.Controllers.AgeGroup
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult(_localizer.GetString("Error_StaffNotFound")));
+                return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffNotFound")));
             }
             #endregion
 
@@ -91,7 +92,7 @@ namespace UI.Controllers.AgeGroup
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult(_localizer.GetString("Error_StaffNotFound")));
+                return Json(new ErrorServiceResult(false, _localizer.GetString("Error_StaffNotFound")));
             }
             #endregion
 
@@ -99,7 +100,7 @@ namespace UI.Controllers.AgeGroup
             {
                 Entities.Concrete.AgeGroup entity = ageGroup.GetBusinessModel();
                 if (entity == null)
-                    return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
+                    return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_SystemError")));
 
                 entity.CustomerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
 

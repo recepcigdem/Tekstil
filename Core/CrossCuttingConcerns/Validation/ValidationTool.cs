@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Core.Utilities.Results;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -8,7 +9,7 @@ namespace Core.CrossCuttingConcerns.Validation
 {
     public static class ValidationTool
     {
-        public static void Validate(IValidator validator, object entity)
+        public static IServiceResult Validate(IValidator validator, object entity)
         {
             var context = new ValidationContext<object>(entity);
 
@@ -16,8 +17,9 @@ namespace Core.CrossCuttingConcerns.Validation
 
             if (!result.IsValid)
             {
-                throw new ValidationException(result.Errors);
+                return new ServiceResult(false, result.Errors.ToString());
             }
+            return null;
         }
     }
 }

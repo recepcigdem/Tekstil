@@ -20,11 +20,14 @@ namespace UI.Models.Staff
             var customerId= SessionHelper.GetStaff(request).CustomerId;
             _staffService = staffService;
             var listGrid = _staffService.GetAll(customerId).Data;
-            data = new List<StaffListLine>();
-            foreach (var item in listGrid)
+            if (listGrid != null)
             {
-                StaffListLine line = new StaffListLine(item);
-                data.Add(line);
+                data = new List<StaffListLine>();
+                foreach (var item in listGrid)
+                {
+                    StaffListLine line = new StaffListLine(item);
+                    data.Add(line);
+                }
             }
         }
     }

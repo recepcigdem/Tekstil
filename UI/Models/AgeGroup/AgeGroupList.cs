@@ -18,11 +18,14 @@ namespace UI.Models.AgeGroup
         {
             _ageGroupService = ageGroupService;
             var listGrid = _ageGroupService.GetAll().Data;
-            data = new List<AgeGroupListLine>();
-            foreach (var item in listGrid)
+            if (listGrid != null)
             {
-                AgeGroupListLine line = new AgeGroupListLine(item);
-                data.Add(line);
+                data = new List<AgeGroupListLine>();
+                foreach (var item in listGrid)
+                {
+                    AgeGroupListLine line = new AgeGroupListLine(item);
+                    data.Add(line);
+                }
             }
         }
     }

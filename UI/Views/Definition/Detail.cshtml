@@ -1,0 +1,282 @@
+﻿
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Definition.Definition
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("Detail", "Definition", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+    @Html.HiddenFor(x => x.DefinitionTitleId)
+    @Html.HiddenFor(x => x.CategoryId)
+    @Html.HiddenFor(x => x.ProductGroupId)
+
+    <div class="page-header page-header-bordered">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Home/Index">@Localizer["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Definition/Index">@Localizer["List"]</a></li>
+
+            @if (Model.EntityId == 0)
+            {
+                <li class="breadcrumb-item active">@Localizer["NewDefinition"]</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active">@Model.DescriptionTr </li>
+            }
+        </ol>
+    </div>
+    <div class="page-content">
+        <div class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions"></div>
+                <h3 class="panel-title">@Localizer["PageTitle"]</h3>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top:20px;">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["DefinitionTitle"]
+                                                    <select id="definitionTitle" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["Category"]
+                                                    <select id="category" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["ProductGroup"]
+                                                    <select id="productGroup" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                                                        @Html.CheckBoxFor(x => x.Status, new { @id = "CheckBoxActive", @class = "chb" })
+                                                        @Html.LabelFor(x => x.Status, "") @Localizer["IsActive"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                                                        @Html.CheckBoxFor(x => x.IsDefault, new { @id = "CheckBoxIsDefault", @class = "chb" })
+                                                        @Html.LabelFor(x => x.IsDefault, "") @Localizer["IsDefault"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Localizer["Kdv"]
+                                                    @Html.TextBoxFor(x => x.Kdv, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Localizer["Code"]
+                                                    @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["ShortDescription"]
+                                                    @Html.TextBoxFor(x => x.ShortDescription, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["DescriptionTr"]
+                                                    @Html.TextBoxFor(x => x.DescriptionTr, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["DescriptionEn"]
+                                                    @Html.TextBoxFor(x => x.DescriptionEn, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-success" id="buttonSave" onclick="Save();">@Localizer["Save"]</button>
+                        </div>
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-danger" onclick="window.location.href='Index'">@Localizer["Cancel"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var comboDefinitionTitleUrl = "@Url.Action("ComboList", "DefinitionTitle")" + "?DefinitionTitleId=" + DefinitionTitleId;
+
+        $.ajax({
+            url: comboDefinitionTitleUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#definitionTitle").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectDefinitionTitle"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#definitionTitle').val($('#DefinitionTitleId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#definitionTitle').on('select2:select', function (evt) {
+            $('#DefinitionTitleId').val(this.value);
+        });
+
+
+        var comboCategoryUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 4;
+
+        $.ajax({
+            url: comboCategoryUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#category").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectCategory"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#category').val($('#CategoryId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#category').on('select2:select', function (evt) {
+            $('#CategoryId').val(this.value);
+        });
+
+        var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
+        
+        $.ajax({
+            url: comboProductGroupUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#productGroup").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectProductGroup"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#productGroup').val($('#ProductGroupId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#productGroup').on('select2:select', function (evt) {
+            $('#ProductGroupId').val(this.value);
+        });
+
+    });
+    var newID = 0;
+    function Save(){
+            var url = "@Url.Action("Save", "Definition")";
+            $.post(url,
+                $("form").serialize(),
+                function(data) {
+                    if (data.result == false) {
+                        ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
+                    }
+                    if (data.result == true) {
+                        newID = data.obj;
+                        ShowSuccess('@SharedLocaLizer.GetLocalizedHtmlString("SaveMessage")');
+                    }
+                });
+            };
+
+            function ShowError(title, message) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: 'error',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    padding: '4em'
+                });
+            }
+
+            function ShowSuccess(title, message) {
+
+                Swal.fire({
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: 'success',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    padding: '4em'
+                }).then(function() {
+                    window.location.href = "@Url.Action("Index", "Definition")";
+                });
+            }
+
+</script>

@@ -10,43 +10,45 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using UI.Models;
-using UI.Models.Authorization;
+using UI.Models.Definition;
 
-namespace UI.Controllers.Authorization
+namespace UI.Controllers.Definition
 {
-    public class AuthorizationController : BaseController
+    public class DefinitionController : BaseController
     {
-        private IAuthorizationService _authorizationService;
+        private IDefinitionService _definitionService;
+        private IDefinitionTitleService _definitionTitleService;
 
-        public AuthorizationController(IStringLocalizerFactory factory, IStringLocalizer<AuthorizationController> localizer, ILogger<AuthorizationController> logger, IWebHostEnvironment env, IAuthorizationService authorizationService) : base(factory, env)
+        public DefinitionController(IStringLocalizerFactory factory, IStringLocalizer<DefinitionController> localizer, ILogger<DefinitionController> logger, IWebHostEnvironment env, IDefinitionService definitionService, IDefinitionTitleService definitionTitleService) : base(factory, env)
         {
-            _authorizationService = authorizationService;
+            _definitionService = definitionService;
+            _definitionTitleService = definitionTitleService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
-        }
 
+        }
         public IActionResult Index()
         {
             BaseModel model = new BaseModel(Request);
             return View(model);
         }
         [HttpPost]
-        public JsonResult AuthorizationList()
+        public JsonResult DefinitionList()
         {
-            AuthorizationList list = new AuthorizationList(_authorizationService);
+            DefinitionList list = new DefinitionList(Request, _definitionService,_definitionTitleService);
             return Json(list);
         }
 
         public ActionResult Detail(int id)
         {
-            Entities.Concrete.Authorization serviceDetail = new Entities.Concrete.Authorization();
-            if (id > 0)
-                serviceDetail = _authorizationService.GetById(id).Data;
+            Entities.Concrete.Definition serviceDetail = new Entities.Concrete.Definition();
+            if (id>0)
+                serviceDetail = _definitionService.GetById(id).Data;
 
-            var model = new Models.Authorization.Authorization(Request, serviceDetail, _localizerShared);
+            var model = new Models.Definition.Definition(Request, serviceDetail, _localizerShared);
             return View(model);
         }
 
@@ -54,10 +56,10 @@ namespace UI.Controllers.Authorization
         {
             if (id > 0)
             {
-                var serviceDetail = _authorizationService.GetById(id).Data;
+                var serviceDetail = _definitionService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
-                    Models.Authorization.Authorization model = new Models.Authorization.Authorization(Request, serviceDetail, _localizerShared);
+                    Models.Definition.Definition model = new Models.Definition.Definition(Request, serviceDetail, _localizerShared);
                     return PartialView(model);
                 }
                 return null;
@@ -67,50 +69,51 @@ namespace UI.Controllers.Authorization
 
         public JsonResult Delete(int Id)
         {
-            #region  Authorization Session Control
+            #region  Definition Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorServiceResult(false, _localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorServiceResult(false,_localizer.GetString("Error_UserNotFound")));
             }
             #endregion
 
-            Entities.Concrete.Authorization entity = new Entities.Concrete.Authorization();
+            Entities.Concrete.Definition entity = new Entities.Concrete.Definition();
             entity.Id = Id;
 
             if (Id > 0)
             {
-                var res = _authorizationService.Delete(entity);
+                var res = _definitionService.Delete(entity);
                 return Json(res);
             }
             return null;
         }
         [HttpPost]
-        public JsonResult Save(Models.Authorization.Authorization authorization)
+        public JsonResult Save(Models.Definition.Definition definition)
         {
             #region  Staff Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorServiceResult(false, _localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorServiceResult(false,_localizer.GetString("Error_UserNotFound")));
             }
             #endregion
 
-            if (authorization != null)
+            if (definition != null)
             {
-                Entities.Concrete.Authorization entity = authorization.GetBusinessModel();
+                Entities.Concrete.Definition entity = definition.GetBusinessModel();
                 if (entity == null)
                     return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _authorizationService.Save(entity);
+                entity.CustomerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
+
+                var result = _definitionService.Save(entity);
                 if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
                     return Json(result);
                 }
-
 
                 result.Data = entity;
                 return Json(result);
@@ -118,17 +121,21 @@ namespace UI.Controllers.Authorization
 
             return null;
         }
-        public JsonResult ComboList()
+
+        public JsonResult ComboList(int value)
         {
-            var authorizationList = _authorizationService.GetAll().Data;
+            var customerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
+
+            var definitionTitle = _definitionTitleService.GetByValue(customerId, value);
+
+            var definitionList = _definitionService.GetAllByCustomerIdAndDefinitionTitleId(customerId, definitionTitle.Data.Id).Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
-            foreach (Entities.Concrete.Authorization entity in authorizationList)
+            foreach (Entities.Concrete.Definition entity in definitionList)
             {
-                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.AuthorizationName);
+                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.DescriptionTr);
                 data.Add(model);
             }
             return Json(data);
         }
-
     }
 }

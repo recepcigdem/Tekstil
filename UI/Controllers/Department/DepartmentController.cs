@@ -43,9 +43,9 @@ namespace UI.Controllers.Department
 
         public ActionResult Detail(int id)
         {
-            var serviceDetail = _departmentService.GetById(id).Data;
-            if (serviceDetail == null || serviceDetail.Id < 1)
-                serviceDetail = new Entities.Concrete.Department();
+            Entities.Concrete.Department serviceDetail = new Entities.Concrete.Department();
+            if (id > 0)
+                serviceDetail = _departmentService.GetById(id).Data;
 
             var model = new Models.Department.Department(Request, serviceDetail, _localizerShared);
             return View(model);
@@ -73,7 +73,7 @@ namespace UI.Controllers.Department
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorServiceResult(false,_localizer.GetString("Error_UserNotFound")));
             }
             #endregion
 
@@ -95,7 +95,7 @@ namespace UI.Controllers.Department
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorServiceResult(false, _localizer.GetString("Error_UserNotFound")));
             }
             #endregion
 
@@ -105,7 +105,7 @@ namespace UI.Controllers.Department
                 
                 Entities.Concrete.Department entity = department.GetBusinessModel();
                 if (entity == null)
-                    return Json(new ErrorResult(false, _localizerShared.GetString("Error_SystemError")));
+                    return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_SystemError")));
 
                 entity.CustomerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
 

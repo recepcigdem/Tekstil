@@ -65,11 +65,11 @@ namespace UI.Controllers.Staff
 
         public ActionResult Detail(int id)
         {
-            var staff = _staffService.GetById(id).Data;
-            if (staff == null || staff.Id < 1)
-                staff = new Entities.Concrete.Staff();
+            Entities.Concrete.Staff serviceDetail = new Entities.Concrete.Staff();
+            if (id > 0)
+                serviceDetail = _staffService.GetById(id).Data;
 
-            var model = new Models.Staff.Staff(Request, staff, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService, _staffService);
+            var model = new Models.Staff.Staff(Request, serviceDetail, _localizerShared, _env.WebRootPath, _staffEmailService, _staffPhoneService, _staffAuthorizationService, _emailService, _phoneService, _staffService);
             return View(model);
         }
 
@@ -95,7 +95,7 @@ namespace UI.Controllers.Staff
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorResult(_localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorServiceResult(false, _localizer.GetString("Error_UserNotFound")));
             }
             #endregion
 

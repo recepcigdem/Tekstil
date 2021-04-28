@@ -61,6 +61,12 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<DepartmentManager>().As<IDepartmentService>().SingleInstance();
             builder.RegisterType<EfDepartmentDal>().As<IDepartmentDal>().SingleInstance();
 
+            builder.RegisterType<DefinitionManager>().As<IDefinitionService>().SingleInstance();
+            builder.RegisterType<EfDefinitionDal>().As<IDefinitionDal>().SingleInstance();
+
+            builder.RegisterType<DefinitionTitleManager>().As<IDefinitionTitleService>().SingleInstance();
+            builder.RegisterType<EfDefinitionTitleDal>().As<IDefinitionTitleDal>().SingleInstance();
+
             builder.RegisterType<DetailManager>().As<IDetailService>().SingleInstance();
             builder.RegisterType<EfDetailDal>().As<IDetailDal>().SingleInstance();
 

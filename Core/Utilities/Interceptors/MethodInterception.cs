@@ -23,7 +23,7 @@ namespace Core.Utilities.Interceptors
                 isSuccess = false;
                 OnException(invocation, e);
                 //throw;
-                new ErrorResult(e.Message);
+                new ServiceResult(false,e.Message);
             }
             finally
             {

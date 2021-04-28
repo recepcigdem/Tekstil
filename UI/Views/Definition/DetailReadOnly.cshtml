@@ -1,0 +1,104 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Definition.Definition
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+
+@using (Html.BeginForm("DetailReadOnly", "Definition", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top:20px;">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Localizer["DefinitionTitle"]
+                        <select id="definitionTitle" class="form-control" disabled="disabled">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Localizer["Category"]
+                        <select id="category" class="form-control" disabled="disabled">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Localizer["ProductGroup"]
+                        <select id="productGroup" class="form-control" disabled="disabled">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                            @Html.CheckBoxFor(x => x.Status, new { @id = "CheckBoxActive", @class = "chb" ,@disabled = "disabled" })
+                            @Html.LabelFor(x => x.Status, "") @Localizer["IsActive"]
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                            @Html.CheckBoxFor(x => x.IsDefault, new { @id = "CheckBoxIsDefault", @class = "chb", @disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsDefault, "") @Localizer["IsDefault"]
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Localizer["Kdv"]
+                        @Html.TextBoxFor(x => x.Kdv, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Localizer["Code"]
+                        @Html.TextBoxFor(x => x.Code, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Localizer["ShortDescription"]
+                        @Html.TextBoxFor(x => x.ShortDescription, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Localizer["DescriptionTr"]
+                        @Html.TextBoxFor(x => x.DescriptionTr, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Localizer["DescriptionEn"]
+                        @Html.TextBoxFor(x => x.DescriptionEn, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-2" style="float:right">
+                <button class="btn btn-success" onclick="location.href = '@Url.Action("Detail", "Definition",new {id=Model.EntityId })'" data-dismiss="modal" type="button">@Localizer["Edit"]</button>
+
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $('.form-group').css('pointer-events', 'none');
+</script>
