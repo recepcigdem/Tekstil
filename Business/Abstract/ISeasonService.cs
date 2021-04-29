@@ -15,6 +15,9 @@ namespace Business.Abstract
         IServiceResult Add(Season season);
         IServiceResult Update(Season season);
         IServiceResult DeleteAll(Season season);
-        IDataServiceResult<Season> SaveAll(Season season);
+        IDataServiceResult<Season> SaveAll(Season season, List<SeasonCurrency> seasonCurrencies,
+            List<SeasonPlaning> seasonPlanings, List<PaymentMethodShare> paymentMethodShares,
+            List<ModelSeasonRowNumber> modelSeasonRowNumbers,
+            List<CountryShippingMultiplier> countryShippingMultipliers);
     }
 }
