@@ -64,9 +64,9 @@ namespace UI.Models.Staff
             get { return JsonConvert.SerializeObject(SubPhone); }
             set { SubPhone.data = JsonConvert.DeserializeObject<List<StaffPhoneDto>>(value); }
         }
+
         public List<StaffEmailDto> ListStaffEmail { get; set; }
         public List<StaffPhoneDto> ListStaffPhone { get; set; }
-
 
         #endregion
 

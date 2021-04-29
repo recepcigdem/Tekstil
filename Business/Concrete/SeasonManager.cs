@@ -15,10 +15,20 @@ namespace Business.Concrete
     public class SeasonManager : ISeasonService
     {
         private ISeasonDal _seasonDal;
+        private ISeasonCurrencyService _seasonCurrencyService;
+        private ISeasonPlaningService _seasonPlaningService;
+        private IPaymentMethodShareService _paymentMethodShareService;
+        private ICountryShippingMultiplierService _countryShippingMultiplierService;
+        private IModelSeasonRowNumberService _modelSeasonRowNumberService;
 
-        public SeasonManager(ISeasonDal seasonDal)
+        public SeasonManager(ISeasonDal seasonDal, ISeasonCurrencyService seasonCurrencyService, ISeasonPlaningService seasonPlaningService, IPaymentMethodShareService paymentMethodShareService, ICountryShippingMultiplierService countryShippingMultiplierService, IModelSeasonRowNumberService modelSeasonRowNumberService)
         {
             _seasonDal = seasonDal;
+            _seasonCurrencyService = seasonCurrencyService;
+            _seasonPlaningService = seasonPlaningService;
+            _paymentMethodShareService = paymentMethodShareService;
+            _countryShippingMultiplierService = countryShippingMultiplierService;
+            _modelSeasonRowNumberService = modelSeasonRowNumberService;
         }
         public IDataServiceResult<List<Season>> GetAll(int customerId)
         {
@@ -42,7 +52,7 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IServiceResult Add(Season season)
         {
-            ServiceResult result = BusinessRules.Run(CheckIfCodeExists(season),CheckIfDescriptionExists(season));
+            ServiceResult result = BusinessRules.Run(CheckIfCodeExists(season), CheckIfDescriptionExists(season));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);
 
@@ -72,6 +82,26 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IServiceResult DeleteAll(Season season)
         {
+            var seasonPlanning = _seasonPlaningService.DeleteBySeason(season);
+            if (seasonPlanning.Result == false)
+                return new ErrorServiceResult(false, "SeasonPlanningNotFound");
+
+            var seasonCurrency = _seasonCurrencyService.DeleteBySeason(season);
+            if (seasonCurrency.Result == false)
+                return new ErrorServiceResult(false, "SeasonCurrencyNotFound");
+
+            var paymentMethodShare = _paymentMethodShareService.DeleteBySeason(season);
+            if (paymentMethodShare.Result == false)
+                return new ErrorServiceResult(false, "PaymentMethodShareNotFound");
+
+            var modelSeasonRowNumber = _modelSeasonRowNumberService.DeleteBySeason(season);
+            if (modelSeasonRowNumber.Result == false)
+                return new ErrorServiceResult(false, "ModelSeasonRowNumberNotFound");
+
+            var countryShippingMultiplier = _countryShippingMultiplierService.DeleteBySeason(season);
+            if (countryShippingMultiplier.Result == false)
+                return new ErrorServiceResult(false, "CountryShippingMultiplierNotFound");
+
             var result = _seasonDal.Delete(season);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -79,7 +109,8 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-       public IDataServiceResult<Season> SaveAll(Season season)
+        public IDataServiceResult<Season> SaveAll(Season season, List<SeasonCurrency> seasonCurrencies, List<SeasonPlaning> seasonPlanings, List<PaymentMethodShare> paymentMethodShares,
+            List<ModelSeasonRowNumber> modelSeasonRowNumbers, List<CountryShippingMultiplier> countryShippingMultipliers)
         {
             if (season.Id > 0)
             {
@@ -89,6 +120,12 @@ namespace Business.Concrete
             {
                 Add(season);
             }
+
+            _seasonPlaningService.Save(season.CustomerId, seasonPlanings);
+            _seasonCurrencyService.Save(season.CustomerId, seasonCurrencies);
+            _paymentMethodShareService.Save(season.CustomerId, paymentMethodShares);
+            _countryShippingMultiplierService.Save(season.CustomerId, countryShippingMultipliers);
+            _modelSeasonRowNumberService.Save(season.CustomerId, modelSeasonRowNumbers);
 
             return new SuccessDataServiceResult<Season>(season, true, "Saved");
         }
