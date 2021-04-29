@@ -10,10 +10,11 @@ namespace Business.Abstract
 {
     public interface ISeasonService
     {
-        IDataResult<List<Season>> GetAll();
-        IDataResult<Season> GetById(int seasonId);
-        IResult Add(Season season);
-        IResult Update(Season season);
-        IResult Delete(Season season);
+        IDataServiceResult<List<Season>> GetAll(int customerId);
+        IDataServiceResult<Season> GetById(int seasonId);
+        IServiceResult Add(Season season);
+        IServiceResult Update(Season season);
+        IServiceResult DeleteAll(Season season);
+        IDataServiceResult<Season> SaveAll(Season season);
     }
 }

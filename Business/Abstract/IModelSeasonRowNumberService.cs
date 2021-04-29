@@ -10,10 +10,11 @@ namespace Business.Abstract
 {
     public interface IModelSeasonRowNumberService
     {
-        IDataResult<List<ModelSeasonRowNumber>> GetAll();
-        IDataResult<ModelSeasonRowNumber> GetById(int seasonId, int productGroupId);
-        IResult Add(ModelSeasonRowNumber modelSeasonRowNumber);
-        IResult Update(ModelSeasonRowNumber modelSeasonRowNumber);
-        IResult Delete(ModelSeasonRowNumber modelSeasonRowNumber);
+        IDataServiceResult<List<ModelSeasonRowNumber>> GetAll(int customerId);
+        IDataServiceResult<List<ModelSeasonRowNumber>> GetAllBySeasonId(int seasonId);
+        IDataServiceResult<ModelSeasonRowNumber> GetById(int modelSeasonRowNumbersId);
+        IServiceResult Delete(ModelSeasonRowNumber modelSeasonRowNumbers);
+        IServiceResult DeleteBySeason(Season season);
+        IDataServiceResult<ModelSeasonRowNumber> Save(int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers);
     }
 }

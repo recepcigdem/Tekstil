@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class CountryShippingMultiplier : BaseEntity
+    public class CountryShippingMultiplier : BaseCustomerEntity
     {
         public int SeasonId { get; set; }
         public int CountryId { get; set; }

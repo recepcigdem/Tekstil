@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class Season : BaseEntity
+    public class Season : BaseCustomerEntity
     {
         public bool IsActive { get; set; }
         public string Code { get; set; }

@@ -21,64 +21,120 @@ namespace Business.Concrete
             _paymentMethodShareDal = paymentMethodShareDal;
         }
 
-        public IDataResult<List<PaymentMethodShare>> GetAll()
+
+        public IDataServiceResult<List<PaymentMethodShare>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<PaymentMethodShare>>(true, "Listed", _paymentMethodShareDal.GetAll());
+            var dbResult = _paymentMethodShareDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<PaymentMethodShare>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<PaymentMethodShare> GetById(int paymentMethodShareId)
+        public IDataServiceResult<List<PaymentMethodShare>> GetAllBySeasonId(int seasonId)
         {
-            return new SuccessDataResult<PaymentMethodShare>(true, "Listed", _paymentMethodShareDal.Get(p => p.Id == paymentMethodShareId));
+            var dbResult = _paymentMethodShareDal.GetAll(x => x.SeasonId == seasonId);
+
+            return new SuccessDataServiceResult<List<PaymentMethodShare>>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,season.add")]
+        public IDataServiceResult<PaymentMethodShare> GetById(int paymentMethodShareId)
+        {
+            var dbResult = _paymentMethodShareDal.Get(p => p.Id == paymentMethodShareId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<PaymentMethodShare>(false, "SystemError");
+
+            return new SuccessDataServiceResult<PaymentMethodShare>(dbResult, true, "Listed");
+        }
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [ValidationAspect(typeof(PaymentMethodShareValidator))]
         [TransactionScopeAspect]
-        public IResult Add(PaymentMethodShare paymentMethodShare)
+        public IServiceResult Add(PaymentMethodShare paymentMethodShare)
         {
-            IResult result = BusinessRules.Run(CheckIfPaymentMethodExists(paymentMethodShare));
+            ServiceResult result = BusinessRules.Run(CheckIfPaymentMethodExists(paymentMethodShare));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _paymentMethodShareDal.Add(paymentMethodShare);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _paymentMethodShareDal.Add(paymentMethodShare);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
-
-        [SecuredOperation("admin,season.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [ValidationAspect(typeof(PaymentMethodShareValidator))]
         [TransactionScopeAspect]
-        public IResult Update(PaymentMethodShare paymentMethodShare)
+        public IServiceResult Update(PaymentMethodShare paymentMethodShare)
         {
-            IResult result = BusinessRules.Run(CheckIfPaymentMethodExists(paymentMethodShare));
+            ServiceResult result = BusinessRules.Run(CheckIfPaymentMethodExists(paymentMethodShare));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _paymentMethodShareDal.Update(paymentMethodShare);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _paymentMethodShareDal.Add(paymentMethodShare);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
-
-        [SecuredOperation("admin,season.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
-        public IResult Delete(PaymentMethodShare paymentMethodShare)
+        public IServiceResult Delete(PaymentMethodShare paymentMethodShare)
         {
-            _paymentMethodShareDal.Delete(paymentMethodShare);
+            var result = _paymentMethodShareDal.Delete(paymentMethodShare);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfPaymentMethodExists(PaymentMethodShare paymentMethodShare)
+        public IServiceResult DeleteBySeason(Season season)
         {
-            var result = _paymentMethodShareDal.GetAll(x => x.SeasonId == paymentMethodShare.SeasonId && x.PaymentMethodId == paymentMethodShare.PaymentMethodId).Any();
+            var paymentMethodShares = GetAllBySeasonId(season.Id);
+            if (paymentMethodShares.Result == false)
+                return new ErrorServiceResult(false, "PaymentMethodShareNotFound");
 
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
+            foreach (var paymentMethodShare in paymentMethodShares.Data)
+            {
+                var deletePaymentMethodShare = Delete(paymentMethodShare);
+                if (deletePaymentMethodShare.Result == false)
+                    return new ErrorServiceResult(false, "PaymentMethodShareNotDeleted");
+            }
 
-            return new SuccessResult();
+            return new ServiceResult(true, "Delated");
+        }
+
+        public IDataServiceResult<PaymentMethodShare> Save(int customerId, List<PaymentMethodShare> paymentMethodShares)
+        {
+            var dbPaymentMethodShares = GetAll(customerId).Data;
+            foreach (var dbPaymentMethodShare in dbPaymentMethodShares)
+            {
+                var control = dbPaymentMethodShares.Any(x => x.Id == dbPaymentMethodShare.Id);
+                if (control != true)
+                {
+                    Delete(dbPaymentMethodShare);
+                }
+            }
+
+            foreach (var paymentMethodShare in paymentMethodShares)
+            {
+                if (paymentMethodShare.Id > 0)
+                {
+                    Update(paymentMethodShare);
+                }
+                else
+                {
+                    Add(paymentMethodShare);
+                }
+            }
+            return new SuccessDataServiceResult<PaymentMethodShare>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfPaymentMethodExists(PaymentMethodShare paymentMethodShare)
+        {
+            var result = _paymentMethodShareDal.GetAll(x => x.SeasonId == paymentMethodShare.SeasonId && x.PaymentMethodId == paymentMethodShare.PaymentMethodId);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "PaymentMethodAlreadyExists");
+
+            return new ServiceResult();
         }
     }
 }

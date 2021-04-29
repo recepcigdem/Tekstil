@@ -21,44 +21,89 @@ namespace Business.Concrete
             _modelSeasonRowNumberDal = modelSeasonRowNumberDal;
         }
 
-        public IDataResult<List<ModelSeasonRowNumber>> GetAll()
+
+        public IDataServiceResult<List<ModelSeasonRowNumber>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<ModelSeasonRowNumber>>(true, "Listed", _modelSeasonRowNumberDal.GetAll());
+            var dbResult = _modelSeasonRowNumberDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<ModelSeasonRowNumber>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<ModelSeasonRowNumber> GetById(int seasonId,int productGroupId)
+        public IDataServiceResult<List<ModelSeasonRowNumber>> GetAllBySeasonId(int seasonId)
         {
-            return new SuccessDataResult<ModelSeasonRowNumber>(true, "Listed", _modelSeasonRowNumberDal.Get(p => p.SeasonId == seasonId && p.ProductGroupId == productGroupId));
+            var dbResult = _modelSeasonRowNumberDal.GetAll(x => x.SeasonId == seasonId);
+
+            return new SuccessDataServiceResult<List<ModelSeasonRowNumber>>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,season.add")]
-        [ValidationAspect(typeof(ModelSeasonRowNumberValidator))]
+        public IDataServiceResult<ModelSeasonRowNumber> GetById(int modelSeasonRowNumbersId)
+        {
+            var dbResult = _modelSeasonRowNumberDal.Get(p => p.Id == modelSeasonRowNumbersId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
+
+            return new SuccessDataServiceResult<ModelSeasonRowNumber>(dbResult, true, "Listed");
+        }
+        
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
-        public IResult Add(ModelSeasonRowNumber modelSeasonRowNumber)
+        public IServiceResult Delete(ModelSeasonRowNumber modelSeasonRowNumbers)
         {
-            _modelSeasonRowNumberDal.Add(modelSeasonRowNumber);
+            var result = _modelSeasonRowNumberDal.Delete(modelSeasonRowNumbers);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Delated");
         }
-
-        [SecuredOperation("admin,season.updated")]
-        [ValidationAspect(typeof(ModelSeasonRowNumberValidator))]
+        
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
-        public IResult Update(ModelSeasonRowNumber modelSeasonRowNumber)
+        public IServiceResult DeleteBySeason(Season season)
         {
-            _modelSeasonRowNumberDal.Add(modelSeasonRowNumber);
+            var modelSeasonRowNumbers = GetAllBySeasonId(season.Id);
+            if (modelSeasonRowNumbers.Result == false)
+                return new ErrorServiceResult(false, "ModelSeasonRowNumberNotFound");
 
-            return new SuccessResult("Updated");
+            foreach (var modelSeasonRowNumber in modelSeasonRowNumbers.Data)
+            {
+                var deleteModelSeasonRowNumber = Delete(modelSeasonRowNumber);
+                if (deleteModelSeasonRowNumber.Result == false)
+                    return new ErrorServiceResult(false, "ModelSeasonRowNumberNotDeleted");
+            }
+
+            return new ServiceResult(true, "Delated");
         }
-
-        [SecuredOperation("admin,season.deleted")]
+       
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
-        public IResult Delete(ModelSeasonRowNumber modelSeasonRowNumber)
+        public IDataServiceResult<ModelSeasonRowNumber> Save(int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers)
         {
-            _modelSeasonRowNumberDal.Delete(modelSeasonRowNumber);
+            var dbModelSeasonRowNumbers = GetAll(customerId).Data;
+            foreach (var dbModelSeasonRowNumber in dbModelSeasonRowNumbers)
+            {
+                var control = dbModelSeasonRowNumbers.Any(x => x.Id == dbModelSeasonRowNumber.Id);
+                if (control != true)
+                {
+                    Delete(dbModelSeasonRowNumber);
+                }
+            }
 
-            return new SuccessResult("Deleted");
+            foreach (var modelSeasonRowNumber in modelSeasonRowNumbers)
+            {
+                if (modelSeasonRowNumber.Id > 0)
+                {
+                    var dbResult = _modelSeasonRowNumberDal.Update(modelSeasonRowNumber);
+                    if (dbResult == null)
+                        return new DataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
+                }
+                else
+                {
+                    var dbResult = _modelSeasonRowNumberDal.Add(modelSeasonRowNumber);
+                    if (dbResult == null)
+                        return new DataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
+                }
+            }
+            return new SuccessDataServiceResult<ModelSeasonRowNumber>(true, "Saved");
         }
     }
 }

@@ -21,64 +21,123 @@ namespace Business.Concrete
             _countryShippingMultiplierDal = countryShippingMultiplierDal;
         }
 
-        public IDataResult<List<CountryShippingMultiplier>> GetAll()
+        public IDataServiceResult<List<CountryShippingMultiplier>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<CountryShippingMultiplier>>(true, "Listed", _countryShippingMultiplierDal.GetAll());
+            var dbResult = _countryShippingMultiplierDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<CountryShippingMultiplier>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<CountryShippingMultiplier> GetById(int countryShippingMultiplierId)
+        public IDataServiceResult<List<CountryShippingMultiplier>> GetAllBySeasonId(int seasonId)
         {
-            return new SuccessDataResult<CountryShippingMultiplier>(true, "Listed", _countryShippingMultiplierDal.Get(p => p.Id == countryShippingMultiplierId));
+            var dbResult = _countryShippingMultiplierDal.GetAll(x =>x.SeasonId==seasonId);
+
+            return new SuccessDataServiceResult<List<CountryShippingMultiplier>>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,definition.add")]
+        public IDataServiceResult<CountryShippingMultiplier> GetById(int countryShippingMultipliersId)
+        {
+            var dbResult = _countryShippingMultiplierDal.Get(p => p.Id == countryShippingMultipliersId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<CountryShippingMultiplier>(false, "SystemError");
+
+            return new SuccessDataServiceResult<CountryShippingMultiplier>(dbResult, true, "Listed");
+        }
+
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [ValidationAspect(typeof(CountryShippingMultiplierValidator))]
         [TransactionScopeAspect]
-        public IResult Add(CountryShippingMultiplier countryShippingMultiplier)
+        public IServiceResult Add(CountryShippingMultiplier countryShippingMultiplier)
         {
-            IResult result = BusinessRules.Run(CheckIfCountryAndShippingExists(countryShippingMultiplier));
+            ServiceResult result = BusinessRules.Run(CheckIfCountryAndShippingExists(countryShippingMultiplier));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _countryShippingMultiplierDal.Add(countryShippingMultiplier);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _countryShippingMultiplierDal.Add(countryShippingMultiplier);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
-
-        [SecuredOperation("admin,definition.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [ValidationAspect(typeof(CountryShippingMultiplierValidator))]
         [TransactionScopeAspect]
-        public IResult Update(CountryShippingMultiplier countryShippingMultiplier)
+        public IServiceResult Update(CountryShippingMultiplier countryShippingMultiplier)
         {
-            IResult result = BusinessRules.Run(CheckIfCountryAndShippingExists(countryShippingMultiplier));
+            ServiceResult result = BusinessRules.Run(CheckIfCountryAndShippingExists(countryShippingMultiplier));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _countryShippingMultiplierDal.Update(countryShippingMultiplier);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _countryShippingMultiplierDal.Add(countryShippingMultiplier);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,definition.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
-        public IResult Delete(CountryShippingMultiplier countryShippingMultiplier)
+        public IServiceResult Delete(CountryShippingMultiplier countryShippingMultiplier)
         {
-            _countryShippingMultiplierDal.Delete(countryShippingMultiplier);
+            var result = _countryShippingMultiplierDal.Delete(countryShippingMultiplier);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfCountryAndShippingExists(CountryShippingMultiplier countryShippingMultiplier)
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+        [TransactionScopeAspect]
+        public IServiceResult DeleteBySeason(Season season)
         {
-            var result = _countryShippingMultiplierDal.GetAll(x => x.SeasonId == countryShippingMultiplier.SeasonId && x.CountryId == countryShippingMultiplier.CountryId && x.ShippingMethodId == countryShippingMultiplier.ShippingMethodId).Any();
+            var countryShippingMultipliers = GetAllBySeasonId(season.Id);
+            if (countryShippingMultipliers.Result == false)
+                return new ErrorServiceResult(false, "CountryShippingMultiplierNotDeleted");
 
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
+            foreach (var countryShippingMultiplier in countryShippingMultipliers.Data)
+            {
+                var deleteCountryShippingMultiplier = Delete(countryShippingMultiplier);
+                if (deleteCountryShippingMultiplier.Result == false)
+                    return new ErrorServiceResult(false, "CountryShippingMultiplierNotDeleted");
+            }
 
-            return new SuccessResult();
+            return new ServiceResult(true, "Delated");
+        }
+
+        public IDataServiceResult<CountryShippingMultiplier> Save(int customerId, List<CountryShippingMultiplier> countryShippingMultipliers)
+        {
+            var dbCountryShippingMultipliers = GetAll(customerId).Data;
+            foreach (var dbCountryShippingMultiplier in dbCountryShippingMultipliers)
+            {
+                var control = countryShippingMultipliers.Any(x => x.Id == dbCountryShippingMultiplier.Id);
+                if (control != true)
+                {
+                    Delete(dbCountryShippingMultiplier);
+                }
+            }
+
+            foreach (var countryShippingMultiplier in countryShippingMultipliers)
+            {
+                if (countryShippingMultiplier.Id > 0)
+                {
+                    Update(countryShippingMultiplier);
+                }
+                else
+                {
+                    Add(countryShippingMultiplier);
+                }
+            }
+            return new SuccessDataServiceResult<CountryShippingMultiplier>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfCountryAndShippingExists(CountryShippingMultiplier countryShippingMultiplier)
+        {
+            var result = _countryShippingMultiplierDal.GetAll(x => x.SeasonId == countryShippingMultiplier.SeasonId && x.CountryId == countryShippingMultiplier.CountryId && x.ShippingMethodId == countryShippingMultiplier.ShippingMethodId);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "DescriptionAlreadyExists");
+
+            return new ServiceResult(true, "");
         }
     }
 }

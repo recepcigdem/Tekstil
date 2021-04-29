@@ -10,10 +10,13 @@ namespace Business.Abstract
 {
     public interface ISeasonCurrencyService
     {
-        IDataResult<List<SeasonCurrency>> GetAll();
-        IDataResult<SeasonCurrency> GetById(int seasonCurrencyId);
-        IResult Add(SeasonCurrency seasonCurrency);
-        IResult Update(SeasonCurrency seasonCurrency);
-        IResult Delete(SeasonCurrency seasonCurrency);
+        IDataServiceResult<List<SeasonCurrency>> GetAll(int customerId);
+        IDataServiceResult<List<SeasonCurrency>> GetAllBySeasonId(int seasonId);
+        IDataServiceResult<SeasonCurrency> GetById(int seasonCurrencyId);
+        IServiceResult Add(SeasonCurrency seasonCurrency);
+        IServiceResult Update(SeasonCurrency seasonCurrency);
+        IServiceResult Delete(SeasonCurrency seasonCurrency);
+        IServiceResult DeleteBySeason(Season season);
+        IDataServiceResult<SeasonCurrency> Save(int customerId, List<SeasonCurrency> seasonCurrencies);
     }
 }

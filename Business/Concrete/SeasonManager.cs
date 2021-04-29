@@ -20,74 +20,96 @@ namespace Business.Concrete
         {
             _seasonDal = seasonDal;
         }
-
-        public IDataResult<List<Season>> GetAll()
+        public IDataServiceResult<List<Season>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<Season>>(true, "Listed", _seasonDal.GetAll());
+            var dbResult = _seasonDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<Season>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Season> GetById(int seasonId)
+        public IDataServiceResult<Season> GetById(int seasonId)
         {
-            return new SuccessDataResult<Season>(true, "Listed", _seasonDal.Get(p => p.Id == seasonId));
+            var dbResult = _seasonDal.Get(p => p.Id == seasonId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Season>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Season>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,season.add")]
+
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [ValidationAspect(typeof(SeasonValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Season season)
+        public IServiceResult Add(Season season)
         {
-            IResult result = BusinessRules.Run(CheckIfDescriptionExists(season), CheckIfCodeExists(season));
+            ServiceResult result = BusinessRules.Run(CheckIfCodeExists(season),CheckIfDescriptionExists(season));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _seasonDal.Add(season);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _seasonDal.Add(season);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
-
-        [SecuredOperation("admin,season.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [ValidationAspect(typeof(SeasonValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Season season)
+        public IServiceResult Update(Season season)
         {
-            IResult result = BusinessRules.Run(CheckIfDescriptionExists(season),CheckIfCodeExists(season));
+            ServiceResult result = BusinessRules.Run(CheckIfCodeExists(season), CheckIfDescriptionExists(season));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _seasonDal.Update(season);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _seasonDal.Add(season);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,season.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
-        public IResult Delete(Season season)
+        public IServiceResult DeleteAll(Season season)
         {
-            _seasonDal.Delete(season);
+            var result = _seasonDal.Delete(season);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfDescriptionExists(Season season)
+       public IDataServiceResult<Season> SaveAll(Season season)
         {
-            var result = _seasonDal.GetAll(x => x.Description == season.Description).Any();
+            if (season.Id > 0)
+            {
+                Update(season);
+            }
+            else
+            {
+                Add(season);
+            }
 
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
-
-            return new SuccessResult();
+            return new SuccessDataServiceResult<Season>(season, true, "Saved");
         }
-        private IResult CheckIfCodeExists(Season season)
+
+        private ServiceResult CheckIfDescriptionExists(Season season)
         {
-            var result = _seasonDal.GetAll(x => x.Code == season.Code).Any();
+            var result = _seasonDal.GetAll(x => x.Description == season.Description);
 
-            if (result)
-                new ErrorResult("CodeAlreadyExists");
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "DescriptionAlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult(true, "");
+        }
+        private ServiceResult CheckIfCodeExists(Season season)
+        {
+            var result = _seasonDal.GetAll(x => x.Code == season.Code);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "CodeAlreadyExists");
+
+            return new ServiceResult(true, "");
         }
 
     }

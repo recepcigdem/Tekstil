@@ -10,10 +10,13 @@ namespace Business.Abstract
 {
     public interface ICountryShippingMultiplierService
     {
-        IDataResult<List<CountryShippingMultiplier>> GetAll();
-        IDataResult<CountryShippingMultiplier> GetById(int countryShippingMultiplierId);
-        IResult Add(CountryShippingMultiplier countryShippingMultiplier);
-        IResult Update(CountryShippingMultiplier countryShippingMultiplier);
-        IResult Delete(CountryShippingMultiplier countryShippingMultiplier);
+        IDataServiceResult<List<CountryShippingMultiplier>> GetAll(int customerId);
+        IDataServiceResult<List<CountryShippingMultiplier>> GetAllBySeasonId(int seasonId);
+        IDataServiceResult<CountryShippingMultiplier> GetById(int countryShippingMultipliersId);
+        IServiceResult Add(CountryShippingMultiplier countryShippingMultiplier);
+        IServiceResult Update(CountryShippingMultiplier countryShippingMultiplier);
+        IServiceResult Delete(CountryShippingMultiplier countryShippingMultiplier);
+        IServiceResult DeleteBySeason(Season season);
+        IDataServiceResult<CountryShippingMultiplier> Save(int customerId, List<CountryShippingMultiplier> countryShippingMultipliers);
     }
 }

@@ -10,10 +10,13 @@ namespace Business.Abstract
 {
     public interface IPaymentMethodShareService
     {
-        IDataResult<List<PaymentMethodShare>> GetAll();
-        IDataResult<PaymentMethodShare> GetById(int paymentMethodShareId);
-        IResult Add(PaymentMethodShare paymentMethodShare);
-        IResult Update(PaymentMethodShare paymentMethodShare);
-        IResult Delete(PaymentMethodShare paymentMethodShare);
+        IDataServiceResult<List<PaymentMethodShare>> GetAll(int customerId);
+        IDataServiceResult<List<PaymentMethodShare>> GetAllBySeasonId(int seasonId);
+        IDataServiceResult<PaymentMethodShare> GetById(int paymentMethodShareId);
+        IServiceResult Add(PaymentMethodShare paymentMethodShare);
+        IServiceResult Update(PaymentMethodShare paymentMethodShare);
+        IServiceResult Delete(PaymentMethodShare paymentMethodShare);
+        IServiceResult DeleteBySeason(Season season);
+        IDataServiceResult<PaymentMethodShare> Save(int customerId, List<PaymentMethodShare> paymentMethodShares);
     }
 }

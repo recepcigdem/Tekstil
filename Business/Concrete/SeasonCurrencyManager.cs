@@ -21,65 +21,122 @@ namespace Business.Concrete
             _seasonCurrencyDal = seasonCurrencyDal;
         }
 
-        public IDataResult<List<SeasonCurrency>> GetAll()
+
+        public IDataServiceResult<List<SeasonCurrency>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<SeasonCurrency>>(true, "Listed", _seasonCurrencyDal.GetAll());
+            var dbResult = _seasonCurrencyDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<SeasonCurrency>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<SeasonCurrency> GetById(int seasonCurrencyId)
+        public IDataServiceResult<List<SeasonCurrency>> GetAllBySeasonId(int seasonId)
         {
-            return new SuccessDataResult<SeasonCurrency>(true, "Listed", _seasonCurrencyDal.Get(p => p.Id == seasonCurrencyId));
+            var dbResult = _seasonCurrencyDal.GetAll(x => x.SeasonId == seasonId);
+
+            return new SuccessDataServiceResult<List<SeasonCurrency>>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,season.add")]
+        public IDataServiceResult<SeasonCurrency> GetById(int seasonCurrencyId)
+        {
+            var dbResult = _seasonCurrencyDal.Get(p => p.Id == seasonCurrencyId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<SeasonCurrency>(false, "SystemError");
+
+            return new SuccessDataServiceResult<SeasonCurrency>(dbResult, true, "Listed");
+        }
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [ValidationAspect(typeof(SeasonCurrencyValidator))]
         [TransactionScopeAspect]
-        public IResult Add(SeasonCurrency seasonCurrency)
+        public IServiceResult Add(SeasonCurrency seasonCurrency)
         {
-            IResult result = BusinessRules.Run(CheckIfCurrencyTypeExists(seasonCurrency));
+            ServiceResult result = BusinessRules.Run(CheckIfCurrencyTypeExists(seasonCurrency));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _seasonCurrencyDal.Add(seasonCurrency);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _seasonCurrencyDal.Add(seasonCurrency);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
-
-        [SecuredOperation("admin,season.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [ValidationAspect(typeof(SeasonCurrencyValidator))]
         [TransactionScopeAspect]
-        public IResult Update(SeasonCurrency seasonCurrency)
+        public IServiceResult Update(SeasonCurrency seasonCurrency)
         {
-            IResult result = BusinessRules.Run(CheckIfCurrencyTypeExists(seasonCurrency));
+            ServiceResult result = BusinessRules.Run(CheckIfCurrencyTypeExists(seasonCurrency));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _seasonCurrencyDal.Update(seasonCurrency);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _seasonCurrencyDal.Add(seasonCurrency);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
-
-        [SecuredOperation("admin,season.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
-        public IResult Delete(SeasonCurrency seasonCurrency)
+        public IServiceResult Delete(SeasonCurrency seasonCurrency)
         {
-            _seasonCurrencyDal.Delete(seasonCurrency);
+            var result = _seasonCurrencyDal.Delete(seasonCurrency);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Deleted");
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfCurrencyTypeExists(SeasonCurrency seasonCurrency)
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+        [TransactionScopeAspect]
+        public IServiceResult DeleteBySeason(Season season)
         {
-            var result = _seasonCurrencyDal.GetAll(x => x.SeasonId == seasonCurrency.SeasonId && x.CurrencyType == seasonCurrency.CurrencyType).Any();
+            var seasonCurrencies = GetAllBySeasonId(season.Id);
+            if (seasonCurrencies.Result == false)
+                return new ErrorServiceResult(false, "SeasonCurrencyNotFound");
 
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
+            foreach (var seasonCurrency in seasonCurrencies.Data)
+            {
+                var deleteSeasonCurrency = Delete(seasonCurrency);
+                if (deleteSeasonCurrency.Result == false)
+                    return new ErrorServiceResult(false, "SeasonCurrencyNotDeleted");
+            }
 
-            return new SuccessResult();
+            return new ServiceResult(true, "Delated");
         }
-       
+
+        public IDataServiceResult<SeasonCurrency> Save(int customerId, List<SeasonCurrency> seasonCurrencies)
+        {
+            var dbSeasonCurrencies = GetAll(customerId).Data;
+            foreach (var dbSeasonCurrency in dbSeasonCurrencies)
+            {
+                var control = seasonCurrencies.Any(x => x.Id == dbSeasonCurrency.Id);
+                if (control != true)
+                {
+                    Delete(dbSeasonCurrency);
+                }
+            }
+
+            foreach (var seasonCurrency in seasonCurrencies)
+            {
+                if (seasonCurrency.Id > 0)
+                {
+                    Update(seasonCurrency);
+                }
+                else
+                {
+                    Add(seasonCurrency);
+                }
+            }
+            return new SuccessDataServiceResult<SeasonCurrency>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfCurrencyTypeExists(SeasonCurrency seasonCurrency)
+        {
+            var result = _seasonCurrencyDal.GetAll(x => x.SeasonId == seasonCurrency.SeasonId && x.CurrencyType == seasonCurrency.CurrencyType);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "CurrencyTypeAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
     }
 }

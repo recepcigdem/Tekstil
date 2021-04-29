@@ -58,7 +58,7 @@ namespace Business.Concrete
             if (dbResult == null)
                 return new ErrorServiceResult(false, "SystemError");
 
-            return new ServiceResult(true, "Updated");
+            return new ServiceResult(true, "Added");
 
         }
 
@@ -158,7 +158,7 @@ namespace Business.Concrete
             var result = _staffDal.GetAll(x => x.FirstName == staff.FirstName && x.LastName == staff.LastName);
 
             if (result.Count > 1)
-                new ErrorServiceResult(false, "AlreadyExists");
+                new ErrorServiceResult(false, "NameAlreadyExists");
 
             return new ServiceResult(true, "");
         }
