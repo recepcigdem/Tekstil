@@ -13,7 +13,7 @@ namespace UI.Models.Season
 
         public SeasonListLine()
         {
-            IsActive = 0;
+            IsActive = false;
             Code = string.Empty;
             Description = string.Empty;
         }

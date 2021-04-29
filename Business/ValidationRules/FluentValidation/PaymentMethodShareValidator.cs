@@ -15,8 +15,8 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(x => x.SeasonId).GreaterThan(0);
             RuleFor(x => x.SeasonCurrencyId).GreaterThan(0);
             RuleFor(x => x.PaymentMethodId).GreaterThan(0);
-            RuleFor(x => x.CenterShareEURO).GreaterThan(0);
-            RuleFor(x => x.CenterShareTL).GreaterThan(0);
+            RuleFor(x => x.CenterShareEuro).GreaterThan(0);
+            RuleFor(x => x.CenterShareTl).GreaterThan(0);
         }
     }
 }
