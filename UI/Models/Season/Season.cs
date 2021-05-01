@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Concrete;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.Dtos.Season;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using UI.Models.Common;
+using Entities.Concrete.Enums.DefinitionTitle;
 
 namespace UI.Models.Season
 {
@@ -48,15 +50,15 @@ namespace UI.Models.Season
 
         #region PaymentMethodShare
 
-        public List<Entities.Concrete.PaymentMethodShare> PaymentMethodShares { get; set; }
+        public List<PaymentMethodShare> PaymentMethodShares { get; set; }
 
         public string SubPaymentMethodShareString
         {
             get { return JsonConvert.SerializeObject(PaymentMethodShares); }
-            set { PaymentMethodShares = JsonConvert.DeserializeObject<List<Entities.Concrete.PaymentMethodShare>>(value); }
+            set { PaymentMethodShares = JsonConvert.DeserializeObject<List<PaymentMethodShare>>(value); }
         }
 
-        public List<Entities.Concrete.PaymentMethodShare> ListPaymentMethodShares { get; set; }
+        public List<PaymentMethodShare> ListPaymentMethodShares { get; set; }
 
         #endregion
 
@@ -76,15 +78,15 @@ namespace UI.Models.Season
 
         #region CountryShippingMultiplier
 
-        public List<Entities.Concrete.CountryShippingMultiplier> CountryShippingMultipliers { get; set; }
+        public List<CountryShippingMultiplier> CountryShippingMultipliers { get; set; }
 
         public string SubCountryShippingMultiplierString
         {
             get { return JsonConvert.SerializeObject(CountryShippingMultipliers); }
-            set { CountryShippingMultipliers = JsonConvert.DeserializeObject<List<Entities.Concrete.CountryShippingMultiplier>>(value); }
+            set { CountryShippingMultipliers = JsonConvert.DeserializeObject<List<CountryShippingMultiplier>>(value); }
         }
 
-        public List<Entities.Concrete.CountryShippingMultiplier> ListCountryShippingMultipliers { get; set; }
+        public List<CountryShippingMultiplier> ListCountryShippingMultipliers { get; set; }
 
         #endregion
 
@@ -95,6 +97,8 @@ namespace UI.Models.Season
         private IPaymentMethodShareService _paymentMethodShareService;
         private IModelSeasonRowNumberService _modelSeasonRowNumberService;
         private ICountryShippingMultiplierService _countryShippingMultiplierService;
+        private IDefinitionTitleService _definitionTitleService;
+        private IDefinitionService _definitionService;
 
         #endregion
 
@@ -149,7 +153,7 @@ namespace UI.Models.Season
                 }
             }
             #endregion
-           
+
             #region SeasonPlaning
             var seasonPlaningList = _seasonPlaningService.GetAllBySeasonId(EntityId);
             if (seasonPlaningList != null)
@@ -162,14 +166,17 @@ namespace UI.Models.Season
             #endregion
 
             #region PaymentMethodShare
+
             var paymentMethodShareList = _paymentMethodShareService.GetAllBySeasonId(EntityId);
             if (paymentMethodShareList != null)
-            {
-                foreach (var paymentMethodShare in paymentMethodShareList.Data)
                 {
-                    ListPaymentMethodShares.Add(paymentMethodShare);
+                    foreach (var paymentMethodShare in paymentMethodShareList.Data)
+                    {
+                        ListPaymentMethodShares.Add(paymentMethodShare);
+                    }
                 }
-            }
+            
+
             #endregion
 
             #region ModelSeasonRowNumber

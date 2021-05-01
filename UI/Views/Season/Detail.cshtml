@@ -1,5 +1,1032 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Season.Season
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
 @{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
+
+<link href="~/css/customerDetail.css" rel="stylesheet" />
+<link href="~/js/panel-structure.js" rel="stylesheet" />
+<link href="~/css/AccordionTables.css" rel="stylesheet" />
+
+@using (Html.BeginForm("Detail", "Season", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+    @Html.HiddenFor(x => x.CustomerId)
+    @Html.HiddenFor(x => x.SubSeasonPlanningString)
+    @Html.HiddenFor(x => x.SubSeasonCurrencyString)
+    @Html.HiddenFor(x => x.SubPaymentMethodShareString)
+    @Html.HiddenFor(x => x.SubCountryShippingMultiplierString)
+    @Html.HiddenFor(x => x.SubModelSeasonRowNumberString)
+
+    <div class="page-header page-header-bordered">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Home/Index">@Localizer["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Season/Index">@Localizer["List"]</a></li>
+
+            @if (Model.EntityId == 0)
+            {
+                <li class="breadcrumb-item active">@Localizer["NewSeason"]</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active">@Model.Code @Model.Description </li>
+            }
+        </ol>
+    </div>
+    <div class="page-content">
+        <div class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions"></div>
+                <h3 class="panel-title">@Localizer["PageTitle"]</h3>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div class="box-body">
+                                <div class="row">
+                                    <!-- Example Tabs Line Top -->
+                                    <div class="example-wrap col-md-12">
+                                        <div class="nav-tabs-horizontal" data-plugin="tabs">
+                                            <ul class="nav nav-tabs nav-tabs-line tabs-line-top" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link active" data-toggle="tab" href="#general"
+                                                       aria-controls="general" role="tab">@Localizer["General"]</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" data-toggle="tab" href="#modelSeasonRowNumber"
+                                                       aria-controls="modelSeasonRowNumber" role="tab">@Localizer["ModelSeasonRowNumber"]</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content pt-20">
+                                                <div class="tab-pane active" id="general" role="tabpanel">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
+                                                                    @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive" })
+                                                                    @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                @Localizer["Code"]
+                                                                @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                @Localizer["Description"]
+                                                                @Html.TextBoxFor(x => x.Description, new { @class = "form-control" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <!-- Example Tabs Line Top -->
+                                                        <div class="example-wrap col-md-12">
+                                                            <div class="nav-tabs-horizontal" data-plugin="tabs">
+                                                                <ul class="nav nav-tabs nav-tabs-line tabs-line-top" role="tablist">
+                                                                    <li class="nav-item" role="presentation">
+                                                                        <a class="nav-link active" data-toggle="tab" href="#seasonPlanning"
+                                                                           aria-controls="seasonPlanning" role="tab">@Localizer["SeasonPlanning"]</a>
+                                                                    </li>
+                                                                    <li class="nav-item" role="presentation">
+                                                                        <a class="nav-link" data-toggle="tab" href="#seasonCurrency"
+                                                                           aria-controls="seasonCurrency" role="tab">@Localizer["SeasonCurrency"]</a>
+                                                                    </li>
+                                                                    <li class="nav-item" role="presentation">
+                                                                        <a class="nav-link" data-toggle="tab" href="#paymentMethodShare"
+                                                                           aria-controls="paymentMethodShare" role="tab">@Localizer["PaymentMethodShare"]</a>
+                                                                    </li>
+                                                                    <li class="nav-item" role="presentation">
+                                                                        <a class="nav-link" data-toggle="tab" href="#countryShippingMultiplier"
+                                                                           aria-controls="countryShippingMultiplier" role="tab">@Localizer["CountryShippingMultiplier"]</a>
+                                                                    </li>
+                                                                </ul>
+                                                                <div class="tab-content pt-20">
+                                                                    <div class="tab-pane active" id="seasonPlanning" role="tabpanel">
+                                                                        @Html.HiddenFor(x => x.SubSeasonPlanningString)
+                                                                        <div class="col-md-12">
+                                                                            <div class="panel panel-primary panel-line">
+
+                                                                                <div class="col-md-12">
+                                                                                    <div class="row">
+                                                                                        <h4 class="col mb-0 align-self-end">@Localizer["SeasonPlanning"]</h4>
+                                                                                        <div class="col-md-auto text-right mt-2">
+                                                                                            <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddSeasonPlanning()">@Localizer["NewSeasonPlanning"]</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <table id="seasonPlanningGrid" class="fold-table table-bordered table-hover table table-striped">
+                                                                                    <thead class="col-md-12">
+                                                                                        <tr>
+                                                                                            <th>@Localizer["ProductGroup"]</th>
+                                                                                            <th>@Localizer["PlanTotalQuantity"]</th>
+                                                                                            <th>@Localizer["RealTotalQuantity"]</th>
+                                                                                            <th></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody class="col-md-12">
+
+                                                                                        @for (int i = 0; i < Model.ListSeasonPlannings.Count; i++)
+                                                                                        {
+                                                                                        <tr class="view" id="view'@i'">
+                                                                                            <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                            <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                            <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealTotalQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                            <td>
+                                                                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteListLine(@i)">@Localizer["Delete"]</button>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                            <tr class="fold" id="fold'@i'">
+                                                                                                <td colspan="7">
+                                                                                                    <div class="fold-content">
+                                                                                                        <table id="tableSeasonPlanning">
+                                                                                                            <thead>
+                                                                                                                <tr>
+                                                                                                                    <th width="34%">@Localizer["ProductGroup"]</th>
+                                                                                                                    <th width="33%">@Localizer["PlanTotalQuantity"]</th>
+                                                                                                                    <th width="33%">@Localizer["RealTotalQuantity"]</th>
+
+                                                                                                                </tr>
+                                                                                                            </thead>
+                                                                                                            <tbody>
+                                                                                                                <tr id="trProductGroup'@i'">
+                                                                                                                    <td id="productGroup">@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @class = "form-control" })</td>
+                                                                                                                    <td colspan="2">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @class = "form-control" })</td>
+                                                                                                                    <td colspan="2">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealTotalQuantity, new { @class = "form-control" })</td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <th width="100%"><strong>@Localizer["Planned"]</strong></th>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <th width="12%">@Localizer["ModelMain"]</th>
+                                                                                                                    <th width="11%">@Localizer["ModelMini"]</th>
+                                                                                                                    <th width="11%">@Localizer["ModelMidi"]</th>
+                                                                                                                    <th width="11%">@Localizer["OptionMain"]</th>
+                                                                                                                    <th width="11%">@Localizer["OptionMini"]</th>
+                                                                                                                    <th width="11%">@Localizer["OptionMidi"]</th>
+                                                                                                                    <th width="11%">@Localizer["QuantityMain"]</th>
+                                                                                                                    <th width="11%">@Localizer["QuantityMini"]</th>
+                                                                                                                    <th width="11%">@Localizer["QuantityMidi"]</th>
+                                                                                                                </tr>
+                                                                                                                <tr id="trPlanLine">
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanModelMain, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanModelMini, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanModelMidi, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanOptionMain, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanOptionMini, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanOptionMidi, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanQuantityMain, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanQuantityMini, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanQuantityMidi, new { @class = "form-control numericField" })</td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <th width="100%"><strong>@Localizer["Performed"]</strong></th>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <th width="12%">@Localizer["ModelMain"]</th>
+                                                                                                                    <th width="11%">@Localizer["ModelMini"]</th>
+                                                                                                                    <th width="11%">@Localizer["ModelMidi"]</th>
+                                                                                                                    <th width="11%">@Localizer["OptionMain"]</th>
+                                                                                                                    <th width="11%">@Localizer["OptionMini"]</th>
+                                                                                                                    <th width="11%">@Localizer["OptionMidi"]</th>
+                                                                                                                    <th width="11%">@Localizer["QuantityMain"]</th>
+                                                                                                                    <th width="11%">@Localizer["QuantityMini"]</th>
+                                                                                                                    <th width="11%">@Localizer["QuantityMidi"]</th>
+                                                                                                                </tr>
+                                                                                                                <tr id="trRealLine">
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealModelMain, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealModelMini, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealModelMidi, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealOptionMain, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealOptionMini, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealOptionMidi, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealQuantityMain, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealQuantityMini, new { @class = "form-control numericField" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealQuantityMidi, new { @class = "form-control numericField" })</td>
+                                                                                                                </tr>
+                                                                                                            </tbody>
+                                                                                                        </table>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane" id="seasonCurrency" role="tabpanel">
+                                                                        @Html.HiddenFor(x => x.SeasonCurrencies)
+                                                                        <div class="col-md-12">
+                                                                            <div class="panel panel-primary panel-line">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="row">
+                                                                                        <h4 class="col mb-0 align-self-end">@Localizer["SeasonCurrency"]</h4>
+                                                                                        <div class="col-md-auto text-right mt-2">
+                                                                                            <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddSeasonCurrency()">@Localizer["NewSeasonCurrency"]</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <table id="seasonCurrencyGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th width="10%">@Localizer["IsDefault"]</th>
+                                                                                            <th width="30%">@Localizer["CurrencyType"]</th>
+                                                                                            <th width="40%">@Localizer["ExchangeRate"]</th>
+                                                                                            <th width="10%"></th>
+                                                                                            <th width="10%"></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @for (int i = 0; i < Model.ListSeasonCurrencies.Count; i++)
+                                                                                        {
+                                                                                            <tr class="dataSatir">
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <div class="checkbox-custom checkbox-inline checkbox-success" style="padding-top:5px">
+                                                                                                            @Html.CheckBoxFor(x => x.ListSeasonCurrencies[i].IsDefault, new { @class = "isDefaultCheck", @style = "" })
+                                                                                                            @Html.LabelFor(x => x.ListSeasonCurrencies[i].IsDefault, "")
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control" name="currencyType" id="currencyType" value="@Model.ListSeasonCurrencies[i].CurrencyType" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="exchangeRate" id="exchangeRate" value="@Model.ListSeasonCurrencies[i].ExchangeRate"/>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteSeasonCurrency(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListSeasonCurrencies[i].Id)</td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane" id="paymentMethodShare" role="tabpanel">
+                                                                        @Html.HiddenFor(x => x.PaymentMethodShares)
+                                                                        <div class="col-md-12">
+                                                                            <div class="panel panel-primary panel-line">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="row">
+                                                                                        <h4 class="col mb-0 align-self-end">@Localizer["PaymentMethodShare"]</h4>
+                                                                                        <div class="col-md-auto text-right mt-2">
+                                                                                            <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddPaymentMethodShare()">@Localizer["NewPaymentMethodShare"]</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <table id="paymentMethodGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th width="30%">@Localizer["PaymentMethod"]</th>
+                                                                                            <th width="10%">@Localizer["CenterShare"]</th>
+                                                                                            <th width="20%">@Localizer["SeasonCurrency"]</th>
+                                                                                            <th width="10%">@Localizer["CenterShareEuro"]</th>
+                                                                                            <th width="10%">@Localizer["AccessoryCenterShareEuro"]</th>
+                                                                                            <th width="10%"></th>
+                                                                                            <th width="10%"></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @for (int i = 0; i < Model.ListPaymentMethodShares.Count; i++)
+                                                                                        {
+                                                                                            <tr class="dataSatir">
+                                                                                                <td id="paymentMethod'@i'">@Html.HiddenFor(x => x.ListPaymentMethodShares[i].PaymentMethodId, new { @class = "form-control" })</td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="centerShare" id="centerShare" value="@Model.ListPaymentMethodShares[i].CenterShare" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td id="seasonCurrency'@i'">@Html.HiddenFor(x => x.ListPaymentMethodShares[i].SeasonCurrencyId, new { @class = "form-control" })</td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="centerShareEuro" id="centerShareEuro" value="@Model.ListPaymentMethodShares[i].CenterShareEuro" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="accessoryCenterShareEuro" id="accessoryCenterShareEuro" value="@Model.ListPaymentMethodShares[i].AccessoryCenterShareEuro" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deletePaymentMethodShare(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListPaymentMethodShares[i].Id)</td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane" id="countryShippingMultiplier" role="tabpanel">
+                                                                        @Html.HiddenFor(x => x.CountryShippingMultipliers)
+                                                                        <div class="col-md-12">
+                                                                            <div class="panel panel-primary panel-line">
+                                                                                <div class="col-md-12">
+                                                                                    <div class="row">
+                                                                                        <h4 class="col mb-0 align-self-end">@Localizer["CountryShippingMultiplier"]</h4>
+                                                                                        <div class="col-md-auto text-right mt-2">
+                                                                                            <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddCountryShippingMultiplier()">@Localizer["NewCountryShippingMultiplier"]</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <table id="countryShippingMultiplierGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th width="12%">@Localizer["Country"]</th>
+                                                                                            <th width="10%">@Localizer["ShippingMethod"]</th>
+                                                                                            <th width="10%">@Localizer["Currency"]</th>
+                                                                                            <th width="8%">@Localizer["Multiplier"]</th>
+                                                                                            <th width="8%">@Localizer["TestPrice"]</th>
+                                                                                            <th width="8%">@Localizer["Test%"]</th>
+                                                                                            <th width="8%">@Localizer["Cargo%"]</th>
+                                                                                            <th width="8%">@Localizer["Insurance%"]</th>
+                                                                                            <th width="8%">@Localizer["Freight%"]</th>
+                                                                                            <th width="10%"></th>
+                                                                                            <th width="10%"></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @for (int i = 0; i < Model.ListCountryShippingMultipliers.Count; i++)
+                                                                                        {
+                                                                                            <tr class="dataSatir">
+                                                                                                <td id="country'@i'">@Html.HiddenFor(x => x.ListCountryShippingMultipliers[i].CountryId, new { @class = "form-control" })</td>
+                                                                                                <td id="shippingMethod'@i'">@Html.HiddenFor(x => x.ListCountryShippingMultipliers[i].ShippingMethodId, new { @class = "form-control" })</td>
+                                                                                                <td id="seasonCurrency'@i'">@Html.HiddenFor(x => x.ListCountryShippingMultipliers[i].SeasonCurrencyId, new { @class = "form-control" })</td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="multiplier" id="multiplier" value="@Model.ListCountryShippingMultipliers[i].Multiplier" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="testPrice" id="testPrice" value="@Model.ListCountryShippingMultipliers[i].TestPrice" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="testPercentage" id="testPercentage" value="@Model.ListCountryShippingMultipliers[i].TestPercentage" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="cargoPercentage" id="cargoPercentage" value="@Model.ListCountryShippingMultipliers[i].CargoPercentage" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="insurancePercentage" id="insurancePercentage" value="@Model.ListCountryShippingMultipliers[i].InsurancePercentage" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="input-group">
+                                                                                                        <input type="text" class="form-control numericField" name="freightPercentage" id="freightPercentage" value="@Model.ListCountryShippingMultipliers[i].FreightPercentage" />
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteCountryShippingMultiplier(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListCountryShippingMultipliers[i].Id)</td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="modelSeasonRowNumber" role="tabpanel">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-success" id="buttonSave" onclick="Save();">@Localizer["Save"]</button>
+                        </div>
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-danger" onclick="window.location.href='Index'">@Localizer["Cancel"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+    var dataListProductGroup = [];
+    var dataListPaymentMethod = [];
+    var dataListShippingMethod = [];
+    var dataListCountry = [];
+    var dataListSeasonCurrency = [];
+    var count = 0;
+    var countPaymentMethod = 0;
+    var countCountryShippingMultiplier = 0;
+
+    $(document).ready(function () {
+
+        dataListProductGroup = [];
+        dataListPaymentMethod = [];
+        dataListSeasonCurrency = [];
+        dataListShippingMethod = [];
+        dataListCountry = [];
+
+        $("#tableSeasonPlanning tbody").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            data.productGroupId = row.find("#trProductGroup").find("td").find("input").eq(0).val();
+            ComboProductGroupList(data.productGroupId);
+
+            count++;
+        });
+
+        $("#paymentMethodGrid tbody").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            data.paymentMethodId = row.find("#dataSatir").find("td").find("input").eq(0).val();
+            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
+
+            ComboPaymentMethodList(data.paymentMethodId);
+            ComboSeasonCurrencyList(data.seasonCurrencyId);
+
+            countPaymentMethod++;
+        });
+
+        $("#countryShippingMultiplierGrid tbody").each(function () {
+            var row = $(this);
+
+            var data = {};
+            data.countryId = row.find("#dataSatir").find("td").find("input").eq(0).val();
+            console.log(data.countryId);
+            data.shippingMethodId = row.find("#dataSatir").find("td").find("input").eq(1).val();
+            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            
+            ComboCountryList(data.countryId, countCountryShippingMultiplier);
+            ComboShippingMethodList(data.shippingMethodId, countCountryShippingMultiplier);
+            //ComboSeasonCurrencyList(data.seasonCurrencyId);
+
+            countCountryShippingMultiplier++;
+        });
+
+
+    });
+
+    function ComboProductGroupList(productGroupId,count)
+    {
+        dataListProductGroup = [];
+
+        document.getElementById("productGroup'" + count + "'").innerHTML = "<select id=\"comboProductGroup" + count + "\" class=\"form-control productGroup comboProductGroup\">" + "</select>";
+        var selectitem = document.getElementById("comboProductGroup" + count);
+
+        var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
+
+        $.ajax({
+            url: comboProductGroupUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.forEach(element => {
+                    dataListProductGroup.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+                });
+            }
+        });
+
+        //dataListProductGroup.forEach(a => {
+        //    console.log(a);
+        //    var option = document.createElement("option");
+        //    option.textContent = a.text;
+        //    option.value = a.id;
+        //    selectitem.appendChild(option);
+
+        //});
+
+        if (productGroupId > 0) {
+            selectitem.value = productGroupId;
+        }
+    }
+
+    function ComboSeasonCurrencyList(seasonCurrencyId, countSeasonCurrency)
+    {
+        dataListSeasonCurrency = [];
+
+        document.getElementById("seasonCurrency'" + countSeasonCurrency + "'").innerHTML = "<select id=\"comboSeasonCurrency" + countSeasonCurrency + "\" class=\"form-control seasonCurrency comboSeasonCurrency\">" + "</select>";
+        var selectitem = document.getElementById("comboSeasonCurrency" + countSeasonCurrency);
+
+        var comboSeasonCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + id;
+
+        $.ajax({
+            url: comboSeasonCurrencyUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.forEach(element => {
+                    dataListSeasonCurrency.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+                });
+            }
+        });
+
+        if (seasonCurrencyId > 0) {
+            selectitem.value = seasonCurrencyId;
+        }
+    }
+
+    function ComboPaymentMethodList(paymentMethodId, countPaymentMethod)
+    {
+        dataListPaymentMethod = [];
+
+        document.getElementById("paymentMethod'" + countPaymentMethod + "'").innerHTML = "<select id=\"comboPaymentMethod" + countPaymentMethod + "\" class=\"form-control paymentMethod comboPaymentMethod\">" + "</select>";
+        var selectitem = document.getElementById("comboPaymentMethod" + countPaymentMethod);
+
+        var comboPaymentMethodUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 36;
+
+        $.ajax({
+            url: comboPaymentMethodUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.forEach(element => {
+                    dataListPaymentMethod.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+                });
+            }
+        });
+
+        if (paymentMethodId > 0) {
+            selectitem.value = paymentMethodId;
+        }
+    }
+
+    function ComboShippingMethodList(shippingMethodId, countCountryShippingMultiplier)
+    {
+        dataListShippingMethod = [];
+
+        document.getElementById("shippingMethod'" + countCountryShippingMultiplier + "'").innerHTML = "<select id=\"comboShippingMethod" + countCountryShippingMultiplier + "\" class=\"form-control shippingMethod comboShippingMethod\">" + "</select>";
+        var selectitem = document.getElementById("comboShippingMethod" + countCountryShippingMultiplier);
+
+        var comboShippingMethodUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 37;
+
+        $.ajax({
+            url: comboShippingMethodUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.forEach(element => {
+                    dataListShippingMethod.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+                });
+            }
+        });
+
+        if (shippingMethodId > 0) {
+            selectitem.value = shippingMethodId;
+        }
+    }
+
+    function ComboCountryList(countryId, countCountryShippingMultiplier)
+    {
+        dataListCountry = [];
+
+        document.getElementById("country'" + countCountryShippingMultiplier + "'").innerHTML = "<select id=\"comboCountry" + countCountryShippingMultiplier + "\" class=\"form-control country comboCountry\">" + "</select>";
+        var selectitem = document.getElementById("comboCountry" + countCountryShippingMultiplier);
+
+        var comboCountryUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 35;
+
+        $.ajax({
+            url: comboCountryUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.forEach(element => {
+                    dataListCountry.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+                });
+            }
+        });
+
+        if (countryId > 0) {
+            selectitem.value = countryId;
+        }
+    }
+
+    function AddSeasonPlanning() {
+        event.preventDefault();
+        var table = document.querySelector("#seasonPlanningGrid tbody");
+        table.insertAdjacentHTML("beforeend",
+            "<tr class=\"view\" id=\"view'" + count + "'\">"
+            + "<td id=\"productGroup'" + count + "' disabled=\"disabled\">"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanTotalQuantity' class='form-control' disabled=\"disabled\">"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealTotalQuantity' class='form-control' disabled=\"disabled\">"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteListLine("+count+")\">@Localizer["Delete"]</button>"
+            + "</td>"
+            + "</tr>"
+            + "<tr class=\"fold open\" id=\"fold'" + count + "'\">"
+            + "<td colspan=\"7\">"
+            + "<div class=\"fold-content\">"
+            + "<table id=\"tableSeasonPlanning\">"
+            + "<thead>"
+            + "<tr>"
+            + "<th width=\"34%\">@Localizer["ProductGroup"]</th>"
+            + "<th width=\"33%\">@Localizer["PlanTotalQuantity"]</th>"
+            + "<th width=\"33%\">@Localizer["RealTotalQuantity"]</th>"
+            + "</tr>"
+            + "</thead>"
+            + "<tbody>"
+            + "<tr id=\"trProductGroup\">"
+            + "<td id=\"productGroup'" + count + "'\">"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanTotalQuantity' class='form-control' disabled=\"disabled\">"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealTotalQuantity' class='form-control' disabled=\"disabled\">"
+            + "</div>"
+            + "</td>"
+            + "</tr>"
+            + "<tr>"
+            + "<th width=\"100%\"><strong>@Localizer["Planned"]</strong></th>"
+            + "</tr>"
+            + "<tr>"
+            + "<th width=\"12%\">@Localizer["ModelMain"]</th>"
+            + "<th width=\"11%\">@Localizer["ModelMini"]</th>"
+            + "<th width=\"11%\">@Localizer["ModelMidi"]</th>"
+            + "<th width=\"11%\">@Localizer["OptionMain"]</th>"
+            + "<th width=\"11%\">@Localizer["OptionMini"]</th>"
+            + "<th width=\"11%\">@Localizer["OptionMidi"]</th>"
+            + "<th width=\"11%\">@Localizer["QuantityMain"]</th>"
+            + "<th width=\"11%\">@Localizer["QuantityMini"]</th>"
+            + "<th width=\"11%\">@Localizer["QuantityMidi"]</th>"
+            + "</tr>"
+            + "<tr id=\"trPlanLine\">"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanModelMain' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanModelMini' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanModelMidi' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanOptionMain' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanOptionMini' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanOptionMidi' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanQuantityMain' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanQuantityMini' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanQuantityMidi' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "</tr>"
+            + "<tr>"
+            + "<th width=\"100%\"><strong>@Localizer["Performed"]</strong></th>"
+            + "</tr>"
+            + "<tr>"
+            + "<th width=\"12%\">@Localizer["ModelMain"]</th>"
+            + "<th width=\"11%\">@Localizer["ModelMini"]</th>"
+            + "<th width=\"11%\">@Localizer["ModelMidi"]</th>"
+            + "<th width=\"11%\">@Localizer["OptionMain"]</th>"
+            + "<th width=\"11%\">@Localizer["OptionMini"]</th>"
+            + "<th width=\"11%\">@Localizer["OptionMidi"]</th>"
+            + "<th width=\"11%\">@Localizer["QuantityMain"]</th>"
+            + "<th width=\"11%\">@Localizer["QuantityMini"]</th>"
+            + "<th width=\"11%\">@Localizer["QuantityMidi"]</th>"
+            + "</tr>"
+            + "<tr id=\"trRealLine\">"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealModelMain' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealModelMini' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealModelMidi' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealOptionMain' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealOptionMini' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealOptionMidi' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealQuantityMain' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealQuantityMini' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class='input-group'>"
+            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealQuantityMidi' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "</tr>"
+            + "</tbody>"
+            + "</table>"
+            + "</div>"
+            + "</td>"
+            + "</tr>"
+            );
+
+        tableOpenClosed(count);
+
+        ComboProductGroupList(0, count);
+        count++;
+    }
+
+    function deleteListLine(rowNo) {
+        let rowDocument = document.getElementById("view'" + rowNo + "'");
+        rowDocument.remove();
+
+        let foldDocument = document.getElementById("fold'" + rowNo + "'");;
+        foldDocument.remove();
+    }
+
+    var countSeasonCurrency = $('.dataSatir').length + 1;
+    function AddSeasonCurrency() {
+        event.preventDefault();
+        var table = document.querySelector("#seasonCurrencyGrid tbody");
+         table.insertAdjacentHTML("beforeend",
+             "<tr>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
+             + "<input type=\"checkbox\" class=\"isDefaultCheck\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].IsDefault\">"
+            + "<label></label>"
+            + "</div>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+             + "<input type=\"text\" class=\"form-control\" id=\"currencyType\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].CurrencyType\" />"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+             + "<input type=\"text\" class=\"form-control numericField\" id=\"exchangeRate\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].ExchangeRate\" />"
+            + "</div>"
+            + "</td>"
+            + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteSeasonCurrency(this)\">@Localizer["Delete"]</button>"
+             + "<input type=\"hidden\" class=\"form-control\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].Id\">"
+            + "</td>"
+            + "</tr>"
+
+        );
+        countSeasonCurrency++;
+    }
+
+    function deleteSeasonCurrency(button) {
+        button.closest("tr").remove();
+    }
+
+    function AddPaymentMethodShare() {
+        event.preventDefault();
+        var table = document.querySelector("#paymentMethodGrid tbody");
+        table.insertAdjacentHTML("beforeend",
+            "<tr>"
+            + "<td id=\"paymentMethod'" + countPaymentMethod + "'\">"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"centerShare\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].CenterShare\" />"
+            + "</div>"
+            + "</td>"
+            + "<td id=\"seasonCurrency'" + countPaymentMethod + "'\">"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"centerShareEuro\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].CenterShareEuro\" />"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"accessoryCenterShareEuro\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].AccessoryCenterShareEuro\" />"
+            + "</div>"
+            + "</td>"
+            + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deletePaymentMethodShare(this)\">@Localizer["Delete"]</button>"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].Id\">"
+            + "</td>"
+            + "</tr>"
+        );
+
+        ComboPaymentMethodList(0, countPaymentMethod);
+        //ComboSeasonCurrencyList(0, countPaymentMethod);
+        countPaymentMethod++;
+    }
+
+    function deletePaymentMethodShare(button) {
+        button.closest("tr").remove();
+    }
+
+    function AddCountryShippingMultiplier() {
+        event.preventDefault();
+        var table = document.querySelector("#countryShippingMultiplierGrid tbody");
+        table.insertAdjacentHTML("beforeend",
+            "<tr>"
+            + "<td id=\"country'" + countCountryShippingMultiplier + "'\">"
+            + "</td>"
+            + "<td id=\"shippingMethod'" + countCountryShippingMultiplier + "'\">"
+            + "</td>"
+            + "<td id=\"seasonCurrency'" + countCountryShippingMultiplier + "'\">"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"multiplier\" name=\"ListCountryShippingMultipliers[" + countCountryShippingMultiplier + "].Multiplier\" />"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"testPrice\" name=\"ListCountryShippingMultipliers[" + countCountryShippingMultiplier + "].TestPrice\" />"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"testPercentage\" name=\"ListCountryShippingMultipliers[" + countCountryShippingMultiplier + "].TestPercentage\" />"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"cargoPercentage\" name=\"ListCountryShippingMultipliers[" + countCountryShippingMultiplier + "].CargoPercentage\" />"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"insurancePercentage\" name=\"ListCountryShippingMultipliers[" + countCountryShippingMultiplier + "].InsurancePercentage\" />"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"freightPercentage\" name=\"ListCountryShippingMultipliers[" + countCountryShippingMultiplier + "].FreightPercentage\" />"
+            + "</div>"
+            + "</td>"
+            + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteCountryShippingMultiplier(this)\">@Localizer["Delete"]</button>"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"ListCountryShippingMultipliers[" + countCountryShippingMultiplier + "].Id\">"
+            + "</td>"
+            + "</tr>"
+        );
+        ComboCountryList(0, countCountryShippingMultiplier);
+        ComboShippingMethodList(0, countCountryShippingMultiplier);
+        //ComboSeasonCurrencyList(0, countCountryShippingMultiplier);
+
+        countCountryShippingMultiplier++;
+    }
+
+    function deleteCountryShippingMultiplier(button) {
+        button.closest("tr").remove();
+    }
+
+    function tableOpenClosed(Count) {
+        document.getElementById("view'" + Count + "'").onclick = function(){
+            if (document.getElementById("view'" + Count + "'").classList.contains("open")) {
+                document.getElementById("view'" + Count + "'").classList.remove("open");
+                document.getElementById("fold'" + Count + "'").classList.remove("open");
+            } else {
+                document.getElementById("view'" + Count + "'").classList.add("open");
+                document.getElementById("fold'" + Count + "'").classList.add("open");
+            }
+
+        }
+
+    }
+
+    function ShowError(title, message) {
+        Swal.fire({
+            position: 'top-end',
+            title: title,
+            text: message,
+            icon: 'error',
+            showCloseButton: true,
+            showConfirmButton: true,
+            padding: '4em'
+        });
+    }
+
+    function ShowSuccess(title, message) {
+
+        Swal.fire({
+            position: 'top-end',
+            title: title,
+            text: message,
+            icon: 'success',
+            showCloseButton: true,
+            showConfirmButton: true,
+            padding: '4em'
+        }).then(function () {
+            window.location.href = "@Url.Action("Detail","Season")" + "?Detail=" + id;;
+        });
+    }
+</script>

@@ -26,8 +26,9 @@ namespace UI.Controllers.Season
         private IPaymentMethodShareService _paymentMethodShareService;
         private ICountryShippingMultiplierService _countryShippingMultiplierService;
 
-        public SeasonController(IStringLocalizerFactory factory, IStringLocalizer<SeasonController> localizer, ILogger<SeasonController> logger, IWebHostEnvironment env, 
-            ISeasonService seasonService, ISeasonCurrencyService seasonCurrencyService, ISeasonPlaningService seasonPlaningService, 
+
+        public SeasonController(IStringLocalizerFactory factory, IStringLocalizer<SeasonController> localizer, ILogger<SeasonController> logger, IWebHostEnvironment env,
+            ISeasonService seasonService, ISeasonCurrencyService seasonCurrencyService, ISeasonPlaningService seasonPlaningService,
             IModelSeasonRowNumberService modelSeasonRowNumberService, IPaymentMethodShareService paymentMethodShareService, ICountryShippingMultiplierService countryShippingMultiplierService) : base(factory, env)
         {
             _seasonService = seasonService;
@@ -51,7 +52,7 @@ namespace UI.Controllers.Season
         }
 
         [HttpPost]
-        public JsonResult StaffList()
+        public JsonResult SeasonList()
         {
             SeasonList list = new SeasonList(Request, _seasonService);
             return Json(list);
@@ -63,7 +64,7 @@ namespace UI.Controllers.Season
             if (id > 0)
                 serviceDetail = _seasonService.GetById(id).Data;
 
-            var model = new Models.Season.Season(Request, serviceDetail, _localizerShared, _seasonCurrencyService, _seasonPlaningService, 
+            var model = new Models.Season.Season(Request, serviceDetail, _localizerShared, _seasonCurrencyService, _seasonPlaningService,
                 _paymentMethodShareService, _modelSeasonRowNumberService, _countryShippingMultiplierService);
             return View(model);
         }
@@ -76,8 +77,8 @@ namespace UI.Controllers.Season
                 if (season != null)
                 {
                     Models.Season.Season model = new Models.Season.Season(Request, season, _localizerShared, _seasonCurrencyService, _seasonPlaningService,
-                        _paymentMethodShareService, _modelSeasonRowNumberService, _countryShippingMultiplierService); 
-                    
+                        _paymentMethodShareService, _modelSeasonRowNumberService, _countryShippingMultiplierService);
+
                     return PartialView(model);
                 }
                 return null;
@@ -124,7 +125,7 @@ namespace UI.Controllers.Season
                 List<PaymentMethodShare> paymentMethodShares = season.ListPaymentMethodShares;
                 List<CountryShippingMultiplier> countryShippingMultipliers = season.ListCountryShippingMultipliers;
 
-                var result = _seasonService.SaveAll(entity,seasonCurrencies,seasonPlanings,paymentMethodShares,modelSeasonRowNumbers,countryShippingMultipliers);
+                var result = _seasonService.SaveAll(entity, seasonCurrencies, seasonPlanings, paymentMethodShares, modelSeasonRowNumbers, countryShippingMultipliers);
                 if (result.Result == false)
                 {
                     result.Message = _localizer.GetString(result.Message);
@@ -135,6 +136,22 @@ namespace UI.Controllers.Season
                 return Json(result);
             }
 
+            return null;
+        }
+
+        public JsonResult ComboListSeasonCurrency(int seasonId)
+        {
+            var seasonCurrencyList = _seasonCurrencyService.GetAllBySeasonId(seasonId);
+            if (seasonCurrencyList.Result)
+            {
+                List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
+                foreach (SeasonCurrency entity in seasonCurrencyList.Data)
+                {
+                    Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.CurrencyType);
+                    data.Add(model);
+                }
+                return Json(data);
+            }
             return null;
         }
     }

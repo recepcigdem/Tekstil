@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete.Dtos
+namespace Entities.Concrete.Dtos.Staff
 {
     public class StaffEmailDto :BaseEntity
     {

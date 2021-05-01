@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Concrete;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.Dtos.Staff;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
@@ -149,10 +150,6 @@ namespace UI.Models.Staff
                 this.IsSuperAdminControl = resultStaffSession.IsSuperAdmin;
                 this.IsCompanyAdminControl = resultStaffSession.IsCompanyAdmin;
             }
-
-
-            
-            
 
             EntityId = staff.Id;
             CustomerId = staff.CustomerId;

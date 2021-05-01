@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
 
-namespace Entities.Concrete.Dtos
+namespace Entities.Concrete.Dtos.Staff
 {
     public class StaffPhoneDto : BaseEntity
     {

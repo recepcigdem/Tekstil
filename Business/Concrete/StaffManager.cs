@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.Dtos.Staff;
 
 namespace Business.Concrete
 {

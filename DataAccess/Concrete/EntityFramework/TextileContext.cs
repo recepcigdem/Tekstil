@@ -37,7 +37,7 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<ModelSeasonRowNumber> ModelSeasonRowNumber { get; set; }
         public DbSet<PaymentMethodShare> PaymentMethodShare { get; set; }
         public DbSet<Phone> Phone { get; set; }
-        public DbSet<Season> Season { get; set; }
+        public DbSet<Season> Seasons { get; set; }
         public DbSet<SeasonCurrency> SeasonCurrency { get; set; }
         public DbSet<SeasonPlaning> SeasonPlaning { get; set; }
         public DbSet<Staff> Staff { get; set; }
