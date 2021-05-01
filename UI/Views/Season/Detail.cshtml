@@ -989,6 +989,124 @@
         button.closest("tr").remove();
     }
 
+    var newID = 0;
+    function Save() {
+
+        var dataListSeasonPlanning = [];
+        var dataListSeasonCurrency = [];
+        var dataListPaymentMethodShare = [];
+        var dataListCountryShippingMultiplier = [];
+        var dataListModelSeasonRowNumber = [];
+       
+
+        $("#tableSeasonPlanning tbody tr").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            data.productGroupId = row.find("#trProductGroup").find("td").find("input").eq(0).val();
+            data.planTotalQuantity = row.find("#trProductGroup").find("td").find("input").eq(1).val();
+            data.realTotalQuantity = row.find("#trProductGroup").find("td").find("input").eq(2).val();
+
+            data.planModelMain = row.find("#trPlanLine").find("td").find("input").eq(0).val();
+            data.planModelMini = row.find("#trPlanLine").find("td").find("input").eq(1).val();
+            data.planModelMidi = row.find("#trPlanLine").find("td").find("input").eq(2).val();
+            data.planOptionMain = row.find("#trPlanLine").find("td").find("input").eq(3).val();
+            data.planOptionMini = row.find("#trPlanLine").find("td").find("input").eq(4).val();
+            data.planOptionMidi = row.find("#trPlanLine").find("td").find("input").eq(5).val();
+            data.planQuantityMain = row.find("#trPlanLine").find("td").find("input").eq(6).val();
+            data.planQuantityMini = row.find("#trPlanLine").find("td").find("input").eq(7).val();
+            data.planQuantityMidi = row.find("#trPlanLine").find("td").find("input").eq(8).val();
+
+            data.realModelMain = row.find("#trRealLine").find("td").find("input").eq(0).val();
+            data.realModelMini = row.find("#trRealLine").find("td").find("input").eq(1).val();
+            data.realModelMidi = row.find("#trRealLine").find("td").find("input").eq(2).val();
+            data.realOptionMain = row.find("#trRealLine").find("td").find("input").eq(3).val();
+            data.realOptionMini = row.find("#trRealLine").find("td").find("input").eq(4).val();
+            data.realOptionMidi = row.find("#trRealLine").find("td").find("input").eq(5).val();
+            data.realQuantityMain = row.find("#trRealLine").find("td").find("input").eq(6).val();
+            data.realQuantityMini = row.find("#trRealLine").find("td").find("input").eq(7).val();
+            data.realQuantityMidi = row.find("#trRealLine").find("td").find("input").eq(8).val();
+
+            dataListSeasonPlanning.push(data);
+        });
+
+        $("#seasonCurrencyGrid tbody tr").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            if (row.find(".isDefaultCheck").is(":checked")) {
+                data.isDefault = true;
+            } else {
+                data.isDefault = false;
+            }
+            data.currencyType = row.find("#dataSatir").find("td").find("input").eq(1).val();
+            data.exchangeRate = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(3).val();
+
+            dataListSeasonCurrency.push(data);
+        });
+
+        $("#paymentMethodGrid tbody tr").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            data.paymentMethodId = row.find("#dataSatir").find("td").find("input").eq(0).val();
+            data.centerShare = row.find("#dataSatir").find("td").find("input").eq(1).val();
+            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            data.centerShareEuro = row.find("#dataSatir").find("td").find("input").eq(3).val();
+            data.accessoryCenterShareEuro = row.find("#dataSatir").find("td").find("input").eq(4).val();
+            data.paymentMethodShareId = row.find("#dataSatir").find("td").find("input").eq(5).val();
+
+            dataListPaymentMethodShare.push(data);
+        });
+
+        $("#countryShippingMultiplierGrid tbody tr").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            data.countryId = row.find("#dataSatir").find("td").find("input").eq(0).val();
+            data.shippingMethodId = row.find("#dataSatir").find("td").find("input").eq(1).val();
+            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            data.multiplier = row.find("#dataSatir").find("td").find("input").eq(3).val();
+            data.testPrice = row.find("#dataSatir").find("td").find("input").eq(4).val();
+            data.testPercentage = row.find("#dataSatir").find("td").find("input").eq(5).val();
+            data.cargoPercentage = row.find("#dataSatir").find("td").find("input").eq(6).val();
+            data.insurancePercentage = row.find("#dataSatir").find("td").find("input").eq(7).val();
+            data.freightPercentage = row.find("#dataSatir").find("td").find("input").eq(8).val();
+            data.countryShippingMultiplierId = row.find("#dataSatir").find("td").find("input").eq(9).val();
+
+            dataListCountryShippingMultiplier.push(data);
+        });
+
+        $('#SubSeasonPlanningString').val(JSON.stringify(dataListSeasonPlanning));
+        $('#SubSeasonCurrencyString').val(JSON.stringify(dataListSeasonCurrency));
+        $('#SubPaymentMethodShareString').val(JSON.stringify(dataListPaymentMethodShare));
+        $('#SubCountryShippingMultiplierString').val(JSON.stringify(dataListCountryShippingMultiplier));
+        //$('#SubModelSeasonRowNumberString').val(JSON.stringify(dataListModelSeasonRowNumber));
+
+        var url = "@Url.Action("Save", "Season")";
+        $.post(url,
+            $("form").serialize(), function (data) {
+                if (data.result == false) {
+                    ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
+                    $('#SubSeasonPlanningString').val(dataListSeasonPlanning);
+                    $('#SubSeasonCurrencyString').val(dataListSeasonCurrency);
+                    $('#SubPaymentMethodShareString').val(dataListPaymentMethodShare);
+                    $('#SubCountryShippingMultiplierString').val(dataListCountryShippingMultiplier);
+                    $('#SubModelSeasonRowNumberString').val(dataListModelSeasonRowNumber);
+                }
+                if (data.result == true) {
+                    newID = data.obj;
+                    ShowSuccess('@SharedLocaLizer.GetLocalizedHtmlString("SaveMessage")');
+                }
+            });
+
+    }
+
     function tableOpenClosed(Count) {
         document.getElementById("view'" + Count + "'").onclick = function(){
             if (document.getElementById("view'" + Count + "'").classList.contains("open")) {
