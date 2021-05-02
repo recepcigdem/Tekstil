@@ -50,15 +50,17 @@ namespace UI.Models.Season
 
         #region PaymentMethodShare
 
-        public List<PaymentMethodShare> PaymentMethodShares { get; set; }
+        public SubEntity<SeasonPaymentMethodShareDto> PaymentMethodShares { get; set; }
 
         public string SubPaymentMethodShareString
         {
             get { return JsonConvert.SerializeObject(PaymentMethodShares); }
-            set { PaymentMethodShares = JsonConvert.DeserializeObject<List<PaymentMethodShare>>(value); }
+            set { PaymentMethodShares = JsonConvert.DeserializeObject<SubEntity<SeasonPaymentMethodShareDto>>(value); }
         }
 
-        public List<PaymentMethodShare> ListPaymentMethodShares { get; set; }
+        public List<SeasonPaymentMethodShareDto> ListPaymentMethodShares { get; set; }
+
+        public List<PaymentMethodShare> ListPaymentMethodShare { get; set; }
 
         #endregion
 
@@ -78,15 +80,16 @@ namespace UI.Models.Season
 
         #region CountryShippingMultiplier
 
-        public List<CountryShippingMultiplier> CountryShippingMultipliers { get; set; }
+        public SubEntity<SeasonCountryShippingMultiplierDto> CountryShippingMultipliers { get; set; }
 
         public string SubCountryShippingMultiplierString
         {
             get { return JsonConvert.SerializeObject(CountryShippingMultipliers); }
-            set { CountryShippingMultipliers = JsonConvert.DeserializeObject<List<CountryShippingMultiplier>>(value); }
+            set { CountryShippingMultipliers = JsonConvert.DeserializeObject<SubEntity<SeasonCountryShippingMultiplierDto>>(value); }
         }
 
-        public List<CountryShippingMultiplier> ListCountryShippingMultipliers { get; set; }
+        public List<SeasonCountryShippingMultiplierDto> ListCountryShippingMultipliers { get; set; }
+        public List<CountryShippingMultiplier> ListCountryShippingMultiplier { get; set; }
 
         #endregion
 
@@ -114,14 +117,16 @@ namespace UI.Models.Season
             SeasonCurrencies = new List<SeasonCurrency>();
             ListSeasonCurrencies = new List<SeasonCurrency>();
 
-            PaymentMethodShares = new List<PaymentMethodShare>();
-            ListPaymentMethodShares = new List<PaymentMethodShare>();
+            PaymentMethodShares = new SubEntity<SeasonPaymentMethodShareDto>();
+            ListPaymentMethodShares = new List<SeasonPaymentMethodShareDto>();
+            ListPaymentMethodShare = new List<PaymentMethodShare>();
 
             ModelSeasonRowNumbers = new List<ModelSeasonRowNumber>();
             ListModelSeasonRowNumbers = new List<ModelSeasonRowNumber>();
 
-            CountryShippingMultipliers = new List<CountryShippingMultiplier>();
-            ListCountryShippingMultipliers = new List<CountryShippingMultiplier>();
+            CountryShippingMultipliers = new SubEntity<SeasonCountryShippingMultiplierDto>();
+            ListCountryShippingMultipliers = new List<SeasonCountryShippingMultiplierDto>();
+            ListCountryShippingMultiplier = new List<CountryShippingMultiplier>();
         }
 
         public Season(HttpRequest request, Entities.Concrete.Season season, IStringLocalizer _localizerShared, ISeasonCurrencyService seasonCurrencyService, ISeasonPlaningService seasonPlaningService, IPaymentMethodShareService paymentMethodShareService, IModelSeasonRowNumberService modelSeasonRowNumberService, ICountryShippingMultiplierService countryShippingMultiplierService)
@@ -134,9 +139,9 @@ namespace UI.Models.Season
 
             ListSeasonPlannings = new List<SeasonPlaning>();
             ListSeasonCurrencies = new List<SeasonCurrency>();
-            ListPaymentMethodShares = new List<PaymentMethodShare>();
+            ListPaymentMethodShares = new List<SeasonPaymentMethodShareDto>();
             ListModelSeasonRowNumbers = new List<ModelSeasonRowNumber>();
-            ListCountryShippingMultipliers = new List<CountryShippingMultiplier>();
+            ListCountryShippingMultipliers = new List<SeasonCountryShippingMultiplierDto>();
 
             EntityId = season.Id;
             IsActive = season.IsActive;
@@ -169,13 +174,30 @@ namespace UI.Models.Season
 
             var paymentMethodShareList = _paymentMethodShareService.GetAllBySeasonId(EntityId);
             if (paymentMethodShareList != null)
+            {
+                SeasonPaymentMethodShareDto paymentMethodShareDto = new SeasonPaymentMethodShareDto();
+                foreach (var paymentMethodShare in paymentMethodShareList.Data)
                 {
-                    foreach (var paymentMethodShare in paymentMethodShareList.Data)
+                    paymentMethodShareDto.CustomerId = CustomerId;
+                    paymentMethodShareDto.SeasonId = EntityId;
+                    paymentMethodShareDto.PaymentMethodId = paymentMethodShare.Id;
+                    paymentMethodShareDto.CenterShare = paymentMethodShare.CenterShare;
+                    paymentMethodShareDto.CenterShareEuro = paymentMethodShare.CenterShareEuro;
+                    paymentMethodShareDto.AccessoryCenterShareEuro = paymentMethodShare.AccessoryCenterShareEuro;
+                    paymentMethodShareDto.SeasonCurrencyId = paymentMethodShare.SeasonCurrencyId;
+
+                    var seasonCurrency = _seasonCurrencyService.GetById(paymentMethodShare.SeasonCurrencyId);
+                    if (seasonCurrency != null)
                     {
-                        ListPaymentMethodShares.Add(paymentMethodShare);
+                        paymentMethodShareDto.SeasonCurrency = seasonCurrency.Data.CurrencyType;
+                        paymentMethodShareDto.ExchangeRates = seasonCurrency.Data.ExchangeRate;
+                        paymentMethodShareDto.CenterShareTl = (paymentMethodShareDto.CenterShare * seasonCurrency.Data.ExchangeRate);
                     }
                 }
-            
+
+                ListPaymentMethodShares.Add(paymentMethodShareDto);
+            }
+
 
             #endregion
 
@@ -194,10 +216,33 @@ namespace UI.Models.Season
             var countryShippingMultiplierList = _countryShippingMultiplierService.GetAllBySeasonId(EntityId);
             if (countryShippingMultiplierList != null)
             {
+
+                SeasonCountryShippingMultiplierDto countryShippingMultiplierDto =
+                    new SeasonCountryShippingMultiplierDto();
                 foreach (var countryShippingMultiplier in countryShippingMultiplierList.Data)
                 {
-                    ListCountryShippingMultipliers.Add(countryShippingMultiplier);
+                    countryShippingMultiplierDto.CustomerId = CustomerId;
+                    countryShippingMultiplierDto.SeasonId = EntityId;
+                    countryShippingMultiplierDto.SeasonCurrencyId = countryShippingMultiplier.SeasonCurrencyId;
+                    countryShippingMultiplierDto.ShippingMethodId = countryShippingMultiplier.ShippingMethodId;
+                    countryShippingMultiplierDto.CountryId = countryShippingMultiplier.CountryId;
+                    countryShippingMultiplierDto.TestPrice = countryShippingMultiplier.TestPrice;
+                    countryShippingMultiplierDto.CargoPercentage = countryShippingMultiplier.CargoPercentage;
+                    countryShippingMultiplierDto.FreightPercentage = countryShippingMultiplier.FreightPercentage;
+                    countryShippingMultiplierDto.InsurancePercentage = countryShippingMultiplier.InsurancePercentage;
+                    countryShippingMultiplierDto.Multiplier = countryShippingMultiplier.Multiplier;
+                    countryShippingMultiplierDto.TestPercentage = countryShippingMultiplier.TestPercentage;
+
+                    var seasonCurrency = _seasonCurrencyService.GetById(countryShippingMultiplier.SeasonCurrencyId);
+                    if (seasonCurrency != null)
+                    {
+                        countryShippingMultiplierDto.SeasonCurrency = seasonCurrency.Data.CurrencyType;
+                        countryShippingMultiplierDto.ExchangeRates = seasonCurrency.Data.ExchangeRate;
+                        countryShippingMultiplierDto.TestPriceTl = (countryShippingMultiplier.TestPrice * seasonCurrency.Data.ExchangeRate);
+                    }
+
                 }
+                ListCountryShippingMultipliers.Add(countryShippingMultiplierDto);
             }
             #endregion
 
@@ -211,6 +256,141 @@ namespace UI.Models.Season
             season.Code = Code;
             season.Description = Description;
 
+            #region SeasonPlannings
+
+            ListSeasonPlannings = new List<SeasonPlaning>();
+            foreach (var item in SeasonPlannings)
+            {
+                Entities.Concrete.SeasonPlaning seasonPlaning = new SeasonPlaning();
+                if (item.Id > 0)
+                {
+                    seasonPlaning.Id = item.Id;
+                }
+                seasonPlaning.CustomerId = item.CustomerId;
+                seasonPlaning.SeasonId = item.SeasonId;
+                seasonPlaning.ProductGroupId = item.ProductGroupId;
+                seasonPlaning.PlanUnitQuantity = item.PlanUnitQuantity;
+                seasonPlaning.PlanModelMain = item.PlanModelMain;
+                seasonPlaning.PlanModelMidi = item.PlanModelMidi;
+                seasonPlaning.PlanModelMini = item.PlanModelMini;
+                seasonPlaning.PlanOptionMain = item.PlanOptionMain;
+                seasonPlaning.PlanOptionMidi = item.PlanOptionMidi;
+                seasonPlaning.PlanOptionMini = item.PlanOptionMini;
+                seasonPlaning.PlanQuantityMain = item.PlanQuantityMain;
+                seasonPlaning.PlanQuantityMidi = item.PlanQuantityMidi;
+                seasonPlaning.PlanQuantityMini = item.PlanQuantityMini;
+                seasonPlaning.PlanTotalQuantity = ((seasonPlaning.PlanOptionMain * seasonPlaning.PlanQuantityMain) +
+                                                   (seasonPlaning.PlanOptionMini * seasonPlaning.PlanQuantityMini) +
+                                                   (seasonPlaning.PlanOptionMidi * seasonPlaning.PlanQuantityMidi));
+
+                seasonPlaning.RealModelMain = item.RealModelMain;
+                seasonPlaning.RealModelMidi = item.RealModelMidi;
+                seasonPlaning.RealModelMini = item.RealModelMini;
+                seasonPlaning.RealOptionMain = item.RealOptionMain;
+                seasonPlaning.RealOptionMidi = item.RealOptionMidi;
+                seasonPlaning.RealOptionMini = item.RealOptionMini;
+                seasonPlaning.RealQuantityMain = item.RealQuantityMain;
+                seasonPlaning.RealQuantityMidi = item.RealQuantityMidi;
+                seasonPlaning.RealQuantityMini = item.RealQuantityMini;
+                seasonPlaning.RealTotalQuantity = ((seasonPlaning.RealOptionMain * seasonPlaning.RealQuantityMain) +
+                                                   (seasonPlaning.RealOptionMini * seasonPlaning.RealQuantityMini) +
+                                                   (seasonPlaning.RealOptionMidi * seasonPlaning.RealQuantityMidi));
+                ListSeasonPlannings.Add(seasonPlaning);
+            }
+
+            #endregion
+
+            #region SeasonCurrency
+
+            ListSeasonCurrencies = new List<SeasonCurrency>();
+            foreach (var item in SeasonCurrencies)
+            {
+                Entities.Concrete.SeasonCurrency seasonCurrency = new SeasonCurrency();
+                if (item.Id > 0)
+                {
+                    seasonCurrency.Id = item.Id;
+                }
+                seasonCurrency.CustomerId = item.CustomerId;
+                seasonCurrency.SeasonId = item.SeasonId;
+                seasonCurrency.IsDefault = item.IsDefault;
+                seasonCurrency.CurrencyType = item.CurrencyType;
+                seasonCurrency.ExchangeRate = item.ExchangeRate;
+
+                ListSeasonCurrencies.Add(seasonCurrency);
+            }
+
+            #endregion
+
+            #region ModelSeasonRowNumber
+
+            ListModelSeasonRowNumbers = new List<ModelSeasonRowNumber>();
+            foreach (var item in ModelSeasonRowNumbers)
+            {
+                Entities.Concrete.ModelSeasonRowNumber modelSeasonRowNumber = new ModelSeasonRowNumber();
+                if (item.Id > 0)
+                {
+                    modelSeasonRowNumber.Id = item.Id;
+                }
+                modelSeasonRowNumber.CustomerId = item.CustomerId;
+                modelSeasonRowNumber.SeasonId = item.SeasonId;
+                modelSeasonRowNumber.ProductGroupId = item.ProductGroupId;
+                modelSeasonRowNumber.RowNumber = item.RowNumber;
+                modelSeasonRowNumber.IsActive = item.IsActive;
+
+                ListModelSeasonRowNumbers.Add(modelSeasonRowNumber);
+            }
+
+            #endregion
+
+            #region PaymentMethodShare
+
+            ListPaymentMethodShare = new List<PaymentMethodShare>();
+            foreach (var item in PaymentMethodShares.data)
+            {
+                Entities.Concrete.PaymentMethodShare paymentMethodShare = new PaymentMethodShare();
+                if (item.Id>0)
+                {
+                    paymentMethodShare.Id = item.Id;
+                }
+                paymentMethodShare.CustomerId = item.CustomerId;
+                paymentMethodShare.SeasonId = item.SeasonId;
+                paymentMethodShare.PaymentMethodId = item.PaymentMethodId;
+                paymentMethodShare.SeasonCurrencyId = item.SeasonCurrencyId;
+                paymentMethodShare.CenterShare = item.CenterShare;
+                paymentMethodShare.CenterShareEuro = item.CenterShareEuro;
+                paymentMethodShare.AccessoryCenterShareEuro = item.AccessoryCenterShareEuro;
+                
+                ListPaymentMethodShare.Add(paymentMethodShare);
+            }
+            
+            #endregion
+
+            #region CountryShippingMultiplier
+
+            ListCountryShippingMultiplier = new List<CountryShippingMultiplier>();
+            foreach (var item in CountryShippingMultipliers.data)
+            {
+                Entities.Concrete.CountryShippingMultiplier countryShippingMultiplier = new CountryShippingMultiplier();
+                if (item.Id > 0)
+                {
+                    countryShippingMultiplier.Id = item.Id;
+                }
+                countryShippingMultiplier.CustomerId = item.CustomerId;
+                countryShippingMultiplier.SeasonId = item.SeasonId;
+                countryShippingMultiplier.CountryId = item.CountryId;
+                countryShippingMultiplier.ShippingMethodId = item.ShippingMethodId;
+                countryShippingMultiplier.SeasonCurrencyId = item.SeasonCurrencyId;
+                countryShippingMultiplier.Multiplier = item.Multiplier;
+                countryShippingMultiplier.TestPrice = item.TestPrice;
+                countryShippingMultiplier.TestPercentage = item.TestPercentage;
+                countryShippingMultiplier.CargoPercentage = item.CargoPercentage;
+                countryShippingMultiplier.InsurancePercentage = item.InsurancePercentage;
+                countryShippingMultiplier.FreightPercentage = item.FreightPercentage;
+
+                ListCountryShippingMultiplier.Add(countryShippingMultiplier);
+            }
+
+            #endregion
 
             return season;
         }

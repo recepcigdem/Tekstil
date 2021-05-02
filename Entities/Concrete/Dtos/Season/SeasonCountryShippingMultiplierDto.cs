@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete.Dtos.Season
 {
-    public class SeasonCountryShippingMultiplierDto
+    public class SeasonCountryShippingMultiplierDto:BaseCustomerEntity
     {
         public int SeasonId { get; set; }
         public int CountryId { get; set; }

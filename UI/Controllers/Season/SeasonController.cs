@@ -122,8 +122,8 @@ namespace UI.Controllers.Season
                 List<SeasonCurrency> seasonCurrencies = season.ListSeasonCurrencies;
                 List<SeasonPlaning> seasonPlanings = season.ListSeasonPlannings;
                 List<ModelSeasonRowNumber> modelSeasonRowNumbers = season.ListModelSeasonRowNumbers;
-                List<PaymentMethodShare> paymentMethodShares = season.ListPaymentMethodShares;
-                List<CountryShippingMultiplier> countryShippingMultipliers = season.ListCountryShippingMultipliers;
+                List<PaymentMethodShare> paymentMethodShares = season.ListPaymentMethodShare;
+                List<CountryShippingMultiplier> countryShippingMultipliers = season.ListCountryShippingMultiplier;
 
                 var result = _seasonService.SaveAll(entity, seasonCurrencies, seasonPlanings, paymentMethodShares, modelSeasonRowNumbers, countryShippingMultipliers);
                 if (result.Result == false)

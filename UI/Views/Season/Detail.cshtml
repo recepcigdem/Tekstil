@@ -139,7 +139,7 @@
                                                                                         @for (int i = 0; i < Model.ListSeasonPlannings.Count; i++)
                                                                                         {
                                                                                         <tr class="view" id="view'@i'">
-                                                                                            <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                            <td>@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                             <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                             <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealTotalQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                             <td>
@@ -159,10 +159,10 @@
                                                                                                                 </tr>
                                                                                                             </thead>
                                                                                                             <tbody>
-                                                                                                                <tr id="trProductGroup'@i'">
-                                                                                                                    <td id="productGroup">@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @class = "form-control" })</td>
-                                                                                                                    <td colspan="2">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @class = "form-control" })</td>
-                                                                                                                    <td colspan="2">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealTotalQuantity, new { @class = "form-control" })</td>
+                                                                                                                <tr id="trProductGroup">
+                                                                                                                    <td id="productGroup'@i'">@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @class = "form-control" })</td>
+                                                                                                                    <td id="planTotalQuantity">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @class = "form-control" })</td>
+                                                                                                                    <td id="realTotalQuantity">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealTotalQuantity, new { @class = "form-control" })</td>
                                                                                                                 </tr>
                                                                                                                 <tr>
                                                                                                                     <th width="100%"><strong>@Localizer["Planned"]</strong></th>
@@ -487,7 +487,7 @@
             console.log(data.countryId);
             data.shippingMethodId = row.find("#dataSatir").find("td").find("input").eq(1).val();
             data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
-            
+
             ComboCountryList(data.countryId, countCountryShippingMultiplier);
             ComboShippingMethodList(data.shippingMethodId, countCountryShippingMultiplier);
             //ComboSeasonCurrencyList(data.seasonCurrencyId);
@@ -705,12 +705,12 @@
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].PlanTotalQuantity' class='form-control' disabled=\"disabled\">"
+            + "<input type='text' id='planTotalQuantity' name='ListSeasonPlannings[" + count + "].PlanTotalQuantity' class='form-control'>"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealTotalQuantity' class='form-control' disabled=\"disabled\">"
+            + "<input type='text' id='realTotalQuantity' name='ListSeasonPlannings[" + count + "].RealTotalQuantity' class='form-control'>"
             + "</div>"
             + "</td>"
             + "</tr>"
@@ -997,16 +997,16 @@
         var dataListPaymentMethodShare = [];
         var dataListCountryShippingMultiplier = [];
         var dataListModelSeasonRowNumber = [];
-       
 
-        $("#tableSeasonPlanning tbody tr").each(function () {
+
+        $("#tableSeasonPlanning tbody").each(function () {
             var row = $(this);
 
             var data = {};
 
-            data.productGroupId = row.find("#trProductGroup").find("td").find("input").eq(0).val();
-            data.planTotalQuantity = row.find("#trProductGroup").find("td").find("input").eq(1).val();
-            data.realTotalQuantity = row.find("#trProductGroup").find("td").find("input").eq(2).val();
+            data.productGroupId = row.find(".productGroup").val();
+            data.planTotalQuantity = row.find(".planTotalQuantity").val();
+            data.pealTotalQuantity = row.find(".realTotalQuantity").val();
 
             data.planModelMain = row.find("#trPlanLine").find("td").find("input").eq(0).val();
             data.planModelMini = row.find("#trPlanLine").find("td").find("input").eq(1).val();
@@ -1031,7 +1031,7 @@
             dataListSeasonPlanning.push(data);
         });
 
-        $("#seasonCurrencyGrid tbody tr").each(function () {
+        $("#seasonCurrencyGrid tbody").each(function () {
             var row = $(this);
 
             var data = {};
@@ -1048,7 +1048,7 @@
             dataListSeasonCurrency.push(data);
         });
 
-        $("#paymentMethodGrid tbody tr").each(function () {
+        $("#paymentMethodGrid tbody").each(function () {
             var row = $(this);
 
             var data = {};
@@ -1063,7 +1063,7 @@
             dataListPaymentMethodShare.push(data);
         });
 
-        $("#countryShippingMultiplierGrid tbody tr").each(function () {
+        $("#countryShippingMultiplierGrid tbody").each(function () {
             var row = $(this);
 
             var data = {};
