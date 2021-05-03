@@ -187,7 +187,7 @@
                                                                                                                     <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanModelMini, new { @class = "form-control numericField" })</td>
                                                                                                                     <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanModelMidi, new { @class = "form-control numericField" })</td>
                                                                                                                     <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanOptionMain, new { @class = "form-control numericField", onkeyup ="SeasonPlanningTotalCalc("+i+");" })</td>
-                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanOptionMini, new { @class = "form-control numericField", onkeyup = "SeasonPlanningTotalCalc(" + i + ");" })</td>
+                                                                                                                    <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanOptionMini, new { @class = "form-control numericField", onkeyup = "SeasonPlanningTotalCalc(  " + i + " );" })</td>
                                                                                                                     <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanOptionMidi, new { @class = "form-control numericField", onkeyup = "SeasonPlanningTotalCalc(" + i + ");" })</td>
                                                                                                                     <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanQuantityMain, new { @class = "form-control numericField", onkeyup = "SeasonPlanningTotalCalc(" + i + ");" })</td>
                                                                                                                     <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanQuantityMini, new { @class = "form-control numericField", onkeyup = "SeasonPlanningTotalCalc(" + i + ");" })</td>
@@ -312,22 +312,10 @@
                                                                                         {
                                                                                         <tr class="dataSatir">
                                                                                             <td id="paymentMethod'@i'">@Html.HiddenFor(x => x.ListPaymentMethodShares[i].PaymentMethodId, new { @class = "form-control" })</td>
-                                                                                            <td>
-                                                                                                <div class="input-group">
-                                                                                                    <input type="text" class="form-control numericField" name="centerShare" id="centerShare" value="@Model.ListPaymentMethodShares[i].CenterShare" />
-                                                                                                </div>
-                                                                                            </td>
-                                                                                            <td id="seasonCurrency'@i'">@Html.HiddenFor(x => x.ListPaymentMethodShares[i].SeasonCurrencyId, new { @class = "form-control" })</td>
-                                                                                            <td>
-                                                                                                <div class="input-group">
-                                                                                                    <input type="text" class="form-control numericField" name="exchangeRates" id="exchangeRates" disabled="disabled" value="@Model.ListPaymentMethodShares[i].ExchangeRates" />
-                                                                                                </div>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <div class="input-group">
-                                                                                                    <input type="text" class="form-control numericField" name="centerShareTl" id="centerShareTl" disabled="disabled" value="@Model.ListPaymentMethodShares[i].CenterShareTl" />
-                                                                                                </div>
-                                                                                            </td>
+                                                                                            <td>@Html.TextBoxFor(x => x.ListPaymentMethodShares[i].CenterShare, new { @class = "form-control numericField", onchange = "PaymentMethodCurrencyCalc(" + @i + ");", id="centerShare'"+@i+"'" })</td>
+                                                                                            <td id="seasonCurrency'@i'">@Html.HiddenFor(x => x.ListPaymentMethodShares[i].SeasonCurrencyId, new { @class = "form-control", onchange = "PaymentMethodCurrencyCalc(" + @i + ");" })</td>
+                                                                                            <td>@Html.TextBoxFor(x => x.ListPaymentMethodShares[i].ExchangeRates, new { @class = "form-control numericField", disabled = "disabled", name = "exchangeRates", id = "exchangeRates'" + @i + "'" })</td>
+                                                                                            <td>@Html.TextBoxFor(x => x.ListPaymentMethodShares[i].CenterShareTl, new { @class = "form-control numericField", disabled = "disabled", name = "centerShareTl", id = "centerShareTl'"+ @i +"'" })</td>
                                                                                             <td>
                                                                                                 <div class="input-group">
                                                                                                     <input type="text" class="form-control numericField" name="centerShareEuro" id="centerShareEuro" value="@Model.ListPaymentMethodShares[i].CenterShareEuro" />
@@ -526,37 +514,7 @@
 
     });
 
-    function SeasonPlanningTotalCalc(count) {
-
-        $("#tableSeasonPlanning tbody").each(function () {
-            var row = $(this);
-
-            var planOptionMain = row.find("#trPlanLine").find("td").find("input").eq(3).val();
-            var planOptionMini = row.find("#trPlanLine").find("td").find("input").eq(4).val();
-            var planOptionMidi = row.find("#trPlanLine").find("td").find("input").eq(5).val();
-            var planQuantityMain = row.find("#trPlanLine").find("td").find("input").eq(6).val();
-            var planQuantityMini = row.find("#trPlanLine").find("td").find("input").eq(7).val();
-            var planQuantityMidi = row.find("#trPlanLine").find("td").find("input").eq(8).val();
-
-            var planTotal = ((planOptionMain * planQuantityMain) + (planOptionMini * planQuantityMini) + (planOptionMidi * planQuantityMidi));
-            
-            var realOptionMain = row.find("#trRealLine").find("td").find("input").eq(3).val();
-            var realOptionMini = row.find("#trRealLine").find("td").find("input").eq(4).val();
-            var realOptionMidi = row.find("#trRealLine").find("td").find("input").eq(5).val();
-            var realQuantityMain = row.find("#trRealLine").find("td").find("input").eq(6).val();
-            var realQuantityMini = row.find("#trRealLine").find("td").find("input").eq(7).val();
-            var realQuantityMidi = row.find("#trRealLine").find("td").find("input").eq(8).val();
-
-            var realTotal = (realOptionMain * realQuantityMain + realOptionMini * realQuantityMini + realOptionMidi * realQuantityMidi);
-            
-            
-            document.getElementById("planTotalQuantity" + "\'" + count + "\'").value = planTotal;
-            document.getElementById("realTotalQuantity" + "\'" + count + "\'").value = realTotal;
-            
-            
-        });
-       
-    }
+    
 
     function ComboProductGroupList(productGroupId,count)
     {
@@ -603,11 +561,10 @@
     {
         dataListSeasonCurrency = [];
 
-        document.getElementById("seasonCurrency'" + countSeasonCurrency + "'").innerHTML = "<select id=\"comboSeasonCurrency" + countSeasonCurrency + "\" class=\"form-control seasonCurrency comboSeasonCurrency\">" + "</select>";
+        document.getElementById("seasonCurrency'" + countSeasonCurrency + "'").innerHTML = "<select id=\"comboSeasonCurrency" + countSeasonCurrency + "\" class=\"form-control seasonCurrency comboSeasonCurrency\" onchange=\"PaymentMethodCurrencyCalc(" + countSeasonCurrency+");\">" + "</select>";
         var selectitem = document.getElementById("comboSeasonCurrency" + countSeasonCurrency);
 
-        var comboSeasonCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + id;
-
+        var comboSeasonCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + @Model.EntityId;
         $.ajax({
             url: comboSeasonCurrencyUrl,
             type: 'POST',
@@ -725,6 +682,92 @@
         if (countryId > 0) {
             selectitem.value = countryId;
         }
+    }
+
+    function SeasonPlanningTotalCalc(count) {
+
+        $("#tableSeasonPlanning tbody").each(function () {
+            var row = $(this);
+
+            var planOptionMain = row.find("#trPlanLine").find("td").find("input").eq(3).val();
+            var planOptionMini = row.find("#trPlanLine").find("td").find("input").eq(4).val();
+            var planOptionMidi = row.find("#trPlanLine").find("td").find("input").eq(5).val();
+            var planQuantityMain = row.find("#trPlanLine").find("td").find("input").eq(6).val();
+            var planQuantityMini = row.find("#trPlanLine").find("td").find("input").eq(7).val();
+            var planQuantityMidi = row.find("#trPlanLine").find("td").find("input").eq(8).val();
+
+            var planTotal = ((planOptionMain * planQuantityMain) + (planOptionMini * planQuantityMini) + (planOptionMidi * planQuantityMidi));
+
+            var realOptionMain = row.find("#trRealLine").find("td").find("input").eq(3).val();
+            var realOptionMini = row.find("#trRealLine").find("td").find("input").eq(4).val();
+            var realOptionMidi = row.find("#trRealLine").find("td").find("input").eq(5).val();
+            var realQuantityMain = row.find("#trRealLine").find("td").find("input").eq(6).val();
+            var realQuantityMini = row.find("#trRealLine").find("td").find("input").eq(7).val();
+            var realQuantityMidi = row.find("#trRealLine").find("td").find("input").eq(8).val();
+
+            var realTotal = (realOptionMain * realQuantityMain + realOptionMini * realQuantityMini + realOptionMidi * realQuantityMidi);
+
+
+            document.getElementById("planTotalQuantity" + "\'" + count + "\'").value = planTotal;
+            document.getElementById("realTotalQuantity" + "\'" + count + "\'").value = realTotal;
+
+
+        });
+
+    }
+
+    function PaymentMethodCurrencyCalc(count) {
+
+        $("#paymentMethodGrid tbody").each(function () {
+
+            
+            var seasonCurrency = document.getElementById("comboSeasonCurrency" + count);
+            var selectSeasonCurrency = seasonCurrency.options[seasonCurrency.selectedIndex].text;
+           
+            var centerShare = document.getElementById("centerShare" + "\'" + count + "\'").value;
+            var exchangeRate = document.getElementById("exchangeRates" + "\'" + count + "\'").value;
+            dataListSeasonCurrency.forEach(element => {
+
+                console.log(element.text);
+                if (element.text === selectSeasonCurrency) {
+                    exchangeRate = element.obj;
+                    document.getElementById("exchangeRates" + "\'" + count + "\'").value = exchangeRate;
+                }
+            });
+            
+            var centerShareTl = (centerShare * exchangeRate);
+
+            document.getElementById("centerShareTl" + "\'" + count + "\'").value = centerShareTl;
+
+        });
+
+    }
+
+    function CountryShippingMultiplierCurrencyCalc(count) {
+
+        $("#countryShippingMultiplierGrid tbody").each(function () {
+
+            
+            var seasonCurrency = document.getElementById("comboSeasonCurrency" + count);
+            var selectSeasonCurrency = seasonCurrency.options[seasonCurrency.selectedIndex].text;
+           
+            var centerShare = document.getElementById("centerShare" + "\'" + count + "\'").value;
+            var exchangeRate = document.getElementById("exchangeRates" + "\'" + count + "\'").value;
+            dataListSeasonCurrency.forEach(element => {
+
+                console.log(element.text);
+                if (element.text === selectSeasonCurrency) {
+                    exchangeRate = element.obj;
+                    document.getElementById("exchangeRates" + "\'" + count + "\'").value = exchangeRate;
+                }
+            });
+            
+            var centerShareTl = (centerShare * exchangeRate);
+
+            document.getElementById("centerShareTl" + "\'" + count + "\'").value = centerShareTl;
+
+        });
+
     }
 
     function AddSeasonPlanning() {
@@ -969,23 +1012,24 @@
         event.preventDefault();
         var table = document.querySelector("#paymentMethodGrid tbody");
         table.insertAdjacentHTML("beforeend",
-            "<tr>"
+            "<tr class=\"dataSatir\">"
             + "<td id=\"paymentMethod'" + countPaymentMethod + "'\">"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-            + "<input type=\"text\" class=\"form-control numericField\" id=\"centerShare\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].CenterShare\" />"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"centerShare'" + countPaymentMethod + "'\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].CenterShare\" onchange = \"PaymentMethodCurrencyCalc(" + countPaymentMethod + ");\"/>"
             + "</div>"
             + "</td>"
-            + "<td id=\"seasonCurrency'" + countPaymentMethod + "'\">"
-            + "<td>"
-            + "<div class=\"input-group\">"
-            + "<input type=\"text\" class=\"form-control numericField\" id=\"exchangeRates\" disabled=\"disabled\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].ExchangeRates\" />"
-            + "</div>"
+            + "<td id=\"seasonCurrency'" + countPaymentMethod + "'\" onchange = \"PaymentMethodCurrencyCalc(" + countPaymentMethod + ");\">"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-            + "<input type=\"text\" class=\"form-control numericField\" id=\"centerShareTl\" disabled=\"disabled\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].CenterShareTl\" />"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"exchangeRates'" + countPaymentMethod + "'\" disabled=\"disabled\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].ExchangeRates\" />"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"centerShareTl'" + countPaymentMethod +"'\" disabled=\"disabled\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].CenterShareTl\" />"
             + "</div>"
             + "</td>"
             + "<td>"
@@ -1005,7 +1049,7 @@
         );
 
         ComboPaymentMethodList(0, countPaymentMethod);
-        //ComboSeasonCurrencyList(0, countPaymentMethod);
+        ComboSeasonCurrencyList(0, countPaymentMethod);
         countPaymentMethod++;
     }
 
@@ -1071,7 +1115,7 @@
         );
         ComboCountryList(0, countCountryShippingMultiplier);
         ComboShippingMethodList(0, countCountryShippingMultiplier);
-        //ComboSeasonCurrencyList(0, countCountryShippingMultiplier);
+        ComboSeasonCurrencyList(0, countCountryShippingMultiplier);
 
         countCountryShippingMultiplier++;
     }
@@ -1100,25 +1144,25 @@
             data.planTotalQuantity = row.find(".planTotalQuantity").val();
             data.pealTotalQuantity = row.find(".realTotalQuantity").val();
 
-            data.planModelMain = row.find("#trPlanLine").find("td").find("input").eq(0).val();
-            data.planModelMini = row.find("#trPlanLine").find("td").find("input").eq(1).val();
-            data.planModelMidi = row.find("#trPlanLine").find("td").find("input").eq(2).val();
-            data.planOptionMain = row.find("#trPlanLine").find("td").find("input").eq(3).val();
-            data.planOptionMini = row.find("#trPlanLine").find("td").find("input").eq(4).val();
-            data.planOptionMidi = row.find("#trPlanLine").find("td").find("input").eq(5).val();
-            data.planQuantityMain = row.find("#trPlanLine").find("td").find("input").eq(6).val();
-            data.planQuantityMini = row.find("#trPlanLine").find("td").find("input").eq(7).val();
-            data.planQuantityMidi = row.find("#trPlanLine").find("td").find("input").eq(8).val();
+            data.planModelMain = row.find("#trPlanLine").find("td").find("input").eq(0).value;
+            data.planModelMini = row.find("#trPlanLine").find("td").find("input").eq(1).value;
+            data.planModelMidi = row.find("#trPlanLine").find("td").find("input").eq(2).value;
+            data.planOptionMain = row.find("#trPlanLine").find("td").find("input").eq(3).value;
+            data.planOptionMini = row.find("#trPlanLine").find("td").find("input").eq(4).value;
+            data.planOptionMidi = row.find("#trPlanLine").find("td").find("input").eq(5).value;
+            data.planQuantityMain = row.find("#trPlanLine").find("td").find("input").eq(6).value;
+            data.planQuantityMini = row.find("#trPlanLine").find("td").find("input").eq(7).value;
+            data.planQuantityMidi = row.find("#trPlanLine").find("td").find("input").eq(8).value;
 
-            data.realModelMain = row.find("#trRealLine").find("td").find("input").eq(0).val();
-            data.realModelMini = row.find("#trRealLine").find("td").find("input").eq(1).val();
-            data.realModelMidi = row.find("#trRealLine").find("td").find("input").eq(2).val();
-            data.realOptionMain = row.find("#trRealLine").find("td").find("input").eq(3).val();
-            data.realOptionMini = row.find("#trRealLine").find("td").find("input").eq(4).val();
-            data.realOptionMidi = row.find("#trRealLine").find("td").find("input").eq(5).val();
-            data.realQuantityMain = row.find("#trRealLine").find("td").find("input").eq(6).val();
-            data.realQuantityMini = row.find("#trRealLine").find("td").find("input").eq(7).val();
-            data.realQuantityMidi = row.find("#trRealLine").find("td").find("input").eq(8).val();
+            data.realModelMain = row.find("#trRealLine").find("td").find("input").eq(0).value;
+            data.realModelMini = row.find("#trRealLine").find("td").find("input").eq(1).value;
+            data.realModelMidi = row.find("#trRealLine").find("td").find("input").eq(2).value;
+            data.realOptionMain = row.find("#trRealLine").find("td").find("input").eq(3).value;
+            data.realOptionMini = row.find("#trRealLine").find("td").find("input").eq(4).value;
+            data.realOptionMidi = row.find("#trRealLine").find("td").find("input").eq(5).value;
+            data.realQuantityMain = row.find("#trRealLine").find("td").find("input").eq(6).value;
+            data.realQuantityMini = row.find("#trRealLine").find("td").find("input").eq(7).value;
+            data.realQuantityMidi = row.find("#trRealLine").find("td").find("input").eq(8).value;
 
             dataListSeasonPlanning.push(data);
         });
@@ -1148,9 +1192,11 @@
             data.paymentMethodId = row.find("#dataSatir").find("td").find("input").eq(0).val();
             data.centerShare = row.find("#dataSatir").find("td").find("input").eq(1).val();
             data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
-            data.centerShareEuro = row.find("#dataSatir").find("td").find("input").eq(3).val();
-            data.accessoryCenterShareEuro = row.find("#dataSatir").find("td").find("input").eq(4).val();
-            data.paymentMethodShareId = row.find("#dataSatir").find("td").find("input").eq(5).val();
+            data.exchangeRate = row.find("#dataSatir").find("td").find("input").eq(3).val();
+            data.centerShareTl = row.find("#dataSatir").find("td").find("input").eq(4).val();
+            data.centerShareEuro = row.find("#dataSatir").find("td").find("input").eq(5).val();
+            data.accessoryCenterShareEuro = row.find("#dataSatir").find("td").find("input").eq(6).val();
+            data.paymentMethodShareId = row.find("#dataSatir").find("td").find("input").eq(7).val();
 
             dataListPaymentMethodShare.push(data);
         });
@@ -1162,14 +1208,16 @@
 
             data.countryId = row.find("#dataSatir").find("td").find("input").eq(0).val();
             data.shippingMethodId = row.find("#dataSatir").find("td").find("input").eq(1).val();
-            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
-            data.multiplier = row.find("#dataSatir").find("td").find("input").eq(3).val();
-            data.testPrice = row.find("#dataSatir").find("td").find("input").eq(4).val();
-            data.testPercentage = row.find("#dataSatir").find("td").find("input").eq(5).val();
-            data.cargoPercentage = row.find("#dataSatir").find("td").find("input").eq(6).val();
-            data.insurancePercentage = row.find("#dataSatir").find("td").find("input").eq(7).val();
-            data.freightPercentage = row.find("#dataSatir").find("td").find("input").eq(8).val();
-            data.countryShippingMultiplierId = row.find("#dataSatir").find("td").find("input").eq(9).val();
+            data.multiplier = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            data.testPrice = row.find("#dataSatir").find("td").find("input").eq(3).val();
+            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(4).val();
+            data.exchangeRate = row.find("#dataSatir").find("td").find("input").eq(5).val();
+            data.testPriceTl = row.find("#dataSatir").find("td").find("input").eq(6).val();
+            data.testPercentage = row.find("#dataSatir").find("td").find("input").eq(7).val();
+            data.cargoPercentage = row.find("#dataSatir").find("td").find("input").eq(8).val();
+            data.insurancePercentage = row.find("#dataSatir").find("td").find("input").eq(9).val();
+            data.freightPercentage = row.find("#dataSatir").find("td").find("input").eq(10).val();
+            data.countryShippingMultiplierId = row.find("#dataSatir").find("td").find("input").eq(11).val();
 
             dataListCountryShippingMultiplier.push(data);
         });

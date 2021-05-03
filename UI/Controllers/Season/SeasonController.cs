@@ -147,7 +147,7 @@ namespace UI.Controllers.Season
                 List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
                 foreach (SeasonCurrency entity in seasonCurrencyList.Data)
                 {
-                    Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.CurrencyType);
+                    Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.CurrencyType,entity.ExchangeRate);
                     data.Add(model);
                 }
                 return Json(data);

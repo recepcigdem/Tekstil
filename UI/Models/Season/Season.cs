@@ -22,15 +22,23 @@ namespace UI.Models.Season
 
         #region SeasonPlanning
 
-        public List<Entities.Concrete.SeasonPlaning> SeasonPlannings { get; set; }
+        public List<SeasonPlaning> SeasonPlannings { get; set; }
 
         public string SubSeasonPlanningString
         {
-            get { return JsonConvert.SerializeObject(SeasonPlannings); }
-            set { SeasonPlannings = JsonConvert.DeserializeObject<List<Entities.Concrete.SeasonPlaning>>(value); }
+            get
+            {
+                return JsonConvert.SerializeObject(SeasonPlannings);
+
+            }
+            set
+            {
+                SeasonPlannings = JsonConvert.DeserializeObject<List<SeasonPlaning>>(value);
+                
+            }
         }
 
-        public List<Entities.Concrete.SeasonPlaning> ListSeasonPlannings { get; set; }
+        public List<SeasonPlaning> ListSeasonPlannings { get; set; }
 
         #endregion
 
@@ -258,138 +266,155 @@ namespace UI.Models.Season
 
             #region SeasonPlannings
 
-            ListSeasonPlannings = new List<SeasonPlaning>();
-            foreach (var item in SeasonPlannings)
+            if (SeasonPlannings != null)
             {
-                Entities.Concrete.SeasonPlaning seasonPlaning = new SeasonPlaning();
-                if (item.Id > 0)
+                ListSeasonPlannings = new List<SeasonPlaning>();
+                foreach (var item in SeasonPlannings)
                 {
-                    seasonPlaning.Id = item.Id;
-                }
-                seasonPlaning.CustomerId = item.CustomerId;
-                seasonPlaning.SeasonId = item.SeasonId;
-                seasonPlaning.ProductGroupId = item.ProductGroupId;
-                seasonPlaning.PlanUnitQuantity = item.PlanUnitQuantity;
-                seasonPlaning.PlanModelMain = item.PlanModelMain;
-                seasonPlaning.PlanModelMidi = item.PlanModelMidi;
-                seasonPlaning.PlanModelMini = item.PlanModelMini;
-                seasonPlaning.PlanOptionMain = item.PlanOptionMain;
-                seasonPlaning.PlanOptionMidi = item.PlanOptionMidi;
-                seasonPlaning.PlanOptionMini = item.PlanOptionMini;
-                seasonPlaning.PlanQuantityMain = item.PlanQuantityMain;
-                seasonPlaning.PlanQuantityMidi = item.PlanQuantityMidi;
-                seasonPlaning.PlanQuantityMini = item.PlanQuantityMini;
-                seasonPlaning.PlanTotalQuantity = ((seasonPlaning.PlanOptionMain * seasonPlaning.PlanQuantityMain) +
-                                                   (seasonPlaning.PlanOptionMini * seasonPlaning.PlanQuantityMini) +
-                                                   (seasonPlaning.PlanOptionMidi * seasonPlaning.PlanQuantityMidi));
+                    Entities.Concrete.SeasonPlaning seasonPlaning = new SeasonPlaning();
+                    if (item.Id > 0)
+                    {
+                        seasonPlaning.Id = item.Id;
+                    }
+                    seasonPlaning.CustomerId = item.CustomerId;
+                    seasonPlaning.SeasonId = item.SeasonId;
+                    seasonPlaning.ProductGroupId = item.ProductGroupId;
+                    seasonPlaning.PlanUnitQuantity = item.PlanUnitQuantity;
+                    seasonPlaning.PlanModelMain = item.PlanModelMain;
+                    seasonPlaning.PlanModelMidi = item.PlanModelMidi;
+                    seasonPlaning.PlanModelMini = item.PlanModelMini;
+                    seasonPlaning.PlanOptionMain = item.PlanOptionMain;
+                    seasonPlaning.PlanOptionMidi = item.PlanOptionMidi;
+                    seasonPlaning.PlanOptionMini = item.PlanOptionMini;
+                    seasonPlaning.PlanQuantityMain = item.PlanQuantityMain;
+                    seasonPlaning.PlanQuantityMidi = item.PlanQuantityMidi;
+                    seasonPlaning.PlanQuantityMini = item.PlanQuantityMini;
+                    seasonPlaning.PlanTotalQuantity = ((seasonPlaning.PlanOptionMain * seasonPlaning.PlanQuantityMain) +
+                                                       (seasonPlaning.PlanOptionMini * seasonPlaning.PlanQuantityMini) +
+                                                       (seasonPlaning.PlanOptionMidi * seasonPlaning.PlanQuantityMidi));
 
-                seasonPlaning.RealModelMain = item.RealModelMain;
-                seasonPlaning.RealModelMidi = item.RealModelMidi;
-                seasonPlaning.RealModelMini = item.RealModelMini;
-                seasonPlaning.RealOptionMain = item.RealOptionMain;
-                seasonPlaning.RealOptionMidi = item.RealOptionMidi;
-                seasonPlaning.RealOptionMini = item.RealOptionMini;
-                seasonPlaning.RealQuantityMain = item.RealQuantityMain;
-                seasonPlaning.RealQuantityMidi = item.RealQuantityMidi;
-                seasonPlaning.RealQuantityMini = item.RealQuantityMini;
-                seasonPlaning.RealTotalQuantity = ((seasonPlaning.RealOptionMain * seasonPlaning.RealQuantityMain) +
-                                                   (seasonPlaning.RealOptionMini * seasonPlaning.RealQuantityMini) +
-                                                   (seasonPlaning.RealOptionMidi * seasonPlaning.RealQuantityMidi));
-                ListSeasonPlannings.Add(seasonPlaning);
+                    seasonPlaning.RealModelMain = item.RealModelMain;
+                    seasonPlaning.RealModelMidi = item.RealModelMidi;
+                    seasonPlaning.RealModelMini = item.RealModelMini;
+                    seasonPlaning.RealOptionMain = item.RealOptionMain;
+                    seasonPlaning.RealOptionMidi = item.RealOptionMidi;
+                    seasonPlaning.RealOptionMini = item.RealOptionMini;
+                    seasonPlaning.RealQuantityMain = item.RealQuantityMain;
+                    seasonPlaning.RealQuantityMidi = item.RealQuantityMidi;
+                    seasonPlaning.RealQuantityMini = item.RealQuantityMini;
+                    seasonPlaning.RealTotalQuantity = ((seasonPlaning.RealOptionMain * seasonPlaning.RealQuantityMain) +
+                                                       (seasonPlaning.RealOptionMini * seasonPlaning.RealQuantityMini) +
+                                                       (seasonPlaning.RealOptionMidi * seasonPlaning.RealQuantityMidi));
+                    ListSeasonPlannings.Add(seasonPlaning);
+                }
             }
+            
 
             #endregion
 
             #region SeasonCurrency
 
-            ListSeasonCurrencies = new List<SeasonCurrency>();
-            foreach (var item in SeasonCurrencies)
+            if (SeasonCurrencies != null)
             {
-                Entities.Concrete.SeasonCurrency seasonCurrency = new SeasonCurrency();
-                if (item.Id > 0)
+                ListSeasonCurrencies = new List<SeasonCurrency>();
+                foreach (var item in SeasonCurrencies)
                 {
-                    seasonCurrency.Id = item.Id;
+                    Entities.Concrete.SeasonCurrency seasonCurrency = new SeasonCurrency();
+                    if (item.Id > 0)
+                    {
+                        seasonCurrency.Id = item.Id;
+                    }
+                    seasonCurrency.CustomerId = item.CustomerId;
+                    seasonCurrency.SeasonId = item.SeasonId;
+                    seasonCurrency.IsDefault = item.IsDefault;
+                    seasonCurrency.CurrencyType = item.CurrencyType;
+                    seasonCurrency.ExchangeRate = item.ExchangeRate;
+
+                    ListSeasonCurrencies.Add(seasonCurrency);
                 }
-                seasonCurrency.CustomerId = item.CustomerId;
-                seasonCurrency.SeasonId = item.SeasonId;
-                seasonCurrency.IsDefault = item.IsDefault;
-                seasonCurrency.CurrencyType = item.CurrencyType;
-                seasonCurrency.ExchangeRate = item.ExchangeRate;
-
-                ListSeasonCurrencies.Add(seasonCurrency);
             }
-
+            
             #endregion
 
             #region ModelSeasonRowNumber
 
-            ListModelSeasonRowNumbers = new List<ModelSeasonRowNumber>();
-            foreach (var item in ModelSeasonRowNumbers)
+            if (ModelSeasonRowNumbers!=null)
             {
-                Entities.Concrete.ModelSeasonRowNumber modelSeasonRowNumber = new ModelSeasonRowNumber();
-                if (item.Id > 0)
+                ListModelSeasonRowNumbers = new List<ModelSeasonRowNumber>();
+                foreach (var item in ModelSeasonRowNumbers)
                 {
-                    modelSeasonRowNumber.Id = item.Id;
-                }
-                modelSeasonRowNumber.CustomerId = item.CustomerId;
-                modelSeasonRowNumber.SeasonId = item.SeasonId;
-                modelSeasonRowNumber.ProductGroupId = item.ProductGroupId;
-                modelSeasonRowNumber.RowNumber = item.RowNumber;
-                modelSeasonRowNumber.IsActive = item.IsActive;
+                    Entities.Concrete.ModelSeasonRowNumber modelSeasonRowNumber = new ModelSeasonRowNumber();
+                    if (item.Id > 0)
+                    {
+                        modelSeasonRowNumber.Id = item.Id;
+                    }
+                    modelSeasonRowNumber.CustomerId = item.CustomerId;
+                    modelSeasonRowNumber.SeasonId = item.SeasonId;
+                    modelSeasonRowNumber.ProductGroupId = item.ProductGroupId;
+                    modelSeasonRowNumber.RowNumber = item.RowNumber;
+                    modelSeasonRowNumber.IsActive = item.IsActive;
 
-                ListModelSeasonRowNumbers.Add(modelSeasonRowNumber);
+                    ListModelSeasonRowNumbers.Add(modelSeasonRowNumber);
+                }
             }
+            
 
             #endregion
 
             #region PaymentMethodShare
 
-            ListPaymentMethodShare = new List<PaymentMethodShare>();
-            foreach (var item in PaymentMethodShares.data)
+            if (PaymentMethodShares != null)
             {
-                Entities.Concrete.PaymentMethodShare paymentMethodShare = new PaymentMethodShare();
-                if (item.Id>0)
+                ListPaymentMethodShare = new List<PaymentMethodShare>();
+                foreach (var item in PaymentMethodShares.data)
                 {
-                    paymentMethodShare.Id = item.Id;
+                    Entities.Concrete.PaymentMethodShare paymentMethodShare = new PaymentMethodShare();
+                    if (item.Id > 0)
+                    {
+                        paymentMethodShare.Id = item.Id;
+                    }
+                    paymentMethodShare.CustomerId = item.CustomerId;
+                    paymentMethodShare.SeasonId = item.SeasonId;
+                    paymentMethodShare.PaymentMethodId = item.PaymentMethodId;
+                    paymentMethodShare.SeasonCurrencyId = item.SeasonCurrencyId;
+                    paymentMethodShare.CenterShare = item.CenterShare;
+                    paymentMethodShare.CenterShareEuro = item.CenterShareEuro;
+                    paymentMethodShare.AccessoryCenterShareEuro = item.AccessoryCenterShareEuro;
+
+                    ListPaymentMethodShare.Add(paymentMethodShare);
                 }
-                paymentMethodShare.CustomerId = item.CustomerId;
-                paymentMethodShare.SeasonId = item.SeasonId;
-                paymentMethodShare.PaymentMethodId = item.PaymentMethodId;
-                paymentMethodShare.SeasonCurrencyId = item.SeasonCurrencyId;
-                paymentMethodShare.CenterShare = item.CenterShare;
-                paymentMethodShare.CenterShareEuro = item.CenterShareEuro;
-                paymentMethodShare.AccessoryCenterShareEuro = item.AccessoryCenterShareEuro;
-                
-                ListPaymentMethodShare.Add(paymentMethodShare);
             }
             
             #endregion
 
             #region CountryShippingMultiplier
 
-            ListCountryShippingMultiplier = new List<CountryShippingMultiplier>();
-            foreach (var item in CountryShippingMultipliers.data)
+            if (CountryShippingMultipliers != null)
             {
-                Entities.Concrete.CountryShippingMultiplier countryShippingMultiplier = new CountryShippingMultiplier();
-                if (item.Id > 0)
+                ListCountryShippingMultiplier = new List<CountryShippingMultiplier>();
+                foreach (var item in CountryShippingMultipliers.data)
                 {
-                    countryShippingMultiplier.Id = item.Id;
+                    Entities.Concrete.CountryShippingMultiplier countryShippingMultiplier = new CountryShippingMultiplier();
+                    if (item.Id > 0)
+                    {
+                        countryShippingMultiplier.Id = item.Id;
+                    }
+                    countryShippingMultiplier.CustomerId = item.CustomerId;
+                    countryShippingMultiplier.SeasonId = item.SeasonId;
+                    countryShippingMultiplier.CountryId = item.CountryId;
+                    countryShippingMultiplier.ShippingMethodId = item.ShippingMethodId;
+                    countryShippingMultiplier.SeasonCurrencyId = item.SeasonCurrencyId;
+                    countryShippingMultiplier.Multiplier = item.Multiplier;
+                    countryShippingMultiplier.TestPrice = item.TestPrice;
+                    countryShippingMultiplier.TestPercentage = item.TestPercentage;
+                    countryShippingMultiplier.CargoPercentage = item.CargoPercentage;
+                    countryShippingMultiplier.InsurancePercentage = item.InsurancePercentage;
+                    countryShippingMultiplier.FreightPercentage = item.FreightPercentage;
+
+                    ListCountryShippingMultiplier.Add(countryShippingMultiplier);
                 }
-                countryShippingMultiplier.CustomerId = item.CustomerId;
-                countryShippingMultiplier.SeasonId = item.SeasonId;
-                countryShippingMultiplier.CountryId = item.CountryId;
-                countryShippingMultiplier.ShippingMethodId = item.ShippingMethodId;
-                countryShippingMultiplier.SeasonCurrencyId = item.SeasonCurrencyId;
-                countryShippingMultiplier.Multiplier = item.Multiplier;
-                countryShippingMultiplier.TestPrice = item.TestPrice;
-                countryShippingMultiplier.TestPercentage = item.TestPercentage;
-                countryShippingMultiplier.CargoPercentage = item.CargoPercentage;
-                countryShippingMultiplier.InsurancePercentage = item.InsurancePercentage;
-                countryShippingMultiplier.FreightPercentage = item.FreightPercentage;
-
-                ListCountryShippingMultiplier.Add(countryShippingMultiplier);
             }
-
+            
             #endregion
 
             return season;

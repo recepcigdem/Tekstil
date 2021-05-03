@@ -9,11 +9,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/css/modalCustomerReadOnly.min.css" rel="stylesheet" />
+<link href="~/js/panel-structure.js" rel="stylesheet" />
+
 <script>
 
      $(document).ready(function () {
          var urlData = "@Url.Action("SeasonList", "Season")";
-         var table = $('#SeasonsGrid').DataTable({
+        var table= $('#SeasonsGrid').DataTable({
             "ajax": {
             "url": urlData,
              "type": "POST"
@@ -34,28 +37,28 @@
                       'orderable': false,
                      width: '4%',
                      mRender: function (data, type, full, row) {
-                         return '<a href="@Url.Action("Detail", "Season")?Id=' + data + '">' + '<span style="margin-left:5px" class="fa fa-pencil"></span>' + '</a>'
+                         return '<a href="@Url.Action("Detail","Season")?Id=' + data + '">' + '<span style="margin-left:5px" class="fa fa-pencil"></span>' + '</a>'
               }
                  },
 
                  { "data": "id", "visible": false },
-                    {
-                        "data": "isActive",
+                 {
+                     "data": "isActive",
                      mRender: function (data, type, full, row) {
-                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>" + '<span>' + GridAddBooleanColumn(data) +'</span>' + "</a>";
+                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>" + '<span>' + GridAddBooleanColumn(data) + '</span>' + "</a>";
                      }
                  },
-                 {
+                     {
                      "data": "code",
                      mRender: function (data, type, full, row) {
-                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>" + '<span>' + data+'</span>' + "</a>";
-                     }
-                 },
-                 {
+                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>"+'<span>'+data+'</span>' + "</a>";
+                         }
+                      },
+                     {
                      "data": "description",
                      mRender: function (data, type, full, row) {
-                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>" + '<span>' + data+'</span>' + "</a>";
-                     }
+                         return "<a href='#' style='text-decoration: none;color:inherit'  onclick=ModalShow('" + full['id'] + "')>"+'<span>'+data+'</span>' + "</a>";
+                       }
                  }
              ],
              "lengthMenu": [25, 50, 75, 100],
@@ -196,7 +199,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade  example-modal-lg " id="ReadOnlyDetailShow" aria-hidden="false" aria-labelledby="exampleFormModalLabel"
+<div class="modal fade example-modal-lg " id="ReadOnlyDetailShow" aria-hidden="false" aria-labelledby="exampleFormModalLabel"
      role="dialog" tabindex="-1">
     <div class="modal-dialog modal-center modal-lg">
         @*modal-dialog modal-simple*@
@@ -215,3 +218,8 @@
     </div>
 </div>
 <!-- End Modal -->
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
