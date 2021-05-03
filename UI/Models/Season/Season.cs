@@ -19,6 +19,8 @@ namespace UI.Models.Season
         public bool IsActive { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
+        public int ModelSeasonRowNumberProductGroupId { get; set; }
+        public int ModelSeasonRowNumberMaxNumber { get; set; }
 
         #region SeasonPlanning
 
@@ -118,6 +120,9 @@ namespace UI.Models.Season
             IsActive = false;
             Code = string.Empty;
             Description = string.Empty;
+            ModelSeasonRowNumberProductGroupId = 0;
+            ModelSeasonRowNumberMaxNumber = 0;
+
 
             SeasonPlannings = new List<SeasonPlaning>();
             ListSeasonPlannings = new List<SeasonPlaning>();
@@ -155,6 +160,9 @@ namespace UI.Models.Season
             IsActive = season.IsActive;
             Code = season.Code;
             Description = season.Description;
+
+            ModelSeasonRowNumberProductGroupId = 0;
+            ModelSeasonRowNumberMaxNumber = 0;
 
             #region SeasonCurrency
             var seasonCurrencyList = _seasonCurrencyService.GetAllBySeasonId(EntityId);
@@ -363,7 +371,7 @@ namespace UI.Models.Season
 
             #region PaymentMethodShare
 
-            if (PaymentMethodShares != null)
+            if (PaymentMethodShares.data != null)
             {
                 ListPaymentMethodShare = new List<PaymentMethodShare>();
                 foreach (var item in PaymentMethodShares.data)
@@ -389,7 +397,7 @@ namespace UI.Models.Season
 
             #region CountryShippingMultiplier
 
-            if (CountryShippingMultipliers != null)
+            if (CountryShippingMultipliers.data != null)
             {
                 ListCountryShippingMultiplier = new List<CountryShippingMultiplier>();
                 foreach (var item in CountryShippingMultipliers.data)
