@@ -444,17 +444,18 @@
                                                                     </div>
                                                                     <div class="col-3">
                                                                         <div class="form-group">
+                                                                            @Localizer["MaxRowNumber"]
                                                                             @Html.TextBoxFor(x => x.ModelSeasonRowNumberMaxNumber, new { @class = "form-control", @id = "modelRowNumber" })
                                                                         </div>
                                                                     </div>
                                                                         <div class="col-3">
                                                                             <div class="col-md-auto text-right mt-2">
-                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4">@Localizer["NewModelSeasonRowNumbers"]</button>
+                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersByProductGroupId();">@Localizer["NewModelSeasonRowNumbers"]</button>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-3">
                                                                             <div class="col-md-auto text-right mt-2">
-                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4">@Localizer["NewModelSeasonRowNumbers"]</button>
+                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersAllProductGroup();">@Localizer["NewModelSeasonRowNumbers"]</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -481,7 +482,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
-                                                                            <td id="modelProductGroup'@i'">@Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].ProductGroupId, new { @class = "form-control", disabled = "disabled" })</td>
+                                                                            <td id="modelRowProductGroup'@i'">@Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].ProductGroupId, new { @class = "form-control", disabled = "disabled" })</td>
                                                                             <td id="modelRowNumber'@i'">@Html.TextBoxFor(x => x.ListModelSeasonRowNumbers[i].RowNumber, new { @class = "form-control", disabled = "disabled" })</td>
                                                                             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteModelSeasonRowNumbers(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].Id)</td>
                                                                         </tr>
@@ -539,7 +540,7 @@
             var data = {};
 
             data.productGroupId = row.find("#trProductGroup").find("td").find("input").eq(0).val();
-            ComboProductGroupList(data.productGroupId);
+            ComboProductGroupList(data.productGroupId, count);
 
             count++;
         });
@@ -552,8 +553,8 @@
             data.paymentMethodId = row.find("#dataSatir").find("td").find("input").eq(0).val();
             data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
 
-            ComboPaymentMethodList(data.paymentMethodId);
-            // ComboSeasonCurrencyList(data.seasonCurrencyId);
+            ComboPaymentMethodList(data.paymentMethodId, countPaymentMethod);
+            ComboPaymentMethodSeasonCurrencyList(data.seasonCurrencyId, countPaymentMethod);
 
             countPaymentMethod++;
         });
@@ -563,16 +564,16 @@
 
             var data = {};
             data.countryId = row.find("#dataSatir").find("td").find("input").eq(0).val();
-            console.log(data.countryId);
             data.shippingMethodId = row.find("#dataSatir").find("td").find("input").eq(1).val();
             data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
 
             ComboCountryList(data.countryId, countCountryShippingMultiplier);
             ComboShippingMethodList(data.shippingMethodId, countCountryShippingMultiplier);
-            //ComboSeasonCurrencyList(data.seasonCurrencyId);
+            ComboCountryShippingMultiplierCurrencyList(data.seasonCurrencyId, countCountryShippingMultiplier);
 
             countCountryShippingMultiplier++;
         });
+
 
         ComboModelProductGroupList();
     });
@@ -618,7 +619,6 @@
         }
     }
 
-
     function ComboModelProductGroupList() {
         dataListProductGroup = [];
 
@@ -645,6 +645,25 @@
                 });
             }
         });
+    }
+
+    function ComboModelRowProductGroupList(productGroupId, count) {
+        
+        document.getElementById("modelRowProductGroup'" + count + "'").innerHTML = "<select id=\"comboModelRowProductGroup" + count + "\" class=\"form-control productGroup comboModelRowProductGroup\" disabled=\"disabled\">" + "</select>";
+        var selectItem = document.getElementById("comboModelRowProductGroup" + count);
+
+       
+        dataListProductGroup.forEach(element => {
+                    
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectItem.appendChild(option);
+                });
+
+        if (productGroupId > 0) {
+            selectItem.value = productGroupId;
+        }
     }
 
     function ComboPaymentMethodSeasonCurrencyList(seasonCurrencyId, countSeasonCurrency) {
@@ -679,7 +698,6 @@
 
         }
     }
-
 
     function ComboCountryShippingMultiplierCurrencyList(seasonCurrencyId, countSeasonCurrency) {
         dataListSeasonCurrency = [];
@@ -1243,35 +1261,43 @@
         button.closest("tr").remove();
     }
 
-    function AddModelSeasonRowNumbersByProductGroupId(productId,count) {
+    function AddModelSeasonRowNumbersByProductGroupId() {
+
+        var productGroup = document.getElementById("modelProductGroupId");
+        var productGroupId = productGroup.options[productGroup.selectedIndex].text;
+        console.log(productGroupId);
+        var count = document.getElementById("modelRowNumber").value;
+
         event.preventDefault();
         var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
+        for (var i = 1; i <= count; i++) {
+
         table.insertAdjacentHTML("beforeend",
             "<tr class=\"trModelSeasonRowNumbers\">"
             + "<td>"
             + "<div class=\"input-group\">"
             + "<div class=\"input-group\">"
             + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
-            + "<input type=\"checkbox\" class=\"isActiveCheck\" name=\"ListModelSeasonRowNumbers[" + count + "].IsActive\">"
+            + "<input type=\"checkbox\" class=\"isActiveCheck\" name=\"ListModelSeasonRowNumbers[" + i + "].IsActive\" checked=\"checked\">"
             + "<label></label>"
             + "</div>"
             + "</div>"
             + "</td>"
-            + "<td id=\"modelProductGroup'" + count + "'\" value=" + productId +"\" disabled=\"disabled\">"
+            + "<td id=\"modelRowProductGroup'" + i + "'\" disabled=\"disabled\">"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-            + "<input type=\"text\" class=\"form-control numericField\" id=\"modelRowNumber'" + count + "'\" name=\"ListModelSeasonRowNumbers[" + count + "].RowNumber\"  value=" + count +"\" disabled=\"disabled\" />"
+            + "<input type=\"text\" class=\"form-control numericField\" id=\"modelRowNumber'" + i + "'\" name=\"ListModelSeasonRowNumbers[" + i + "].RowNumber\"  value=" + i +" disabled=\"disabled\" />"
             + "</div>"
             + "</td>"
             + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteModelSeasonRowNumbers(this)\">@Localizer["Delete"]</button>"
-            + "<input type=\"hidden\" class=\"form-control\" name=\"ListModelSeasonRowNumbers[" + count + "].Id\">"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"ListModelSeasonRowNumbers[" + i + "].Id\">"
             + "</td>"
             + "</tr>"
-
-        );
-
-        //ComboModelProductGroupList(0,count);
+            );
+            ComboModelRowProductGroupList(productGroupId, i);
+        }
+        
         count++;
     }
 
