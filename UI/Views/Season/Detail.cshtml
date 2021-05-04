@@ -450,12 +450,12 @@
                                                                     </div>
                                                                         <div class="col-3">
                                                                             <div class="col-md-auto text-right mt-2">
-                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersByProductGroupId();">@Localizer["NewModelSeasonRowNumbers"]</button>
+                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersByProductGroupId();">@Localizer["NewByProductGroup"]</button>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-3">
                                                                             <div class="col-md-auto text-right mt-2">
-                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersAllProductGroup();">@Localizer["NewModelSeasonRowNumbers"]</button>
+                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersAllProductGroup();">@Localizer["NewAllProductGroup"]</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -527,7 +527,7 @@
     var countCountryShippingMultiplier = 0;
 
     $(document).ready(function() {
-
+        
         dataListProductGroup = [];
         dataListPaymentMethod = [];
         dataListSeasonCurrency = [];
@@ -640,7 +640,6 @@
                     var option = document.createElement("option");
                     option.textContent = element.text;
                     option.value = element.id;
-                    console.log(option);
                     document.getElementById("modelProductGroupId").appendChild(option);
                 });
             }
@@ -649,7 +648,7 @@
 
     function ComboModelRowProductGroupList(productGroupId, count) {
         
-        document.getElementById("modelRowProductGroup'" + count + "'").innerHTML = "<select id=\"comboModelRowProductGroup" + count + "\" class=\"form-control productGroup comboModelRowProductGroup\" disabled=\"disabled\">" + "</select>";
+        document.getElementById("modelRowProductGroup'" + count + "'").innerHTML = "<select id=\"comboModelRowProductGroup" + count + "\" class=\"form-control productGroup comboModelRowProductGroup\" name=\"comboModelRowProductGroup\" disabled=\"disabled\">" + "</select>";
         var selectItem = document.getElementById("comboModelRowProductGroup" + count);
 
        
@@ -1261,15 +1260,17 @@
         button.closest("tr").remove();
     }
 
-    function AddModelSeasonRowNumbersByProductGroupId() {
+    function AddModelSeasonRowNumbersAllProductGroup() {
 
-        var productGroup = document.getElementById("modelProductGroupId");
-        var productGroupId = productGroup.options[productGroup.selectedIndex].text;
-        console.log(productGroupId);
-        var count = document.getElementById("modelRowNumber").value;
+        var count = document.getElementById("modelRowNumber").text;
 
         event.preventDefault();
-        var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
+            var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
+
+        dataListProductGroup.forEach(element => {
+            var productGroupId = element.id;
+        });
+        
         for (var i = 1; i <= count; i++) {
 
         table.insertAdjacentHTML("beforeend",
@@ -1297,8 +1298,148 @@
             );
             ComboModelRowProductGroupList(productGroupId, i);
         }
+
+    }
+
+    function AddModelSeasonRowNumbersByProductGroupId() {
+
+        var productGroup = document.getElementById("modelProductGroupId");
+        var productGroupId = productGroup.options[productGroup.selectedIndex].value;
+       
+        var maxNumber = document.getElementById("modelRowNumber").value;
+        var trModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length;
         
-        count++;
+        var trFirstModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length;
+        event.preventDefault();
+        var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
+
+        var i = 0;
+        for (i = 1; i <= maxNumber; i++) {
+            trModelSeasonRowNumbers = trModelSeasonRowNumbers + 1;
+           
+            var used = 0;
+            $("#modelSeasonRowNumbersGrid tbody").each(function () {
+                
+                var tableModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length+1;
+                for (var j = 1; j < tableModelSeasonRowNumbers; j++) {
+
+                    if (!document.getElementById("modelRowNumber'" + j + "\'") && !document.getElementById("comboModelRowProductGroup" + j)) {
+                        j++;
+                    }
+                    var rowProductGroup = document.getElementById("comboModelRowProductGroup"+j);
+                    var rowProductGroupId = rowProductGroup.options[rowProductGroup.selectedIndex].value;
+                    var rowNumber = document.getElementById("modelRowNumber'" + j + "\'").value;
+
+                    if (rowProductGroupId == productGroupId && rowNumber == i) {
+                        used = 1;
+                        /*console.log("Used1:" + used);*/
+                    }
+                   
+                    if (productGroupId == rowProductGroupId && maxNumber < i) {
+                        used = 1;
+                        /*console.log("Used2:" + used);*/
+                    }
+                    if (productGroupId != rowProductGroupId) {
+                        trFirstModelSeasonRowNumbers = 0;
+                    }
+                    if (productGroupId == rowProductGroupId && maxNumber == trFirstModelSeasonRowNumbers) {
+                        used = 1;
+                        /*console.log("Used3:" + used);*/
+                    }
+                    
+                }
+            });
+            
+            if (used !== 1) {
+                table.insertAdjacentHTML("beforeend",
+                    "<tr class=\"trModelSeasonRowNumbers\">"
+                    + "<td>"
+                    + "<div class=\"input-group\">"
+                    + "<div class=\"input-group\">"
+                    + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
+                    + "<input type=\"checkbox\" class=\"isActiveCheck\" name=\"ListModelSeasonRowNumbers[" + trModelSeasonRowNumbers + "].IsActive\" checked=\"checked\">"
+                    + "<label></label>"
+                    + "</div>"
+                    + "</div>"
+                    + "</td>"
+                    + "<td id=\"modelRowProductGroup'" + trModelSeasonRowNumbers + "'\" disabled=\"disabled\">"
+                    + "</td>"
+                    + "<td>"
+                    + "<div class=\"input-group\">"
+                    + "<input type=\"text\" class=\"form-control numericField\" id=\"modelRowNumber'" + trModelSeasonRowNumbers + "'\" name=\"modelRowNumber\"  value=" + i +" disabled=\"disabled\" />"
+                    + "</div>"
+                    + "</td>"
+                    + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteModelSeasonRowNumbers(this)\">@Localizer["Delete"]</button>"
+                    + "<input type=\"hidden\" class=\"form-control\" name=\"ListModelSeasonRowNumbers[" + trModelSeasonRowNumbers + "].Id\">"
+                    + "</td>"
+                    + "</tr>"
+                );
+            
+                ComboModelRowProductGroupList(productGroupId, trModelSeasonRowNumbers);
+                
+            }
+        }
+        //$('#modelSeasonRowNumbersGrid').DataTable( {
+        //    "order": [[ 0, "asc" ]]
+        //} );
+        SortModelSeasonRowNumbers();
+    }
+
+    function SortModelSeasonRowNumbers() {
+        
+        var table, rows, switching, switching2, i, x, y, j, a, b, shouldSwitch, shouldSwitch2;
+        table = document.getElementById("modelSeasonRowNumbersGrid");
+       
+        switching = true;
+        switching2 = true;
+        while (switching) {
+           
+           switching = false;
+            rows = table.rows;
+            
+            for (i = 1; i < (rows.length - 1); i++) {
+               
+                shouldSwitch = false;
+
+                x = rows[i].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
+                x =x.options[x.selectedIndex];
+                y = rows[i + 1].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
+                y = y.options[y.selectedIndex];
+
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+
+        while (switching2) {
+           
+            switching2 = false;
+            rows = table.rows;
+
+            for (j = 1; j < (rows.length - 1); j++) {
+               
+                shouldSwitch2 = false;
+
+                a = rows[j].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
+                b = rows[j + 1].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
+               
+                if (a.toLowerCase() > b.toLowerCase()) {
+
+                    shouldSwitch2 = true;
+                    break;
+                }
+            }
+            if (shouldSwitch2) {
+                rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
+                switching2 = true;
+            }
+        }
     }
 
     function deleteModelSeasonRowNumbers(button) {
