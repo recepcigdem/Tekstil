@@ -1313,8 +1313,7 @@
         event.preventDefault();
         var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
 
-        var i = 0;
-        for (i = 1; i <= maxNumber; i++) {
+        for (var i = 1; i <= maxNumber; i++) {
             trModelSeasonRowNumbers = trModelSeasonRowNumbers + 1;
            
             var used = 0;
@@ -1415,31 +1414,33 @@
                 rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                 switching = true;
             }
-        }
 
-        while (switching2) {
+           while (switching2) {
            
-            switching2 = false;
-            rows = table.rows;
+               switching2 = false;
+               rows = table.rows;
 
-            for (j = 1; j < (rows.length - 1); j++) {
+               for (j = 1; j < (rows.length - 1); j++) {
                
-                shouldSwitch2 = false;
+                   shouldSwitch2 = false;
 
-                a = rows[j].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
-                b = rows[j + 1].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
+                   a = rows[j].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
+                   b = rows[j + 1].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
                
-                if (a.toLowerCase() > b.toLowerCase()) {
+                   if (a.toLowerCase() > b.toLowerCase()) {
 
-                    shouldSwitch2 = true;
-                    break;
-                }
-            }
-            if (shouldSwitch2) {
-                rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
-                switching2 = true;
-            }
+                       shouldSwitch2 = true;
+                       break;
+                   }
+               }
+               if (shouldSwitch2) {
+                   rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
+                   switching2 = true;
+               }
+           }
         }
+
+        
     }
 
     function deleteModelSeasonRowNumbers(button) {
