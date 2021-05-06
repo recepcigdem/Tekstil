@@ -166,7 +166,7 @@ namespace UI.Models.Season
 
             #region SeasonCurrency
             var seasonCurrencyList = _seasonCurrencyService.GetAllBySeasonId(EntityId);
-            if (seasonCurrencyList != null)
+            if (seasonCurrencyList.Data.Count > 0)
             {
                 foreach (var seasonCurrency in seasonCurrencyList.Data)
                 {
@@ -177,7 +177,7 @@ namespace UI.Models.Season
 
             #region SeasonPlaning
             var seasonPlaningList = _seasonPlaningService.GetAllBySeasonId(EntityId);
-            if (seasonPlaningList != null)
+            if (seasonPlaningList.Data.Count > 0)
             {
                 foreach (var seasonPlaning in seasonPlaningList.Data)
                 {
@@ -189,7 +189,7 @@ namespace UI.Models.Season
             #region PaymentMethodShare
 
             var paymentMethodShareList = _paymentMethodShareService.GetAllBySeasonId(EntityId);
-            if (paymentMethodShareList != null)
+            if (paymentMethodShareList.Data.Count>0)
             {
                 SeasonPaymentMethodShareDto paymentMethodShareDto = new SeasonPaymentMethodShareDto();
                 foreach (var paymentMethodShare in paymentMethodShareList.Data)
@@ -219,7 +219,7 @@ namespace UI.Models.Season
 
             #region ModelSeasonRowNumber
             var modelSeasonRowNumberList = _modelSeasonRowNumberService.GetAllBySeasonId(EntityId);
-            if (modelSeasonRowNumberList != null)
+            if (modelSeasonRowNumberList.Data.Count > 0)
             {
                 foreach (var modelSeasonRowNumber in modelSeasonRowNumberList.Data)
                 {
@@ -230,7 +230,7 @@ namespace UI.Models.Season
 
             #region CountryShippingMultiplier
             var countryShippingMultiplierList = _countryShippingMultiplierService.GetAllBySeasonId(EntityId);
-            if (countryShippingMultiplierList != null)
+            if (countryShippingMultiplierList.Data.Count > 0)
             {
 
                 SeasonCountryShippingMultiplierDto countryShippingMultiplierDto =

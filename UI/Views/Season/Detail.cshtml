@@ -137,12 +137,13 @@
                                                                                             <th></th>
                                                                                         </tr>
                                                                                     </thead>
-                                                                                    <tbody class="col-md-12">
 
-                                                                                        @for (int i = 0; i < Model.ListSeasonPlannings.Count; i++)
-                                                                                        {
+
+                                                                                    @for (int i = 0; i < Model.ListSeasonPlannings.Count; i++)
+                                                                                    {
+                                                                                        <tbody class="col-md-12">
                                                                                             <tr class="view" id="view'@i'" value="@i">
-                                                                                                <td>@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                                <td>@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanUnitQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealTotalQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
@@ -166,7 +167,7 @@
                                                                                                             <tbody>
                                                                                                                 <tr id="trProductGroup">
                                                                                                                     <td id="productGroup'@i'">@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @class = "form-control" })</td>
-                                                                                                                    <td id="planUnitQuantity'@i'">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanUnitQuantity, new { @class = "form-control" })</td>
+                                                                                                                    <td id="planUnitQuantity'@i'">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanUnitQuantity, new { @class = "form-control", onkeyup = "SeasonPlanningTotalCalc(" + i + ");" })</td>
                                                                                                                     <td id="planTotalQuantity'@i'">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @disabled = "disabled", @class = "form-control" })</td>
                                                                                                                     <td id="realTotalQuantity'@i'">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealTotalQuantity, new { @disabled = "disabled", @class = "form-control" })</td>
                                                                                                                 </tr>
@@ -225,8 +226,8 @@
                                                                                                     </div>
                                                                                                 </td>
                                                                                             </tr>
-                                                                                        }
-                                                                                    </tbody>
+                                                                                        </tbody>
+                                                                                    }
                                                                                 </table>
                                                                             </div>
                                                                         </div>
@@ -483,7 +484,7 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td id="modelRowProductGroup'@i'">@Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].ProductGroupId, new { @class = "form-control", disabled = "disabled" })</td>
-                                                                            <td id="modelRowNumber'@i'">@Html.TextBoxFor(x => x.ListModelSeasonRowNumbers[i].RowNumber, new { @class = "form-control", disabled = "disabled" })</td>
+                                                                            <td id="modelRowNumber'@i'">@Html.TextBoxFor(x => x.ListModelSeasonRowNumbers[i].RowNumber, new { @class = "form-control", disabled = "disabled" ,type="number" })</td>
                                                                             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteModelSeasonRowNumbers(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].Id)</td>
                                                                         </tr>
                                                                     }
@@ -527,7 +528,7 @@
     var countCountryShippingMultiplier = 0;
 
     $(document).ready(function() {
-        
+
         dataListProductGroup = [];
         dataListPaymentMethod = [];
         dataListSeasonCurrency = [];
@@ -540,7 +541,11 @@
             var data = {};
 
             data.productGroupId = row.find("#trProductGroup").find("td").find("input").eq(0).val();
-            ComboProductGroupList(data.productGroupId, count);
+            if (data.productGroupId>0) {
+                ComboProductGroupList(data.productGroupId, count);
+                ComboTopProductGroupList(data.productGroupId, count);
+            }
+
 
             count++;
         });
@@ -552,9 +557,14 @@
 
             data.paymentMethodId = row.find("#dataSatir").find("td").find("input").eq(0).val();
             data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            if (data.paymentMethodId > 0) {
+                ComboPaymentMethodList(data.paymentMethodId, countPaymentMethod);
+            }
 
-            ComboPaymentMethodList(data.paymentMethodId, countPaymentMethod);
-            ComboPaymentMethodSeasonCurrencyList(data.seasonCurrencyId, countPaymentMethod);
+            if (data.seasonCurrencyId > 0) {
+                ComboPaymentMethodSeasonCurrencyList(data.seasonCurrencyId, countPaymentMethod);
+            }
+
 
             countPaymentMethod++;
         });
@@ -567,9 +577,15 @@
             data.shippingMethodId = row.find("#dataSatir").find("td").find("input").eq(1).val();
             data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
 
-            ComboCountryList(data.countryId, countCountryShippingMultiplier);
-            ComboShippingMethodList(data.shippingMethodId, countCountryShippingMultiplier);
-            ComboCountryShippingMultiplierCurrencyList(data.seasonCurrencyId, countCountryShippingMultiplier);
+            if (data.countryId>0) {
+                ComboCountryList(data.countryId, countCountryShippingMultiplier);
+            }
+            if (data.shippingMethodId > 0) {
+                ComboShippingMethodList(data.shippingMethodId, countCountryShippingMultiplier);
+            }
+            if (data.seasonCurrencyId > 0) {
+                ComboCountryShippingMultiplierCurrencyList(data.seasonCurrencyId, countCountryShippingMultiplier);
+            }
 
             countCountryShippingMultiplier++;
         });
@@ -582,7 +598,7 @@
     function ComboProductGroupList(productGroupId, count) {
         dataListProductGroup = [];
 
-        document.getElementById("productGroup'" + count + "'").innerHTML = "<select id=\"comboProductGroup" + count + "\" class=\"form-control productGroup comboProductGroup\">" + "</select>";
+        document.getElementById("productGroup'" + count + "'").innerHTML = "<select id=\"comboProductGroup" + count + "\" class=\"form-control productGroup comboProductGroup\" onchange =\"SeasonPlanningTotalCalc(" + count + ");\">" + "</select>";
         var selectitem = document.getElementById("comboProductGroup" + count);
 
         var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
@@ -601,22 +617,45 @@
                     option.textContent = element.text;
                     option.value = element.id;
                     selectitem.appendChild(option);
-                });
+                    });
             }
         });
 
-        //dataListProductGroup.forEach(a => {
-        //    console.log(a);
-        //    var option = document.createElement("option");
-        //    option.textContent = a.text;
-        //    option.value = a.id;
-        //    selectitem.appendChild(option);
-
-        //});
 
         if (productGroupId > 0) {
             selectitem.value = productGroupId;
         }
+    }
+
+    function ComboTopProductGroupList(productGroupId, count) {
+        dataListProductGroup = [];
+        
+        document.getElementById("topProductGroup'" + count + "'").innerHTML = "<select id=\"comboTopProductGroup" + count + "\" class=\"form-control productGroup comboTopProductGroup\" disabled=\"disabled\">" + "</select>";
+        var selectitem = document.getElementById("comboTopProductGroup" + count);
+        
+        var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
+
+        $.ajax({
+            url: comboProductGroupUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                data.forEach(element => {
+                    dataListProductGroup.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+                    });
+            }
+        });
+        if (productGroupId > 0) {
+            selectitem.value = productGroupId;
+            }
+
     }
 
     function ComboModelProductGroupList() {
@@ -647,13 +686,13 @@
     }
 
     function ComboModelRowProductGroupList(productGroupId, count) {
-        
+
         document.getElementById("modelRowProductGroup'" + count + "'").innerHTML = "<select id=\"comboModelRowProductGroup" + count + "\" class=\"form-control productGroup comboModelRowProductGroup\" name=\"comboModelRowProductGroup\" disabled=\"disabled\">" + "</select>";
         var selectItem = document.getElementById("comboModelRowProductGroup" + count);
 
-       
+
         dataListProductGroup.forEach(element => {
-                    
+
                     var option = document.createElement("option");
                     option.textContent = element.text;
                     option.value = element.id;
@@ -848,8 +887,20 @@
             var realTotal = (realOptionMain * realQuantityMain + realOptionMini * realQuantityMini + realOptionMidi * realQuantityMidi);
 
 
+            document.getElementById("trPlanTotalQuantity" + "\'" + count + "\'").value = planTotal;
             document.getElementById("planTotalQuantity" + "\'" + count + "\'").value = planTotal;
+            document.getElementById("trRealTotalQuantity" + "\'" + count + "\'").value = realTotal;
             document.getElementById("realTotalQuantity" + "\'" + count + "\'").value = realTotal;
+
+            var planUnitQuantity = document.getElementById("trPlanUnitQuantity" + "\'" + count + "\'").value;
+            document.getElementById("planUnitQuantity" + "\'" + count + "\'").value = planUnitQuantity;
+
+            var productGroup = document.getElementById("comboProductGroup" + count);
+            var productGroupId = productGroup.options[productGroup.selectedIndex].value;
+            
+            var topProductGroup = document.getElementById("comboTopProductGroup" + count);
+            topProductGroup.options[productGroup.options.selectedIndex].setAttribute("selected", "selected");
+            
 
 
         });
@@ -908,10 +959,11 @@
 
     function AddSeasonPlanning() {
         event.preventDefault();
-        var table = document.querySelector("#seasonPlanningGrid tbody");
+        var table = document.querySelector("#seasonPlanningGrid");
         table.insertAdjacentHTML("beforeend",
-            "<tr class=\"view\" id=\"view'" + count + "'\" value="+ count + "\>"
-            + "<td id=\"productGroup'" + count + "' disabled=\"disabled\">"
+             "<tbody>"
+            +"<tr class=\"view\" id=\"view'" + count + "'\" value="+ count + "\>"
+            + "<td id=\"topProductGroup'" + count + "'\">"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
@@ -950,17 +1002,17 @@
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-            + "<input type='text' id=\"planUnitQuantity'" + count +"'\" name='ListSeasonPlannings[" + count + "].PlanUnitQuantity' class='form-control'>"
+            + "<input type='text' id=\"trPlanUnitQuantity'" + count + "'\" name='ListSeasonPlannings[" + count + "].PlanUnitQuantity' class='form-control' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-            + "<input type='text' id=\"planTotalQuantity'" + count +"'\" name='ListSeasonPlannings[" + count + "].PlanTotalQuantity' class='form-control' disabled=\"disabled\">"
+            + "<input type='text' id=\"trPlanTotalQuantity'" + count +"'\" name='ListSeasonPlannings[" + count + "].PlanTotalQuantity' class='form-control' disabled=\"disabled\">"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-            + "<input type='text' id=\"realTotalQuantity'" + count +"'\" name='ListSeasonPlannings[" + count + "].RealTotalQuantity' class='form-control' disabled=\"disabled\">"
+            + "<input type='text' id=\"trRealTotalQuantity'" + count +"'\" name='ListSeasonPlannings[" + count + "].RealTotalQuantity' class='form-control' disabled=\"disabled\">"
             + "</div>"
             + "</td>"
             + "</tr>"
@@ -1091,11 +1143,14 @@
             + "</div>"
             + "</td>"
             + "</tr>"
+            + "</tbody>"
             );
 
         tableOpenClosed(count);
 
         ComboProductGroupList(0, count);
+
+        ComboTopProductGroupList(0, count);
         count++;
     }
 
@@ -1262,110 +1317,162 @@
 
     function AddModelSeasonRowNumbersAllProductGroup() {
 
-        var count = document.getElementById("modelRowNumber").text;
-
-        event.preventDefault();
-            var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
+        SortModelSeasonRowNumbers();
+        var trFirstModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length;
+        var maxNumber = document.getElementById("modelRowNumber").value;
+        var trModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length;
 
         dataListProductGroup.forEach(element => {
             var productGroupId = element.id;
-        });
-        
-        for (var i = 1; i <= count; i++) {
+            console.log(productGroupId);
+            event.preventDefault();
+            var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
 
-        table.insertAdjacentHTML("beforeend",
-            "<tr class=\"trModelSeasonRowNumbers\">"
-            + "<td>"
-            + "<div class=\"input-group\">"
-            + "<div class=\"input-group\">"
-            + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
-            + "<input type=\"checkbox\" class=\"isActiveCheck\" name=\"ListModelSeasonRowNumbers[" + i + "].IsActive\" checked=\"checked\">"
-            + "<label></label>"
-            + "</div>"
-            + "</div>"
-            + "</td>"
-            + "<td id=\"modelRowProductGroup'" + i + "'\" disabled=\"disabled\">"
-            + "</td>"
-            + "<td>"
-            + "<div class=\"input-group\">"
-            + "<input type=\"text\" class=\"form-control numericField\" id=\"modelRowNumber'" + i + "'\" name=\"ListModelSeasonRowNumbers[" + i + "].RowNumber\"  value=" + i +" disabled=\"disabled\" />"
-            + "</div>"
-            + "</td>"
-            + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteModelSeasonRowNumbers(this)\">@Localizer["Delete"]</button>"
-            + "<input type=\"hidden\" class=\"form-control\" name=\"ListModelSeasonRowNumbers[" + i + "].Id\">"
-            + "</td>"
-            + "</tr>"
-            );
-            ComboModelRowProductGroupList(productGroupId, i);
-        }
+            for (var i = 1; i <= maxNumber; i++) {
+                trModelSeasonRowNumbers = trModelSeasonRowNumbers + 1;
+
+                var used = 0;
+
+                $("#modelSeasonRowNumbersGrid tbody").each(function () {
+
+                    var tableModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length + 1;
+                    for (var j = 1; j < tableModelSeasonRowNumbers; j++) {
+                        var rowProductGroup = 0;
+                        var rowProductGroupId = 0;
+                        var rowNumber = 0;
+                        if (!document.getElementById("modelRowNumber'" + j + "'") && !document.getElementById("comboModelRowProductGroup" + j)) {
+                            j++;
+                        } else {
+                            rowProductGroup = document.getElementById("comboModelRowProductGroup" + j);
+                            rowProductGroupId = rowProductGroup.options[rowProductGroup.selectedIndex].value;
+                            rowNumber = document.getElementById("modelRowNumber'" + j + "'").value;
+                        }
+
+
+                        if (rowProductGroupId == productGroupId && rowNumber == i) {
+                            used = 1;
+                            console.log("Used1:" + used);
+                        }
+
+                        if (productGroupId == rowProductGroupId && maxNumber < i) {
+                            used = 1;
+                            console.log("Used2:" + used);
+                        }
+                        if (productGroupId !== rowProductGroupId) {
+                            trFirstModelSeasonRowNumbers = 0;
+                        }
+                        if (productGroupId == rowProductGroupId && i == trFirstModelSeasonRowNumbers) {
+                            used = 1;
+                            console.log("Used3:" + used);
+                        }
+
+                    }
+                });
+
+                if (used !== 1) {
+                    table.insertAdjacentHTML("beforeend",
+                        "<tr class=\"trModelSeasonRowNumbers\">"
+                        + "<td>"
+                        + "<div class=\"input-group\">"
+                        + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
+                        + "<input type=\"checkbox\" class=\"isActiveCheck\" name=\"ListModelSeasonRowNumbers[" + trModelSeasonRowNumbers + "].IsActive\" checked=\"checked\">"
+                        + "<label></label>"
+                        + "</div>"
+                        + "</td>"
+                        + "<td id=\"modelRowProductGroup'" + trModelSeasonRowNumbers + "'\" disabled=\"disabled\">"
+                        + "</td>"
+                        + "<td>"
+                        + "<div class=\"input-group\">"
+                        + "<input type=\"number\" class=\"form-control numericField\" id=\"modelRowNumber'" + trModelSeasonRowNumbers + "'\" name=\"modelRowNumber\"  value=" + i + " disabled=\"disabled\" />"
+                        + "</div>"
+                        + "</td>"
+                        + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteModelSeasonRowNumbers(this)\">@Localizer["Delete"]</button>"
+                        + "<input type=\"hidden\" class=\"form-control\" name=\"ListModelSeasonRowNumbers[" + trModelSeasonRowNumbers + "].Id\">"
+                        + "</td>"
+                        + "</tr>"
+                    );
+
+                    ComboModelRowProductGroupList(productGroupId, trModelSeasonRowNumbers);
+
+                }
+            }
+
+        });
+        SortModelSeasonRowNumbers();
+
 
     }
 
     function AddModelSeasonRowNumbersByProductGroupId() {
 
+        SortModelSeasonRowNumbers();
+
         var productGroup = document.getElementById("modelProductGroupId");
         var productGroupId = productGroup.options[productGroup.selectedIndex].value;
-       
+
         var maxNumber = document.getElementById("modelRowNumber").value;
         var trModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length;
-        
+
         var trFirstModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length;
         event.preventDefault();
         var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
 
         for (var i = 1; i <= maxNumber; i++) {
             trModelSeasonRowNumbers = trModelSeasonRowNumbers + 1;
-           
+
             var used = 0;
+
             $("#modelSeasonRowNumbersGrid tbody").each(function () {
-                
+
                 var tableModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length+1;
                 for (var j = 1; j < tableModelSeasonRowNumbers; j++) {
-
-                    if (!document.getElementById("modelRowNumber'" + j + "\'") && !document.getElementById("comboModelRowProductGroup" + j)) {
+                    var rowProductGroup=0;
+                    var rowProductGroupId=0;
+                    var rowNumber=0;
+                    if (!document.getElementById("modelRowNumber'" + j + "'") && !document.getElementById("comboModelRowProductGroup" + j)) {
                         j++;
+                    } else {
+                        rowProductGroup = document.getElementById("comboModelRowProductGroup" + j);
+                        rowProductGroupId = rowProductGroup.options[rowProductGroup.selectedIndex].value;
+                        rowNumber = document.getElementById("modelRowNumber'" + j + "'").value;
                     }
-                    var rowProductGroup = document.getElementById("comboModelRowProductGroup"+j);
-                    var rowProductGroupId = rowProductGroup.options[rowProductGroup.selectedIndex].value;
-                    var rowNumber = document.getElementById("modelRowNumber'" + j + "\'").value;
+
 
                     if (rowProductGroupId == productGroupId && rowNumber == i) {
                         used = 1;
-                        /*console.log("Used1:" + used);*/
+                        console.log("Used1:" + used);
                     }
-                   
+
                     if (productGroupId == rowProductGroupId && maxNumber < i) {
                         used = 1;
-                        /*console.log("Used2:" + used);*/
+                        console.log("Used2:" + used);
                     }
-                    if (productGroupId != rowProductGroupId) {
+                    if (productGroupId !== rowProductGroupId) {
                         trFirstModelSeasonRowNumbers = 0;
                     }
-                    if (productGroupId == rowProductGroupId && maxNumber == trFirstModelSeasonRowNumbers) {
+                    if (productGroupId == rowProductGroupId && i == trFirstModelSeasonRowNumbers) {
                         used = 1;
-                        /*console.log("Used3:" + used);*/
+                        console.log("Used3:" + used);
                     }
-                    
+
                 }
             });
-            
+
             if (used !== 1) {
                 table.insertAdjacentHTML("beforeend",
                     "<tr class=\"trModelSeasonRowNumbers\">"
                     + "<td>"
                     + "<div class=\"input-group\">"
-                    + "<div class=\"input-group\">"
                     + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
                     + "<input type=\"checkbox\" class=\"isActiveCheck\" name=\"ListModelSeasonRowNumbers[" + trModelSeasonRowNumbers + "].IsActive\" checked=\"checked\">"
                     + "<label></label>"
-                    + "</div>"
                     + "</div>"
                     + "</td>"
                     + "<td id=\"modelRowProductGroup'" + trModelSeasonRowNumbers + "'\" disabled=\"disabled\">"
                     + "</td>"
                     + "<td>"
                     + "<div class=\"input-group\">"
-                    + "<input type=\"text\" class=\"form-control numericField\" id=\"modelRowNumber'" + trModelSeasonRowNumbers + "'\" name=\"modelRowNumber\"  value=" + i +" disabled=\"disabled\" />"
+                    + "<input type=\"number\" class=\"form-control numericField\" id=\"modelRowNumber'" + trModelSeasonRowNumbers + "'\" name=\"modelRowNumber\"  value=" + i +" disabled=\"disabled\" />"
                     + "</div>"
                     + "</td>"
                     + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteModelSeasonRowNumbers(this)\">@Localizer["Delete"]</button>"
@@ -1373,36 +1480,62 @@
                     + "</td>"
                     + "</tr>"
                 );
-            
+
                 ComboModelRowProductGroupList(productGroupId, trModelSeasonRowNumbers);
-                
+
             }
         }
-        //$('#modelSeasonRowNumbersGrid').DataTable( {
-        //    "order": [[ 0, "asc" ]]
-        //} );
+
         SortModelSeasonRowNumbers();
+
+
     }
 
     function SortModelSeasonRowNumbers() {
-        
-        var table, rows, switching, switching2, i, x, y, j, a, b, shouldSwitch, shouldSwitch2;
+
+        var table, rows, switching, switching2, i, iPlus, x, y, j,jPlus, a, b, shouldSwitch, shouldSwitch2;
         table = document.getElementById("modelSeasonRowNumbersGrid");
-       
+
         switching = true;
         switching2 = true;
-        while (switching) {
-           
-           switching = false;
+
+
+        while (switching2) {
+
+            switching2 = false;
             rows = table.rows;
-            
-            for (i = 1; i < (rows.length - 1); i++) {
-               
+
+            for (j = 1; j < (rows.length - 1); j++) {
+                jPlus = j + 1;
+                shouldSwitch2 = false;
+
+                a = rows[j].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
+                b = rows[jPlus].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
+
+                if (a.toLowerCase() > b.toLowerCase()) {
+
+                    shouldSwitch2 = true;
+                    break;
+                }
+            }
+            if (shouldSwitch2) {
+                rows[j].parentNode.insertBefore(rows[jPlus], rows[j]);
+                switching2 = true;
+
+            }
+        }
+
+        while (switching) {
+            rows = table.rows;
+           switching = false;
+           for (i = 1; i < (rows.length - 1); i++) {
+                iPlus = i + 1;
                 shouldSwitch = false;
 
                 x = rows[i].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
-                x =x.options[x.selectedIndex];
-                y = rows[i + 1].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
+                x = x.options[x.selectedIndex];
+
+                y = rows[iPlus].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
                 y = y.options[y.selectedIndex];
 
                 if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
@@ -1411,36 +1544,21 @@
                 }
             }
             if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                rows[i].parentNode.insertBefore(rows[iPlus], rows[i]);
                 switching = true;
             }
-
-           while (switching2) {
-           
-               switching2 = false;
-               rows = table.rows;
-
-               for (j = 1; j < (rows.length - 1); j++) {
-               
-                   shouldSwitch2 = false;
-
-                   a = rows[j].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
-                   b = rows[j + 1].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
-               
-                   if (a.toLowerCase() > b.toLowerCase()) {
-
-                       shouldSwitch2 = true;
-                       break;
-                   }
-               }
-               if (shouldSwitch2) {
-                   rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
-                   switching2 = true;
-               }
-           }
         }
 
-        
+        for (var k = 1; k < (rows.length); k++) {
+            rows[k].getElementsByTagName("TD")[0].getElementsByTagName("div")[0].getElementsByTagName("div")[0].getElementsByTagName("input")[0].name = "ListModelSeasonRowNumbers[" + k + "].IsActive";
+            rows[k].getElementsByTagName("TD")[1].id = "modelRowProductGroup'" + k + "'";
+            rows[k].getElementsByTagName("TD")[1].getElementsByTagName("select")[0].id = "comboModelRowProductGroup" + k;
+            rows[k].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].id = "modelRowNumber'" + k + "'";
+            //rows[k].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value =  k ;
+            rows[k].getElementsByTagName("TD")[3].getElementsByTagName("input")[0].name = "ListModelSeasonRowNumbers[" + k + "].Id";
+
+        }
+
     }
 
     function deleteModelSeasonRowNumbers(button) {
@@ -1545,11 +1663,28 @@
             dataListCountryShippingMultiplier.push(data);
         });
 
+        $("#modelSeasonRowNumbersGrid tbody").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            if (row.find(".isActiveCheck").is(":checked")) {
+                data.isActive = true;
+            } else {
+                data.isActive = false;
+            }
+            data.productGroupId = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(1).val();
+            data.rowNumber = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(2).val();
+            data.modelSeasonRowNumberId = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(3).val();
+
+            dataListModelSeasonRowNumber.push(data);
+        });
+
         $('#SubSeasonPlanningString').val(JSON.stringify(dataListSeasonPlanning));
         $('#SubSeasonCurrencyString').val(JSON.stringify(dataListSeasonCurrency));
         $('#SubPaymentMethodShareString').val(JSON.stringify(dataListPaymentMethodShare));
         $('#SubCountryShippingMultiplierString').val(JSON.stringify(dataListCountryShippingMultiplier));
-        //$('#SubModelSeasonRowNumberString').val(JSON.stringify(dataListModelSeasonRowNumber));
+        $('#SubModelSeasonRowNumberString').val(JSON.stringify(dataListModelSeasonRowNumber));
 
         var url = "@Url.Action("Save", "Season")";
         $.post(url,
