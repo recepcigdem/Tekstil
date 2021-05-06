@@ -233,7 +233,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="tab-pane" id="seasonCurrency" role="tabpanel">
-                                                                        @Html.HiddenFor(x => x.SeasonCurrencies)
+                                                                        @Html.HiddenFor(x => x.SubSeasonCurrencyString)
                                                                         <div class="col-md-12">
                                                                             <div class="panel panel-primary panel-line">
                                                                                 <div class="col-md-12">
@@ -254,10 +254,11 @@
                                                                                             <th width="10%"></th>
                                                                                         </tr>
                                                                                     </thead>
-                                                                                    <tbody>
-                                                                                        @for (int i = 0; i < Model.ListSeasonCurrencies.Count; i++)
-                                                                                        {
-                                                                                            <tr class="dataSatir">
+
+                                                                                    @for (int i = 0; i < Model.ListSeasonCurrencies.Count; i++)
+                                                                                    {
+                                                                                        <tbody>
+                                                                                            <tr id="trSeasonCurrency">
                                                                                                 <td>
                                                                                                     <div class="input-group">
                                                                                                         <div class="checkbox-custom checkbox-inline checkbox-success" style="padding-top:5px">
@@ -278,14 +279,15 @@
                                                                                                 </td>
                                                                                                 <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteSeasonCurrency(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListSeasonCurrencies[i].Id)</td>
                                                                                             </tr>
-                                                                                        }
-                                                                                    </tbody>
+                                                                                        </tbody>
+                                                                                    }
+
                                                                                 </table>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="tab-pane" id="paymentMethodShare" role="tabpanel">
-                                                                        @Html.HiddenFor(x => x.PaymentMethodShares)
+                                                                        @Html.HiddenFor(x => x.SubPaymentMethodShareString)
                                                                         <div class="col-md-12">
                                                                             <div class="panel panel-primary panel-line">
                                                                                 <div class="col-md-12">
@@ -310,10 +312,11 @@
                                                                                             <th width="10%"></th>
                                                                                         </tr>
                                                                                     </thead>
-                                                                                    <tbody>
-                                                                                        @for (int i = 0; i < Model.ListPaymentMethodShares.Count; i++)
-                                                                                        {
-                                                                                            <tr class="dataSatir">
+
+                                                                                    @for (int i = 0; i < Model.ListPaymentMethodShares.Count; i++)
+                                                                                    {
+                                                                                        <tbody>
+                                                                                            <tr id="trPaymentMethod">
                                                                                                 <td id="paymentMethod'@i'">@Html.HiddenFor(x => x.ListPaymentMethodShares[i].PaymentMethodId, new { @class = "form-control" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListPaymentMethodShares[i].CenterShare, new { @class = "form-control numericField", onchange = "PaymentMethodCurrencyCalc(" + @i + ");", id = "centerShare'" + @i + "'" })</td>
                                                                                                 <td id="seasonCurrency'@i'">@Html.HiddenFor(x => x.ListPaymentMethodShares[i].SeasonCurrencyId, new { @class = "form-control", onchange = "PaymentMethodCurrencyCalc(" + @i + ");" })</td>
@@ -331,14 +334,15 @@
                                                                                                 </td>
                                                                                                 <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deletePaymentMethodShare(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListPaymentMethodShares[i].Id)</td>
                                                                                             </tr>
-                                                                                        }
-                                                                                    </tbody>
+                                                                                        </tbody>
+                                                                                    }
+
                                                                                 </table>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="tab-pane" id="countryShippingMultiplier" role="tabpanel">
-                                                                        @Html.HiddenFor(x => x.CountryShippingMultipliers)
+                                                                        @Html.HiddenFor(x => x.SubCountryShippingMultiplierString)
                                                                         <div class="col-md-12">
                                                                             <div class="panel panel-primary panel-line">
                                                                                 <div class="col-md-12">
@@ -370,7 +374,7 @@
                                                                                     <tbody>
                                                                                         @for (int i = 0; i < Model.ListCountryShippingMultipliers.Count; i++)
                                                                                         {
-                                                                                            <tr class="dataSatir">
+                                                                                            <tr id="dataSatir">
                                                                                                 <td id="country'@i'">@Html.HiddenFor(x => x.ListCountryShippingMultipliers[i].CountryId, new { @class = "form-control" })</td>
                                                                                                 <td id="shippingMethod'@i'">@Html.HiddenFor(x => x.ListCountryShippingMultipliers[i].ShippingMethodId, new { @class = "form-control" })</td>
                                                                                                 <td>
@@ -429,7 +433,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="tab-pane" id="modelSeasonRowNumber" role="tabpanel">
-                                                    @Html.HiddenFor(x => x.ModelSeasonRowNumbers)
+                                                    @Html.HiddenFor(x => x.SubModelSeasonRowNumberString)
                                                     <div class="col-md-12">
                                                         <div class="panel panel-primary panel-line">
                                                             <div class="col-md-12">
@@ -449,17 +453,17 @@
                                                                             @Html.TextBoxFor(x => x.ModelSeasonRowNumberMaxNumber, new { @class = "form-control", @id = "modelRowNumber" })
                                                                         </div>
                                                                     </div>
-                                                                        <div class="col-3">
-                                                                            <div class="col-md-auto text-right mt-2">
-                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersByProductGroupId();">@Localizer["NewByProductGroup"]</button>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-3">
-                                                                            <div class="col-md-auto text-right mt-2">
-                                                                                <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersAllProductGroup();">@Localizer["NewAllProductGroup"]</button>
-                                                                            </div>
+                                                                    <div class="col-3">
+                                                                        <div class="col-md-auto text-right mt-2">
+                                                                            <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersByProductGroupId();">@Localizer["NewByProductGroup"]</button>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-3">
+                                                                        <div class="col-md-auto text-right mt-2">
+                                                                            <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddModelSeasonRowNumbersAllProductGroup();">@Localizer["NewAllProductGroup"]</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <table id="modelSeasonRowNumbersGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
                                                                 <thead>
@@ -484,7 +488,7 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td id="modelRowProductGroup'@i'">@Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].ProductGroupId, new { @class = "form-control", disabled = "disabled" })</td>
-                                                                            <td id="modelRowNumber'@i'">@Html.TextBoxFor(x => x.ListModelSeasonRowNumbers[i].RowNumber, new { @class = "form-control", disabled = "disabled" ,type="number" })</td>
+                                                                            <td id="modelRowNumber'@i'">@Html.TextBoxFor(x => x.ListModelSeasonRowNumbers[i].RowNumber, new { @class = "form-control", disabled = "disabled", type = "number" })</td>
                                                                             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteModelSeasonRowNumbers(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].Id)</td>
                                                                         </tr>
                                                                     }
@@ -526,6 +530,7 @@
     var count = 0;
     var countPaymentMethod = 0;
     var countCountryShippingMultiplier = 0;
+    var countSeasonCurrency = 0;
 
     $(document).ready(function() {
 
@@ -629,10 +634,10 @@
 
     function ComboTopProductGroupList(productGroupId, count) {
         dataListProductGroup = [];
-        
+
         document.getElementById("topProductGroup'" + count + "'").innerHTML = "<select id=\"comboTopProductGroup" + count + "\" class=\"form-control productGroup comboTopProductGroup\" disabled=\"disabled\">" + "</select>";
         var selectitem = document.getElementById("comboTopProductGroup" + count);
-        
+
         var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
 
         $.ajax({
@@ -897,10 +902,10 @@
 
             var productGroup = document.getElementById("comboProductGroup" + count);
             var productGroupId = productGroup.options[productGroup.selectedIndex].value;
-            
+
             var topProductGroup = document.getElementById("comboTopProductGroup" + count);
             topProductGroup.options[productGroup.options.selectedIndex].setAttribute("selected", "selected");
-            
+
 
 
         });
@@ -1162,12 +1167,13 @@
         foldDocument.remove();
     }
 
-    var countSeasonCurrency = $('.dataSatir').length + 1;
+
     function AddSeasonCurrency() {
         event.preventDefault();
-        var table = document.querySelector("#seasonCurrencyGrid tbody");
-         table.insertAdjacentHTML("beforeend",
-             "<tr>"
+        var table = document.querySelector("#seasonCurrencyGrid");
+        table.insertAdjacentHTML("beforeend",
+            "<tbody>"
+            + "<tr id=\"trSeasonCurrency\">"
             + "<td>"
             + "<div class=\"input-group\">"
             + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
@@ -1178,19 +1184,19 @@
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-             + "<input type=\"text\" class=\"form-control\" id=\"currencyType\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].CurrencyType\" />"
+             + "<input type=\"text\" class=\"form-control\" id=\"currencyType\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].CurrencyType\">"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
-             + "<input type=\"text\" class=\"form-control numericField\" id=\"exchangeRate\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].ExchangeRate\" />"
+             + "<input type=\"text\" class=\"form-control numericField\" id=\"exchangeRate\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].ExchangeRate\">"
             + "</div>"
             + "</td>"
             + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteSeasonCurrency(this)\">@Localizer["Delete"]</button>"
              + "<input type=\"hidden\" class=\"form-control\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].Id\">"
             + "</td>"
             + "</tr>"
-
+            + "</tbody>"
         );
         countSeasonCurrency++;
     }
@@ -1201,9 +1207,10 @@
 
     function AddPaymentMethodShare() {
         event.preventDefault();
-        var table = document.querySelector("#paymentMethodGrid tbody");
+        var table = document.querySelector("#paymentMethodGrid");
         table.insertAdjacentHTML("beforeend",
-            "<tr class=\"dataSatir\">"
+            "<tbody>"
+            + "<tr id=\"trPaymentMethod\">"
             + "<td id=\"paymentMethod'" + countPaymentMethod + "'\">"
             + "</td>"
             + "<td>"
@@ -1237,6 +1244,7 @@
             + "<input type=\"hidden\" class=\"form-control\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].Id\">"
             + "</td>"
             + "</tr>"
+            + "</tbody>"
         );
 
         ComboPaymentMethodList(0, countPaymentMethod);
@@ -1324,7 +1332,7 @@
 
         dataListProductGroup.forEach(element => {
             var productGroupId = element.id;
-            console.log(productGroupId);
+
             event.preventDefault();
             var table = document.querySelector("#modelSeasonRowNumbersGrid tbody");
 
@@ -1351,19 +1359,19 @@
 
                         if (rowProductGroupId == productGroupId && rowNumber == i) {
                             used = 1;
-                            console.log("Used1:" + used);
+
                         }
 
                         if (productGroupId == rowProductGroupId && maxNumber < i) {
                             used = 1;
-                            console.log("Used2:" + used);
+
                         }
                         if (productGroupId !== rowProductGroupId) {
                             trFirstModelSeasonRowNumbers = 0;
                         }
                         if (productGroupId == rowProductGroupId && i == trFirstModelSeasonRowNumbers) {
                             used = 1;
-                            console.log("Used3:" + used);
+
                         }
 
                     }
@@ -1440,19 +1448,19 @@
 
                     if (rowProductGroupId == productGroupId && rowNumber == i) {
                         used = 1;
-                        console.log("Used1:" + used);
+
                     }
 
                     if (productGroupId == rowProductGroupId && maxNumber < i) {
                         used = 1;
-                        console.log("Used2:" + used);
+
                     }
                     if (productGroupId !== rowProductGroupId) {
                         trFirstModelSeasonRowNumbers = 0;
                     }
                     if (productGroupId == rowProductGroupId && i == trFirstModelSeasonRowNumbers) {
                         used = 1;
-                        console.log("Used3:" + used);
+
                     }
 
                 }
@@ -1580,30 +1588,30 @@
 
             var data = {};
 
-            data.productGroupId = row.find(".productGroup").val();
-            data.planUnitQuantity = row.find(".planUnitQuantity").val();
-            data.planTotalQuantity = row.find(".planTotalQuantity").val();
-            data.pealTotalQuantity = row.find(".realTotalQuantity").val();
+            data.productGroupId = row.find("#trProductGroup").find("td").find("select").eq(0).val();
+            data.planUnitQuantity = row.find("#trProductGroup").find("td").find("input").eq(0).val();
+            data.planTotalQuantity = row.find("#trProductGroup").find("td").find("input").eq(1).val();
+            data.realTotalQuantity = row.find("#trProductGroup").find("td").find("input").eq(2).val();
 
-            data.planModelMain = row.find("#trPlanLine").find("td").find("input").eq(0).value;
-            data.planModelMini = row.find("#trPlanLine").find("td").find("input").eq(1).value;
-            data.planModelMidi = row.find("#trPlanLine").find("td").find("input").eq(2).value;
-            data.planOptionMain = row.find("#trPlanLine").find("td").find("input").eq(3).value;
-            data.planOptionMini = row.find("#trPlanLine").find("td").find("input").eq(4).value;
-            data.planOptionMidi = row.find("#trPlanLine").find("td").find("input").eq(5).value;
-            data.planQuantityMain = row.find("#trPlanLine").find("td").find("input").eq(6).value;
-            data.planQuantityMini = row.find("#trPlanLine").find("td").find("input").eq(7).value;
-            data.planQuantityMidi = row.find("#trPlanLine").find("td").find("input").eq(8).value;
+            data.planModelMain = row.find("#trPlanLine").find("td").find("input").eq(0).val();
+            data.planModelMini = row.find("#trPlanLine").find("td").find("input").eq(1).val();
+            data.planModelMidi = row.find("#trPlanLine").find("td").find("input").eq(2).val();
+            data.planOptionMain = row.find("#trPlanLine").find("td").find("input").eq(3).val();
+            data.planOptionMini = row.find("#trPlanLine").find("td").find("input").eq(4).val();
+            data.planOptionMidi = row.find("#trPlanLine").find("td").find("input").eq(5).val();
+            data.planQuantityMain = row.find("#trPlanLine").find("td").find("input").eq(6).val();
+            data.planQuantityMini = row.find("#trPlanLine").find("td").find("input").eq(7).val();
+            data.planQuantityMidi = row.find("#trPlanLine").find("td").find("input").eq(8).val();
 
-            data.realModelMain = row.find("#trRealLine").find("td").find("input").eq(0).value;
-            data.realModelMini = row.find("#trRealLine").find("td").find("input").eq(1).value;
-            data.realModelMidi = row.find("#trRealLine").find("td").find("input").eq(2).value;
-            data.realOptionMain = row.find("#trRealLine").find("td").find("input").eq(3).value;
-            data.realOptionMini = row.find("#trRealLine").find("td").find("input").eq(4).value;
-            data.realOptionMidi = row.find("#trRealLine").find("td").find("input").eq(5).value;
-            data.realQuantityMain = row.find("#trRealLine").find("td").find("input").eq(6).value;
-            data.realQuantityMini = row.find("#trRealLine").find("td").find("input").eq(7).value;
-            data.realQuantityMidi = row.find("#trRealLine").find("td").find("input").eq(8).value;
+            data.realModelMain = row.find("#trRealLine").find("td").find("input").eq(0).val();
+            data.realModelMini = row.find("#trRealLine").find("td").find("input").eq(1).val();
+            data.realModelMidi = row.find("#trRealLine").find("td").find("input").eq(2).val();
+            data.realOptionMain = row.find("#trRealLine").find("td").find("input").eq(3).val();
+            data.realOptionMini = row.find("#trRealLine").find("td").find("input").eq(4).val();
+            data.realOptionMidi = row.find("#trRealLine").find("td").find("input").eq(5).val();
+            data.realQuantityMain = row.find("#trRealLine").find("td").find("input").eq(6).val();
+            data.realQuantityMini = row.find("#trRealLine").find("td").find("input").eq(7).val();
+            data.realQuantityMidi = row.find("#trRealLine").find("td").find("input").eq(8).val();
 
             dataListSeasonPlanning.push(data);
         });
@@ -1612,15 +1620,17 @@
             var row = $(this);
 
             var data = {};
-
             if (row.find(".isDefaultCheck").is(":checked")) {
                 data.isDefault = true;
             } else {
                 data.isDefault = false;
             }
-            data.currencyType = row.find("#dataSatir").find("td").find("input").eq(1).val();
-            data.exchangeRate = row.find("#dataSatir").find("td").find("input").eq(2).val();
-            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(3).val();
+            data.currencyType = row.find("#trSeasonCurrency").find("td").find("input").eq(1).val();
+            data.exchangeRate = row.find("#trSeasonCurrency").find("td").find("input").eq(2).val();
+            data.seasonCurrencyId = row.find("#trSeasonCurrency").find("td").find("input").eq(3).val();
+
+
+
 
             dataListSeasonCurrency.push(data);
         });
@@ -1630,14 +1640,14 @@
 
             var data = {};
 
-            data.paymentMethodId = row.find("#dataSatir").find("td").find("input").eq(0).val();
-            data.centerShare = row.find("#dataSatir").find("td").find("input").eq(1).val();
-            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
-            data.exchangeRate = row.find("#dataSatir").find("td").find("input").eq(3).val();
-            data.centerShareTl = row.find("#dataSatir").find("td").find("input").eq(4).val();
-            data.centerShareEuro = row.find("#dataSatir").find("td").find("input").eq(5).val();
-            data.accessoryCenterShareEuro = row.find("#dataSatir").find("td").find("input").eq(6).val();
-            data.paymentMethodShareId = row.find("#dataSatir").find("td").find("input").eq(7).val();
+            data.paymentMethodId = row.find("#trPaymentMethod").find("td").find("select").eq(0).val();
+            data.centerShare = row.find("#trPaymentMethod").find("td").find("input").eq(0).val();
+            data.seasonCurrencyId = row.find("#trPaymentMethod").find("td").find("select").eq(1).val();
+            data.exchangeRate = row.find("#trPaymentMethod").find("td").find("input").eq(1).val();
+            data.centerShareTl = row.find("#trPaymentMethod").find("td").find("input").eq(2).val();
+            data.centerShareEuro = row.find("#trPaymentMethod").find("td").find("input").eq(3).val();
+            data.accessoryCenterShareEuro = row.find("#trPaymentMethod").find("td").find("input").eq(4).val();
+            data.paymentMethodShareId = row.find("#trPaymentMethod").find("td").find("input").eq(5).val();
 
             dataListPaymentMethodShare.push(data);
         });
@@ -1647,18 +1657,18 @@
 
             var data = {};
 
-            data.countryId = row.find("#dataSatir").find("td").find("input").eq(0).val();
-            data.shippingMethodId = row.find("#dataSatir").find("td").find("input").eq(1).val();
-            data.multiplier = row.find("#dataSatir").find("td").find("input").eq(2).val();
-            data.testPrice = row.find("#dataSatir").find("td").find("input").eq(3).val();
-            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(4).val();
-            data.exchangeRate = row.find("#dataSatir").find("td").find("input").eq(5).val();
-            data.testPriceTl = row.find("#dataSatir").find("td").find("input").eq(6).val();
-            data.testPercentage = row.find("#dataSatir").find("td").find("input").eq(7).val();
-            data.cargoPercentage = row.find("#dataSatir").find("td").find("input").eq(8).val();
-            data.insurancePercentage = row.find("#dataSatir").find("td").find("input").eq(9).val();
-            data.freightPercentage = row.find("#dataSatir").find("td").find("input").eq(10).val();
-            data.countryShippingMultiplierId = row.find("#dataSatir").find("td").find("input").eq(11).val();
+            data.countryId = row.find("#dataSatir").find("td").find("select").eq(0).val();
+            data.shippingMethodId = row.find("#dataSatir").find("td").find("select").eq(1).val();
+            data.multiplier = row.find("#dataSatir").find("td").find("input").eq(0).val();
+            data.testPrice = row.find("#dataSatir").find("td").find("input").eq(1).val();
+            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("select").eq(2).val();
+            data.exchangeRate = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            data.testPriceTl = row.find("#dataSatir").find("td").find("input").eq(3).val();
+            data.testPercentage = row.find("#dataSatir").find("td").find("input").eq(4).val();
+            data.cargoPercentage = row.find("#dataSatir").find("td").find("input").eq(5).val();
+            data.insurancePercentage = row.find("#dataSatir").find("td").find("input").eq(6).val();
+            data.freightPercentage = row.find("#dataSatir").find("td").find("input").eq(7).val();
+            data.countryShippingMultiplierId = row.find("#dataSatir").find("td").find("input").eq(8).val();
 
             dataListCountryShippingMultiplier.push(data);
         });
@@ -1673,9 +1683,9 @@
             } else {
                 data.isActive = false;
             }
-            data.productGroupId = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(1).val();
-            data.rowNumber = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(2).val();
-            data.modelSeasonRowNumberId = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(3).val();
+            data.productGroupId = row.find("#trModelSeasonRowNumbers").find("td").find("select").eq(0).val();
+            data.rowNumber = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(0).val();
+            data.modelSeasonRowNumberId = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(1).val();
 
             dataListModelSeasonRowNumber.push(data);
         });
