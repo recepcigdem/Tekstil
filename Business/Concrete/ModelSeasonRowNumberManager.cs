@@ -90,6 +90,7 @@ namespace Business.Concrete
 
             foreach (var modelSeasonRowNumber in modelSeasonRowNumbers)
             {
+                modelSeasonRowNumber.CustomerId = customerId;
                 if (modelSeasonRowNumber.Id > 0)
                 {
                     var dbResult = _modelSeasonRowNumberDal.Update(modelSeasonRowNumber);

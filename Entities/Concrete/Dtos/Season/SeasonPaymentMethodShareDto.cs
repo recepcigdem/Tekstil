@@ -19,5 +19,19 @@ namespace Entities.Concrete.Dtos.Season
         public string SeasonCurrency { get; set; }
         public decimal ExchangeRates { get; set; }
         public decimal CenterShareTl { get; set; }
+        public SeasonPaymentMethodShareDto()
+        {
+            SeasonId = 0;
+            PaymentMethodId = 0;
+            SeasonCurrencyId = 0;
+            CenterShare = 0;
+            CenterShareEuro = 0;
+            AccessoryCenterShareEuro = 0;
+            PaymentMethod = string.Empty;
+            SeasonCurrency = string.Empty ;
+            ExchangeRates = 0;
+            CenterShareTl = 0;
+
+        }
     }
 }

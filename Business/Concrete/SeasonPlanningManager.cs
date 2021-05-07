@@ -115,6 +115,7 @@ namespace Business.Concrete
 
             foreach (var seasonPlaning in seasonPlanings)
             {
+                seasonPlaning.CustomerId = customerId;
                 if (seasonPlaning.Id > 0)
                 {
                     Update(seasonPlaning);

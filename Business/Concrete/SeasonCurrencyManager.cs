@@ -117,6 +117,7 @@ namespace Business.Concrete
 
             foreach (var seasonCurrency in seasonCurrencies)
             {
+                seasonCurrency.CustomerId = customerId;
                 if (seasonCurrency.Id > 0)
                 {
                     Update(seasonCurrency);

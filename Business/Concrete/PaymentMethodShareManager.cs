@@ -115,6 +115,7 @@ namespace Business.Concrete
 
             foreach (var paymentMethodShare in paymentMethodShares)
             {
+                paymentMethodShare.CustomerId = customerId;
                 if (paymentMethodShare.Id > 0)
                 {
                     Update(paymentMethodShare);
@@ -134,7 +135,7 @@ namespace Business.Concrete
             if (result.Count > 1)
                 new ErrorServiceResult(false, "PaymentMethodAlreadyExists");
 
-            return new ServiceResult();
+            return new ServiceResult(true,"");
         }
     }
 }

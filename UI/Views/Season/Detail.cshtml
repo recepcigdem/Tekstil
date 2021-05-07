@@ -137,18 +137,16 @@
                                                                                             <th></th>
                                                                                         </tr>
                                                                                     </thead>
-
-
-                                                                                    @for (int i = 0; i < Model.ListSeasonPlannings.Count; i++)
-                                                                                    {
-                                                                                        <tbody class="col-md-12">
-                                                                                            <tr class="view" id="view'@i'" value="@i">
-                                                                                                <td>@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                    <tbody class="col-md-12">
+                                                                                        @for (int i = 0; i < Model.ListSeasonPlannings.Count; i++)
+                                                                                        {
+                                                                                            <tr class="view" name="view" id="view'@i'" value="@i" onclick="tableOpenClosed(@i);">
+                                                                                                <td id="topProductGroup'@i'">@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanUnitQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListSeasonPlannings[i].RealTotalQuantity, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td>
-                                                                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteListLine(@i)">@Localizer["Delete"]</button>
+                                                                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteListLine(@i)">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListSeasonPlannings[i].Id)
                                                                                                 </td>
                                                                                             </tr>
                                                                                             <tr class="fold" id="fold'@i'">
@@ -165,7 +163,7 @@
                                                                                                                 </tr>
                                                                                                             </thead>
                                                                                                             <tbody>
-                                                                                                                <tr id="trProductGroup">
+                                                                                                                <tr id="trProductGroup" value="@Model.ListSeasonPlannings[i].Id">
                                                                                                                     <td id="productGroup'@i'">@Html.HiddenFor(x => x.ListSeasonPlannings[i].ProductGroupId, new { @class = "form-control" })</td>
                                                                                                                     <td id="planUnitQuantity'@i'">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanUnitQuantity, new { @class = "form-control", onkeyup = "SeasonPlanningTotalCalc(" + i + ");" })</td>
                                                                                                                     <td id="planTotalQuantity'@i'">@Html.TextBoxFor(x => x.ListSeasonPlannings[i].PlanTotalQuantity, new { @disabled = "disabled", @class = "form-control" })</td>
@@ -226,8 +224,9 @@
                                                                                                     </div>
                                                                                                 </td>
                                                                                             </tr>
-                                                                                        </tbody>
-                                                                                    }
+
+                                                                                        }
+                                                                                    </tbody>
                                                                                 </table>
                                                                             </div>
                                                                         </div>
@@ -254,10 +253,10 @@
                                                                                             <th width="10%"></th>
                                                                                         </tr>
                                                                                     </thead>
+                                                                                    <tbody>
+                                                                                        @for (int i = 0; i < Model.ListSeasonCurrencies.Count; i++)
+                                                                                        {
 
-                                                                                    @for (int i = 0; i < Model.ListSeasonCurrencies.Count; i++)
-                                                                                    {
-                                                                                        <tbody>
                                                                                             <tr id="trSeasonCurrency">
                                                                                                 <td>
                                                                                                     <div class="input-group">
@@ -279,9 +278,9 @@
                                                                                                 </td>
                                                                                                 <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteSeasonCurrency(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListSeasonCurrencies[i].Id)</td>
                                                                                             </tr>
-                                                                                        </tbody>
-                                                                                    }
 
+                                                                                        }
+                                                                                    </tbody>
                                                                                 </table>
                                                                             </div>
                                                                         </div>
@@ -312,10 +311,10 @@
                                                                                             <th width="10%"></th>
                                                                                         </tr>
                                                                                     </thead>
+                                                                                    <tbody>
+                                                                                        @for (int i = 0; i < Model.ListPaymentMethodShares.Count; i++)
+                                                                                        {
 
-                                                                                    @for (int i = 0; i < Model.ListPaymentMethodShares.Count; i++)
-                                                                                    {
-                                                                                        <tbody>
                                                                                             <tr id="trPaymentMethod">
                                                                                                 <td id="paymentMethod'@i'">@Html.HiddenFor(x => x.ListPaymentMethodShares[i].PaymentMethodId, new { @class = "form-control" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListPaymentMethodShares[i].CenterShare, new { @class = "form-control numericField", onchange = "PaymentMethodCurrencyCalc(" + @i + ");", id = "centerShare'" + @i + "'" })</td>
@@ -334,9 +333,9 @@
                                                                                                 </td>
                                                                                                 <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deletePaymentMethodShare(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListPaymentMethodShares[i].Id)</td>
                                                                                             </tr>
-                                                                                        </tbody>
-                                                                                    }
 
+                                                                                        }
+                                                                                    </tbody>
                                                                                 </table>
                                                                             </div>
                                                                         </div>
@@ -374,7 +373,7 @@
                                                                                     <tbody>
                                                                                         @for (int i = 0; i < Model.ListCountryShippingMultipliers.Count; i++)
                                                                                         {
-                                                                                            <tr id="dataSatir">
+                                                                                            <tr id="trCountryShippingMultiplier">
                                                                                                 <td id="country'@i'">@Html.HiddenFor(x => x.ListCountryShippingMultipliers[i].CountryId, new { @class = "form-control" })</td>
                                                                                                 <td id="shippingMethod'@i'">@Html.HiddenFor(x => x.ListCountryShippingMultipliers[i].ShippingMethodId, new { @class = "form-control" })</td>
                                                                                                 <td>
@@ -478,7 +477,8 @@
                                                                 <tbody>
                                                                     @for (int i = 0; i < Model.ListModelSeasonRowNumbers.Count; i++)
                                                                     {
-                                                                        <tr class="trModelSeasonRowNumbers">
+
+                                                                        <tr id="trModelSeasonRowNumbers" class="trModelSeasonRowNumbers">
                                                                             <td>
                                                                                 <div class="input-group">
                                                                                     <div class="checkbox-custom checkbox-inline checkbox-success" style="padding-top:5px">
@@ -491,6 +491,7 @@
                                                                             <td id="modelRowNumber'@i'">@Html.TextBoxFor(x => x.ListModelSeasonRowNumbers[i].RowNumber, new { @class = "form-control", disabled = "disabled", type = "number" })</td>
                                                                             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteModelSeasonRowNumbers(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].Id)</td>
                                                                         </tr>
+
                                                                     }
                                                                 </tbody>
                                                             </table>
@@ -550,18 +551,19 @@
                 ComboProductGroupList(data.productGroupId, count);
                 ComboTopProductGroupList(data.productGroupId, count);
             }
-
-
+           // SeasonPlanningTotalCalc(count);
             count++;
         });
 
-        $("#paymentMethodGrid tbody").each(function() {
+        $("#paymentMethodGrid tbody tr").each(function() {
             var row = $(this);
-
+           
             var data = {};
 
-            data.paymentMethodId = row.find("#dataSatir").find("td").find("input").eq(0).val();
-            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            data.paymentMethodId = row.find("td").find("input").eq(0).val();
+            console.log(data.paymentMethodId);
+            data.seasonCurrencyId = row.find("td").find("input").eq(2).val();
+           
             if (data.paymentMethodId > 0) {
                 ComboPaymentMethodList(data.paymentMethodId, countPaymentMethod);
             }
@@ -569,18 +571,18 @@
             if (data.seasonCurrencyId > 0) {
                 ComboPaymentMethodSeasonCurrencyList(data.seasonCurrencyId, countPaymentMethod);
             }
-
-
+            
+          
             countPaymentMethod++;
         });
 
-        $("#countryShippingMultiplierGrid tbody").each(function() {
+        $("#countryShippingMultiplierGrid tbody tr").each(function() {
             var row = $(this);
 
             var data = {};
-            data.countryId = row.find("#dataSatir").find("td").find("input").eq(0).val();
-            data.shippingMethodId = row.find("#dataSatir").find("td").find("input").eq(1).val();
-            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("input").eq(2).val();
+            data.countryId = row.find("td").find("input").eq(0).val();
+            data.shippingMethodId = row.find("td").find("input").eq(1).val();
+            data.seasonCurrencyId = row.find("td").find("input").eq(2).val();
 
             if (data.countryId>0) {
                 ComboCountryList(data.countryId, countCountryShippingMultiplier);
@@ -629,6 +631,7 @@
 
         if (productGroupId > 0) {
             selectitem.value = productGroupId;
+
         }
     }
 
@@ -798,9 +801,20 @@
                 });
             }
         });
-
+        console.log(paymentMethodId);
         if (paymentMethodId > 0) {
-            selectitem.value = paymentMethodId;
+
+            dataListPaymentMethod.forEach(element => {
+                console.log("element"+ element.id);  
+                if (element.id == paymentMethodId) {
+                    console.log("ok");                   
+                    //selectitem.options[element.options.selectedIndex].setAttribute("selected", "selected");
+                }
+            });
+            //selectitem.selectitem.val = paymentMethodId;
+            //selectitem.options[index.options.selectedIndex].setAttribute("selected", "selected");
+            //console.log(selectitem.options[selectitem.options.selectItem].value);
+            //selectitem.options[selectitem.selectedIndex].value = paymentMethodId;
         }
     }
 
@@ -830,7 +844,7 @@
                 });
             }
         });
-
+       
         if (shippingMethodId > 0) {
             selectitem.value = shippingMethodId;
         }
@@ -901,7 +915,6 @@
             document.getElementById("planUnitQuantity" + "\'" + count + "\'").value = planUnitQuantity;
 
             var productGroup = document.getElementById("comboProductGroup" + count);
-            var productGroupId = productGroup.options[productGroup.selectedIndex].value;
 
             var topProductGroup = document.getElementById("comboTopProductGroup" + count);
             topProductGroup.options[productGroup.options.selectedIndex].setAttribute("selected", "selected");
@@ -964,10 +977,9 @@
 
     function AddSeasonPlanning() {
         event.preventDefault();
-        var table = document.querySelector("#seasonPlanningGrid");
+        var table = document.querySelector("#seasonPlanningGrid tbody");
         table.insertAdjacentHTML("beforeend",
-             "<tbody>"
-            +"<tr class=\"view\" id=\"view'" + count + "'\" value="+ count + "\>"
+            "<tr class=\"view\" name=\"view\" id=\"view'" + count + "'\" value=" + count + "\ onclick=\"tableOpenClosed("+ count +");\">"
             + "<td id=\"topProductGroup'" + count + "'\">"
             + "</td>"
             + "<td>"
@@ -986,7 +998,8 @@
             + "</div>"
             + "</td>"
             + "<td>"
-            + "<button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteListLine("+count+")\">@Localizer["Delete"]</button>"
+            + "<button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteListLine(" + count + ")\">@Localizer["Delete"]</button>"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"ListSeasonPlannings[" + count + "].Id\">"
             + "</td>"
             + "</tr>"
             + "<tr class=\"fold open\" id=\"fold'" + count + "'\">"
@@ -1002,7 +1015,7 @@
             + "</tr>"
             + "</thead>"
             + "<tbody>"
-            + "<tr id=\"trProductGroup\">"
+            + "<tr id=\"trProductGroup\" value='0'>"
             + "<td id=\"productGroup'" + count + "'\">"
             + "</td>"
             + "<td>"
@@ -1148,7 +1161,6 @@
             + "</div>"
             + "</td>"
             + "</tr>"
-            + "</tbody>"
             );
 
         tableOpenClosed(count);
@@ -1167,13 +1179,11 @@
         foldDocument.remove();
     }
 
-
     function AddSeasonCurrency() {
         event.preventDefault();
-        var table = document.querySelector("#seasonCurrencyGrid");
+        var table = document.querySelector("#seasonCurrencyGrid tbody");
         table.insertAdjacentHTML("beforeend",
-            "<tbody>"
-            + "<tr id=\"trSeasonCurrency\">"
+            "<tr id=\"trSeasonCurrency\">"
             + "<td>"
             + "<div class=\"input-group\">"
             + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
@@ -1196,7 +1206,6 @@
              + "<input type=\"hidden\" class=\"form-control\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].Id\">"
             + "</td>"
             + "</tr>"
-            + "</tbody>"
         );
         countSeasonCurrency++;
     }
@@ -1207,10 +1216,9 @@
 
     function AddPaymentMethodShare() {
         event.preventDefault();
-        var table = document.querySelector("#paymentMethodGrid");
+        var table = document.querySelector("#paymentMethodGrid tbody");
         table.insertAdjacentHTML("beforeend",
-            "<tbody>"
-            + "<tr id=\"trPaymentMethod\">"
+            "<tr id=\"trPaymentMethod\">"
             + "<td id=\"paymentMethod'" + countPaymentMethod + "'\">"
             + "</td>"
             + "<td>"
@@ -1244,7 +1252,6 @@
             + "<input type=\"hidden\" class=\"form-control\" name=\"ListPaymentMethodShares[" + countPaymentMethod + "].Id\">"
             + "</td>"
             + "</tr>"
-            + "</tbody>"
         );
 
         ComboPaymentMethodList(0, countPaymentMethod);
@@ -1260,7 +1267,7 @@
         event.preventDefault();
         var table = document.querySelector("#countryShippingMultiplierGrid tbody");
         table.insertAdjacentHTML("beforeend",
-            "<tr class=\"dataSatir\">"
+            "<tr id=\"trCountryShippingMultiplier\">"
             + "<td id=\"country'" + countCountryShippingMultiplier + "'\">"
             + "</td>"
             + "<td id=\"shippingMethod'" + countCountryShippingMultiplier + "'\">"
@@ -1379,7 +1386,7 @@
 
                 if (used !== 1) {
                     table.insertAdjacentHTML("beforeend",
-                        "<tr class=\"trModelSeasonRowNumbers\">"
+                        "<tr id=\"trModelSeasonRowNumbers\" class=\"trModelSeasonRowNumbers\">"
                         + "<td>"
                         + "<div class=\"input-group\">"
                         + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
@@ -1468,7 +1475,7 @@
 
             if (used !== 1) {
                 table.insertAdjacentHTML("beforeend",
-                    "<tr class=\"trModelSeasonRowNumbers\">"
+                     "<tr id=\"trModelSeasonRowNumbers\" class=\"trModelSeasonRowNumbers\">"
                     + "<td>"
                     + "<div class=\"input-group\">"
                     + "<div class=\"checkbox-custom checkbox-inline checkbox-success\" style=\"padding-top:5px\">"
@@ -1584,10 +1591,15 @@
 
 
         $("#tableSeasonPlanning tbody").each(function () {
-            var row = $(this);
 
+            //var rows = document.getElementsByTagName("table")[1].rows;
+            //var aa=rows[1].attributes[1].value;
+            //console.log(rows);
+            var row = $(this);
+            
             var data = {};
 
+            data.id = row.find("#trProductGroup")[0].attributes[1].value;
             data.productGroupId = row.find("#trProductGroup").find("td").find("select").eq(0).val();
             data.planUnitQuantity = row.find("#trProductGroup").find("td").find("input").eq(0).val();
             data.planTotalQuantity = row.find("#trProductGroup").find("td").find("input").eq(1).val();
@@ -1616,7 +1628,7 @@
             dataListSeasonPlanning.push(data);
         });
 
-        $("#seasonCurrencyGrid tbody").each(function () {
+        $("#seasonCurrencyGrid tbody tr").each(function () {
             var row = $(this);
 
             var data = {};
@@ -1625,55 +1637,62 @@
             } else {
                 data.isDefault = false;
             }
-            data.currencyType = row.find("#trSeasonCurrency").find("td").find("input").eq(1).val();
-            data.exchangeRate = row.find("#trSeasonCurrency").find("td").find("input").eq(2).val();
-            data.seasonCurrencyId = row.find("#trSeasonCurrency").find("td").find("input").eq(3).val();
-
-
-
+            data.currencyType = row.find("td").find("input").eq(1).val();
+            data.exchangeRate = row.find("td").find("input").eq(2).val();
+            data.id = row.find("td").find("input").eq(3).val();
+            if (data.id > 0) {
+                data.id = row.find("td").find("input").eq(3).val();
+            } else {
+                data.id = 0;
+            }     
 
             dataListSeasonCurrency.push(data);
         });
 
-        $("#paymentMethodGrid tbody").each(function () {
+        $("#paymentMethodGrid tbody tr").each(function () {
             var row = $(this);
 
             var data = {};
 
-            data.paymentMethodId = row.find("#trPaymentMethod").find("td").find("select").eq(0).val();
-            data.centerShare = row.find("#trPaymentMethod").find("td").find("input").eq(0).val();
-            data.seasonCurrencyId = row.find("#trPaymentMethod").find("td").find("select").eq(1).val();
-            data.exchangeRate = row.find("#trPaymentMethod").find("td").find("input").eq(1).val();
-            data.centerShareTl = row.find("#trPaymentMethod").find("td").find("input").eq(2).val();
-            data.centerShareEuro = row.find("#trPaymentMethod").find("td").find("input").eq(3).val();
-            data.accessoryCenterShareEuro = row.find("#trPaymentMethod").find("td").find("input").eq(4).val();
-            data.paymentMethodShareId = row.find("#trPaymentMethod").find("td").find("input").eq(5).val();
-
+            data.paymentMethodId = row.find("td").find("select").eq(0).val();
+            data.centerShare = row.find("td").find("input").eq(0).val();
+            data.seasonCurrencyId = row.find("td").find("select").eq(1).val();
+            data.exchangeRate = row.find("td").find("input").eq(1).val();
+            data.centerShareTl = row.find("td").find("input").eq(2).val();
+            data.centerShareEuro = row.find("td").find("input").eq(3).val();
+            data.accessoryCenterShareEuro = row.find("td").find("input").eq(4).val();
+            data.id = row.find("td").find("input").eq(5).val();
+            if (data.id > 0) {
+                data.id = row.find("td").find("input").eq(5).val();
+            } else {
+                data.id = 0;
+            }     
+                      
             dataListPaymentMethodShare.push(data);
         });
 
-        $("#countryShippingMultiplierGrid tbody").each(function () {
+        $("#countryShippingMultiplierGrid tbody tr").each(function () {
             var row = $(this);
 
             var data = {};
 
-            data.countryId = row.find("#dataSatir").find("td").find("select").eq(0).val();
-            data.shippingMethodId = row.find("#dataSatir").find("td").find("select").eq(1).val();
-            data.multiplier = row.find("#dataSatir").find("td").find("input").eq(0).val();
-            data.testPrice = row.find("#dataSatir").find("td").find("input").eq(1).val();
-            data.seasonCurrencyId = row.find("#dataSatir").find("td").find("select").eq(2).val();
-            data.exchangeRate = row.find("#dataSatir").find("td").find("input").eq(2).val();
-            data.testPriceTl = row.find("#dataSatir").find("td").find("input").eq(3).val();
-            data.testPercentage = row.find("#dataSatir").find("td").find("input").eq(4).val();
-            data.cargoPercentage = row.find("#dataSatir").find("td").find("input").eq(5).val();
-            data.insurancePercentage = row.find("#dataSatir").find("td").find("input").eq(6).val();
-            data.freightPercentage = row.find("#dataSatir").find("td").find("input").eq(7).val();
-            data.countryShippingMultiplierId = row.find("#dataSatir").find("td").find("input").eq(8).val();
+            data.countryId = row.find("td").find("select").eq(0).val();
+            data.shippingMethodId = row.find("td").find("select").eq(1).val();
+            data.multiplier = row.find("td").find("input").eq(0).val();
+            data.testPrice = row.find("td").find("input").eq(1).val();
+            data.seasonCurrencyId = row.find("td").find("select").eq(2).val();
+            data.exchangeRate = row.find("td").find("input").eq(2).val();
+            data.testPriceTl = row.find("td").find("input").eq(3).val();
+            data.testPercentage = row.find("td").find("input").eq(4).val();
+            data.cargoPercentage = row.find("td").find("input").eq(5).val();
+            data.insurancePercentage = row.find("td").find("input").eq(6).val();
+            data.freightPercentage = row.find("td").find("input").eq(7).val();
+            data.id = row.find("td").find("input").eq(8).val();
 
             dataListCountryShippingMultiplier.push(data);
         });
 
-        $("#modelSeasonRowNumbersGrid tbody").each(function () {
+        $("#modelSeasonRowNumbersGrid tbody tr").each(function () {
             var row = $(this);
 
             var data = {};
@@ -1683,9 +1702,9 @@
             } else {
                 data.isActive = false;
             }
-            data.productGroupId = row.find("#trModelSeasonRowNumbers").find("td").find("select").eq(0).val();
-            data.rowNumber = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(0).val();
-            data.modelSeasonRowNumberId = row.find("#trModelSeasonRowNumbers").find("td").find("input").eq(1).val();
+            data.productGroupId = row.find("td").find("select").eq(0).val();
+            data.rowNumber = row.find("td").find("input").eq(1).val();
+            data.id = row.find("td").find("input").eq(2).val();
 
             dataListModelSeasonRowNumber.push(data);
         });

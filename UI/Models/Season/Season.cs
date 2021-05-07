@@ -52,20 +52,13 @@ namespace UI.Models.Season
 
         #region PaymentMethodShare
 
-        public SubEntity<SeasonPaymentMethodShareDto> PaymentMethodShares { get; set; }
+        public List<SeasonPaymentMethodShareDto> PaymentMethodShares { get; set; }
 
         public string SubPaymentMethodShareString
         {
             get { return JsonConvert.SerializeObject(PaymentMethodShares); }
-            set
-            {
-                if (value != "[]")
-                {
-                    PaymentMethodShares = JsonConvert.DeserializeObject<SubEntity<SeasonPaymentMethodShareDto>>(value);
-                }
-
-
-            }
+            set { PaymentMethodShares = JsonConvert.DeserializeObject<List<SeasonPaymentMethodShareDto>>(value); }
+          
         }
 
         public List<SeasonPaymentMethodShareDto> ListPaymentMethodShares { get; set; }
@@ -90,19 +83,12 @@ namespace UI.Models.Season
 
         #region CountryShippingMultiplier
 
-        public SubEntity<SeasonCountryShippingMultiplierDto> CountryShippingMultipliers { get; set; }
+        public List<SeasonCountryShippingMultiplierDto> CountryShippingMultipliers { get; set; }
 
         public string SubCountryShippingMultiplierString
         {
             get { return JsonConvert.SerializeObject(CountryShippingMultipliers); }
-            set
-            {
-                if (value != "[{}]")
-                {
-                    CountryShippingMultipliers = JsonConvert.DeserializeObject<SubEntity<SeasonCountryShippingMultiplierDto>>(value);
-                }
-
-            }
+            set { CountryShippingMultipliers = JsonConvert.DeserializeObject<List<SeasonCountryShippingMultiplierDto>>(value); }
         }
 
         public List<SeasonCountryShippingMultiplierDto> ListCountryShippingMultipliers { get; set; }
@@ -137,14 +123,14 @@ namespace UI.Models.Season
             SeasonCurrencies = new List<SeasonCurrency>();
             ListSeasonCurrencies = new List<SeasonCurrency>();
 
-            PaymentMethodShares = new SubEntity<SeasonPaymentMethodShareDto>();
+            PaymentMethodShares = new List<SeasonPaymentMethodShareDto>();
             ListPaymentMethodShares = new List<SeasonPaymentMethodShareDto>();
             ListPaymentMethodShare = new List<PaymentMethodShare>();
 
             ModelSeasonRowNumbers = new List<ModelSeasonRowNumber>();
             ListModelSeasonRowNumbers = new List<ModelSeasonRowNumber>();
 
-            CountryShippingMultipliers = new SubEntity<SeasonCountryShippingMultiplierDto>();
+            CountryShippingMultipliers = new List<SeasonCountryShippingMultiplierDto>();
             ListCountryShippingMultipliers = new List<SeasonCountryShippingMultiplierDto>();
             ListCountryShippingMultiplier = new List<CountryShippingMultiplier>();
         }
@@ -164,6 +150,7 @@ namespace UI.Models.Season
             ListCountryShippingMultipliers = new List<SeasonCountryShippingMultiplierDto>();
 
             EntityId = season.Id;
+            CustomerId = Helpers.SessionHelper.GetStaff(request).CustomerId;
             IsActive = season.IsActive;
             Code = season.Code;
             Description = season.Description;
@@ -199,27 +186,30 @@ namespace UI.Models.Season
             var paymentMethodShareList = _paymentMethodShareService.GetAllBySeasonId(EntityId);
             if (paymentMethodShareList.Data.Count > 0)
             {
-                SeasonPaymentMethodShareDto paymentMethodShareDto = new SeasonPaymentMethodShareDto();
+                
                 foreach (var paymentMethodShare in paymentMethodShareList.Data)
                 {
+                    SeasonPaymentMethodShareDto paymentMethodShareDto = new SeasonPaymentMethodShareDto();
+                    
                     paymentMethodShareDto.CustomerId = CustomerId;
                     paymentMethodShareDto.SeasonId = EntityId;
-                    paymentMethodShareDto.PaymentMethodId = paymentMethodShare.Id;
+                    paymentMethodShareDto.PaymentMethodId = paymentMethodShare.PaymentMethodId;
                     paymentMethodShareDto.CenterShare = paymentMethodShare.CenterShare;
                     paymentMethodShareDto.CenterShareEuro = paymentMethodShare.CenterShareEuro;
                     paymentMethodShareDto.AccessoryCenterShareEuro = paymentMethodShare.AccessoryCenterShareEuro;
                     paymentMethodShareDto.SeasonCurrencyId = paymentMethodShare.SeasonCurrencyId;
 
                     var seasonCurrency = _seasonCurrencyService.GetById(paymentMethodShare.SeasonCurrencyId);
-                    if (seasonCurrency != null)
+                    if (seasonCurrency.Result != false)
                     {
                         paymentMethodShareDto.SeasonCurrency = seasonCurrency.Data.CurrencyType;
                         paymentMethodShareDto.ExchangeRates = seasonCurrency.Data.ExchangeRate;
                         paymentMethodShareDto.CenterShareTl = (paymentMethodShareDto.CenterShare * seasonCurrency.Data.ExchangeRate);
                     }
+                    ListPaymentMethodShares.Add(paymentMethodShareDto);
                 }
 
-                ListPaymentMethodShares.Add(paymentMethodShareDto);
+                
             }
 
 
@@ -241,10 +231,11 @@ namespace UI.Models.Season
             if (countryShippingMultiplierList.Data.Count > 0)
             {
 
-                SeasonCountryShippingMultiplierDto countryShippingMultiplierDto =
-                    new SeasonCountryShippingMultiplierDto();
+                
                 foreach (var countryShippingMultiplier in countryShippingMultiplierList.Data)
                 {
+                    SeasonCountryShippingMultiplierDto countryShippingMultiplierDto =
+                    new SeasonCountryShippingMultiplierDto();
                     countryShippingMultiplierDto.CustomerId = CustomerId;
                     countryShippingMultiplierDto.SeasonId = EntityId;
                     countryShippingMultiplierDto.SeasonCurrencyId = countryShippingMultiplier.SeasonCurrencyId;
@@ -264,9 +255,9 @@ namespace UI.Models.Season
                         countryShippingMultiplierDto.ExchangeRates = seasonCurrency.Data.ExchangeRate;
                         countryShippingMultiplierDto.TestPriceTl = (countryShippingMultiplier.TestPrice * seasonCurrency.Data.ExchangeRate);
                     }
-
+                    ListCountryShippingMultipliers.Add(countryShippingMultiplierDto);
                 }
-                ListCountryShippingMultipliers.Add(countryShippingMultiplierDto);
+                
             }
             #endregion
 
@@ -275,7 +266,7 @@ namespace UI.Models.Season
         public Entities.Concrete.Season GetBusinessModel()
         {
             Entities.Concrete.Season season = new Entities.Concrete.Season();
-
+            
             season.Id = EntityId;
             season.CustomerId = CustomerId;
             season.IsActive = IsActive;
@@ -381,10 +372,10 @@ namespace UI.Models.Season
 
             #region PaymentMethodShare
 
-            if (PaymentMethodShares.data.Count > 0)
+            if (PaymentMethodShares.Count > 0)
             {
                 ListPaymentMethodShare = new List<PaymentMethodShare>();
-                foreach (var item in PaymentMethodShares.data)
+                foreach (var item in PaymentMethodShares)
                 {
                     Entities.Concrete.PaymentMethodShare paymentMethodShare = new PaymentMethodShare();
                     if (item.Id > 0)
@@ -407,10 +398,10 @@ namespace UI.Models.Season
 
             #region CountryShippingMultiplier
 
-            if (CountryShippingMultipliers.data.Count>0)
+            if (CountryShippingMultipliers.Count>0)
             {
                 ListCountryShippingMultiplier = new List<CountryShippingMultiplier>();
-                foreach (var item in CountryShippingMultipliers.data)
+                foreach (var item in CountryShippingMultipliers)
                 {
                     Entities.Concrete.CountryShippingMultiplier countryShippingMultiplier = new CountryShippingMultiplier();
                     if (item.Id > 0)

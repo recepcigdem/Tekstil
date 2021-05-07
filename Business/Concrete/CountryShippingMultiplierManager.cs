@@ -118,6 +118,7 @@ namespace Business.Concrete
 
             foreach (var countryShippingMultiplier in countryShippingMultipliers)
             {
+                countryShippingMultiplier.CustomerId = customerId;
                 if (countryShippingMultiplier.Id > 0)
                 {
                     Update(countryShippingMultiplier);
