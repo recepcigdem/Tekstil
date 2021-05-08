@@ -106,7 +106,7 @@ namespace Business.Concrete
             var dbPaymentMethodShares = GetAll(customerId).Data;
             foreach (var dbPaymentMethodShare in dbPaymentMethodShares)
             {
-                var control = dbPaymentMethodShares.Any(x => x.Id == dbPaymentMethodShare.Id);
+                var control = paymentMethodShares.Any(x => x.Id == dbPaymentMethodShare.Id);
                 if (control != true)
                 {
                     Delete(dbPaymentMethodShare);

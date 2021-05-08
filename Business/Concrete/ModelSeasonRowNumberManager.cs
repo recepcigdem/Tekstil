@@ -81,7 +81,7 @@ namespace Business.Concrete
             var dbModelSeasonRowNumbers = GetAll(customerId).Data;
             foreach (var dbModelSeasonRowNumber in dbModelSeasonRowNumbers)
             {
-                var control = dbModelSeasonRowNumbers.Any(x => x.Id == dbModelSeasonRowNumber.Id);
+                var control = modelSeasonRowNumbers.Any(x => x.Id == dbModelSeasonRowNumber.Id);
                 if (control != true)
                 {
                     Delete(dbModelSeasonRowNumber);

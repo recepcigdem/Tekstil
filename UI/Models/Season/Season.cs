@@ -190,7 +190,8 @@ namespace UI.Models.Season
                 foreach (var paymentMethodShare in paymentMethodShareList.Data)
                 {
                     SeasonPaymentMethodShareDto paymentMethodShareDto = new SeasonPaymentMethodShareDto();
-                    
+
+                    paymentMethodShareDto.Id = paymentMethodShare.Id;
                     paymentMethodShareDto.CustomerId = CustomerId;
                     paymentMethodShareDto.SeasonId = EntityId;
                     paymentMethodShareDto.PaymentMethodId = paymentMethodShare.PaymentMethodId;
@@ -236,6 +237,7 @@ namespace UI.Models.Season
                 {
                     SeasonCountryShippingMultiplierDto countryShippingMultiplierDto =
                     new SeasonCountryShippingMultiplierDto();
+                    countryShippingMultiplierDto.Id = countryShippingMultiplier.Id;
                     countryShippingMultiplierDto.CustomerId = CustomerId;
                     countryShippingMultiplierDto.SeasonId = EntityId;
                     countryShippingMultiplierDto.SeasonCurrencyId = countryShippingMultiplier.SeasonCurrencyId;

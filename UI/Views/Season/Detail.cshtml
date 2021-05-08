@@ -331,7 +331,7 @@
                                                                                                         <input type="text" class="form-control numericField" name="accessoryCenterShareEuro" id="accessoryCenterShareEuro" value="@Model.ListPaymentMethodShares[i].AccessoryCenterShareEuro" />
                                                                                                     </div>
                                                                                                 </td>
-                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deletePaymentMethodShare(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListPaymentMethodShares[i].Id)</td>
+                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deletePaymentMethodShare(this)">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListPaymentMethodShares[i].Id)</td>
                                                                                             </tr>
 
                                                                                         }
@@ -443,7 +443,6 @@
                                                                             <select id="modelProductGroupId" class="form-control">
                                                                                 <option></option>
                                                                             </select>
-                                                                            @*@Html.HiddenFor(x => x.ModelSeasonRowNumberProductGroupId, new {@class = "form-control", @id = "modelProductGroupId"})*@
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-3">
@@ -487,8 +486,8 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
-                                                                            <td id="modelRowProductGroup'@i'">@Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].ProductGroupId, new { @class = "form-control", disabled = "disabled" })</td>
-                                                                            <td id="modelRowNumber'@i'">@Html.TextBoxFor(x => x.ListModelSeasonRowNumbers[i].RowNumber, new { @class = "form-control", disabled = "disabled", type = "number" })</td>
+                                                                            <td id="modelRowProductGroup'@i'">@Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].ProductGroupId, new { @class = "form-control" })</td>
+                                                                            <td id="modelRowNumber'@i'">@Html.TextBoxFor(x => x.ListModelSeasonRowNumbers[i].RowNumber, new { @class = "form-control numericField", disabled = "disabled"})</td>
                                                                             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteModelSeasonRowNumbers(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListModelSeasonRowNumbers[i].Id)</td>
                                                                         </tr>
 
@@ -532,6 +531,7 @@
     var countPaymentMethod = 0;
     var countCountryShippingMultiplier = 0;
     var countSeasonCurrency = 0;
+    var trModelSeasonRowNumbers = 0;
 
     $(document).ready(function() {
 
@@ -557,13 +557,13 @@
 
         $("#paymentMethodGrid tbody tr").each(function() {
             var row = $(this);
-           
+
             var data = {};
 
             data.paymentMethodId = row.find("td").find("input").eq(0).val();
-            console.log(data.paymentMethodId);
+
             data.seasonCurrencyId = row.find("td").find("input").eq(2).val();
-           
+
             if (data.paymentMethodId > 0) {
                 ComboPaymentMethodList(data.paymentMethodId, countPaymentMethod);
             }
@@ -571,8 +571,8 @@
             if (data.seasonCurrencyId > 0) {
                 ComboPaymentMethodSeasonCurrencyList(data.seasonCurrencyId, countPaymentMethod);
             }
-            
-          
+
+
             countPaymentMethod++;
         });
 
@@ -582,7 +582,7 @@
             var data = {};
             data.countryId = row.find("td").find("input").eq(0).val();
             data.shippingMethodId = row.find("td").find("input").eq(1).val();
-            data.seasonCurrencyId = row.find("td").find("input").eq(2).val();
+            data.seasonCurrencyId = row.find("td").find("input").eq(4).val();
 
             if (data.countryId>0) {
                 ComboCountryList(data.countryId, countCountryShippingMultiplier);
@@ -597,8 +597,20 @@
             countCountryShippingMultiplier++;
         });
 
-
         ComboModelProductGroupList();
+
+        $("#modelSeasonRowNumbersGrid tbody tr").each(function () {
+            var row = $(this);
+
+            var data = {};
+            data.productGroupId = row.find("td").find("input").eq(1).val();
+            if (data.productGroupId > 0) {
+                ComboModelRowProductGroupList(data.productGroupId, trModelSeasonRowNumbers);
+            }
+
+            trModelSeasonRowNumbers++;
+        });
+        
     });
 
 
@@ -609,7 +621,7 @@
         var selectitem = document.getElementById("comboProductGroup" + count);
 
         var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
-
+        var index = 0;
         $.ajax({
             url: comboProductGroupUrl,
             type: 'POST',
@@ -624,15 +636,14 @@
                     option.textContent = element.text;
                     option.value = element.id;
                     selectitem.appendChild(option);
+
+                    if (option.value == productGroupId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
                     });
             }
         });
-
-
-        if (productGroupId > 0) {
-            selectitem.value = productGroupId;
-
-        }
     }
 
     function ComboTopProductGroupList(productGroupId, count) {
@@ -642,7 +653,7 @@
         var selectitem = document.getElementById("comboTopProductGroup" + count);
 
         var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
-
+        var index = 0;
         $.ajax({
             url: comboProductGroupUrl,
             type: 'POST',
@@ -657,13 +668,13 @@
                     option.textContent = element.text;
                     option.value = element.id;
                     selectitem.appendChild(option);
+                    if (option.value == productGroupId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
                     });
             }
         });
-        if (productGroupId > 0) {
-            selectitem.value = productGroupId;
-            }
-
     }
 
     function ComboModelProductGroupList() {
@@ -693,23 +704,52 @@
         });
     }
 
-    function ComboModelRowProductGroupList(productGroupId, count) {
+    function ComboModelRowProductGroupList(productGroupId, trModelSeasonRowNumbers) {
+        
+        document.getElementById("modelRowProductGroup'" + trModelSeasonRowNumbers + "'").innerHTML = "<select id=\"comboModelRowProductGroup" + trModelSeasonRowNumbers + "\" class=\"form-control productGroup comboModelRowProductGroup\" name=\"comboModelRowProductGroup\" disabled=\"disabled\">" + "</select>";
 
-        document.getElementById("modelRowProductGroup'" + count + "'").innerHTML = "<select id=\"comboModelRowProductGroup" + count + "\" class=\"form-control productGroup comboModelRowProductGroup\" name=\"comboModelRowProductGroup\" disabled=\"disabled\">" + "</select>";
-        var selectItem = document.getElementById("comboModelRowProductGroup" + count);
-
-
-        dataListProductGroup.forEach(element => {
-
+        var selectItem = document.getElementById("comboModelRowProductGroup" + trModelSeasonRowNumbers);
+        var index = 0;
+        
+        var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
+        $.ajax({
+            url: comboProductGroupUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.forEach(element => {
                     var option = document.createElement("option");
                     option.textContent = element.text;
                     option.value = element.id;
                     selectItem.appendChild(option);
-                });
 
-        if (productGroupId > 0) {
-            selectItem.value = productGroupId;
-        }
+                    if (option.value == productGroupId) {
+                        selectItem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
+                });
+            }
+        });
+
+
+        ////var index = 0;
+        //dataListProductGroup.forEach(element => {
+
+        //    var option = document.createElement("option");
+        //    option.textContent = element.text;
+        //    option.value = element.id;
+        //    selectItem.appendChild(option);
+
+        //    if (option.value == productGroupId) {
+        //        selectItem.options.selectedIndex = index;
+        //    }
+        //    index = index + 1;
+
+        //});
+
+
     }
 
     function ComboPaymentMethodSeasonCurrencyList(seasonCurrencyId, countSeasonCurrency) {
@@ -718,8 +758,10 @@
         document.getElementById("seasonCurrency'" + countSeasonCurrency + "'").innerHTML = "<select id=\"comboSeasonCurrency" + countSeasonCurrency + "\" class=\"form-control seasonCurrency comboSeasonCurrency\">" + "</select>";
         var selectItem = document.getElementById("comboSeasonCurrency" + countSeasonCurrency);
 
-
         var comboSeasonCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + @Model.EntityId;
+
+        var index = 0;
+
         $.ajax({
             url: comboSeasonCurrencyUrl,
             type: 'POST',
@@ -735,14 +777,13 @@
                     option.value = element.id;
                     selectItem.appendChild(option);
 
+                    if (option.value == seasonCurrencyId) {
+                        selectItem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
                 });
             }
         });
-
-        if (seasonCurrencyId > 0) {
-            selectItem.value = seasonCurrencyId;
-
-        }
     }
 
     function ComboCountryShippingMultiplierCurrencyList(seasonCurrencyId, countSeasonCurrency) {
@@ -752,6 +793,7 @@
         var selectItemCountry = document.getElementById("comboCountrySeasonCurrency" + countSeasonCurrency);
 
         var comboSeasonCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + @Model.EntityId;
+        var index = 0;
         $.ajax({
             url: comboSeasonCurrencyUrl,
             type: 'POST',
@@ -766,13 +808,14 @@
                     option.textContent = element.text;
                     option.value = element.id;
                     selectItemCountry.appendChild(option);
+
+                    if (option.value == seasonCurrencyId) {
+                        selectItemCountry.options.selectedIndex = index;
+                    }
+                    index = index + 1;
                 });
             }
         });
-
-        if (seasonCurrencyId > 0) {
-            selectItemCountry.value = seasonCurrencyId;
-        }
     }
 
     function ComboPaymentMethodList(paymentMethodId, countPaymentMethod)
@@ -783,7 +826,7 @@
         var selectitem = document.getElementById("comboPaymentMethod" + countPaymentMethod);
 
         var comboPaymentMethodUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 36;
-
+        var index = 0;
         $.ajax({
             url: comboPaymentMethodUrl,
             type: 'POST',
@@ -798,24 +841,14 @@
                     option.textContent = element.text;
                     option.value = element.id;
                     selectitem.appendChild(option);
+                    if (option.value == paymentMethodId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
                 });
             }
         });
-        console.log(paymentMethodId);
-        if (paymentMethodId > 0) {
 
-            dataListPaymentMethod.forEach(element => {
-                console.log("element"+ element.id);  
-                if (element.id == paymentMethodId) {
-                    console.log("ok");                   
-                    //selectitem.options[element.options.selectedIndex].setAttribute("selected", "selected");
-                }
-            });
-            //selectitem.selectitem.val = paymentMethodId;
-            //selectitem.options[index.options.selectedIndex].setAttribute("selected", "selected");
-            //console.log(selectitem.options[selectitem.options.selectItem].value);
-            //selectitem.options[selectitem.selectedIndex].value = paymentMethodId;
-        }
     }
 
     function ComboShippingMethodList(shippingMethodId, countCountryShippingMultiplier)
@@ -826,7 +859,7 @@
         var selectitem = document.getElementById("comboShippingMethod" + countCountryShippingMultiplier);
 
         var comboShippingMethodUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 37;
-
+        var index = 0;
         $.ajax({
             url: comboShippingMethodUrl,
             type: 'POST',
@@ -841,13 +874,15 @@
                     option.textContent = element.text;
                     option.value = element.id;
                     selectitem.appendChild(option);
+
+                    if (option.value == shippingMethodId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
                 });
             }
         });
-       
-        if (shippingMethodId > 0) {
-            selectitem.value = shippingMethodId;
-        }
+
     }
 
     function ComboCountryList(countryId, countCountryShippingMultiplier)
@@ -858,7 +893,7 @@
         var selectitem = document.getElementById("comboCountry" + countCountryShippingMultiplier);
 
         var comboCountryUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 35;
-
+        var index = 0;
         $.ajax({
             url: comboCountryUrl,
             type: 'POST',
@@ -873,13 +908,13 @@
                     option.textContent = element.text;
                     option.value = element.id;
                     selectitem.appendChild(option);
+                    if (option.value == countryId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
                 });
             }
         });
-
-        if (countryId > 0) {
-            selectitem.value = countryId;
-        }
     }
 
     function SeasonPlanningTotalCalc(count) {
@@ -1336,7 +1371,7 @@
         var trFirstModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length;
         var maxNumber = document.getElementById("modelRowNumber").value;
         var trModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length;
-
+       
         dataListProductGroup.forEach(element => {
             var productGroupId = element.id;
 
@@ -1345,16 +1380,17 @@
 
             for (var i = 1; i <= maxNumber; i++) {
                 trModelSeasonRowNumbers = trModelSeasonRowNumbers + 1;
-
+               
                 var used = 0;
 
-                $("#modelSeasonRowNumbersGrid tbody").each(function () {
-
-                    var tableModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length + 1;
+                
+                var tableModelSeasonRowNumbers = $('.trModelSeasonRowNumbers').length + 1;
+                
                     for (var j = 1; j < tableModelSeasonRowNumbers; j++) {
                         var rowProductGroup = 0;
                         var rowProductGroupId = 0;
                         var rowNumber = 0;
+
                         if (!document.getElementById("modelRowNumber'" + j + "'") && !document.getElementById("comboModelRowProductGroup" + j)) {
                             j++;
                         } else {
@@ -1362,29 +1398,36 @@
                             rowProductGroupId = rowProductGroup.options[rowProductGroup.selectedIndex].value;
                             rowNumber = document.getElementById("modelRowNumber'" + j + "'").value;
                         }
-
-
+                        console.log(document.getElementById("modelRowNumber'" + j + "'"));
+                        console.log("trModelSeasonRowNumbers : " + trModelSeasonRowNumbers);
+                        console.log("tableModelSeasonRowNumbers : " + tableModelSeasonRowNumbers);
+                        console.log("For Döngüsü iiiiiiiiiii: " + i);
+                        console.log("For Döngüsü jjjjjjjjjjjjjjjjj: " + j);
+                        console.log("rowNumber:" + rowNumber);
+                        console.log("product: " + rowProductGroupId);
                         if (rowProductGroupId == productGroupId && rowNumber == i) {
                             used = 1;
-
+                            console.log("used1:" + used);
                         }
 
                         if (productGroupId == rowProductGroupId && maxNumber < i) {
                             used = 1;
-
+                            console.log("used2:" + used);
                         }
                         if (productGroupId !== rowProductGroupId) {
                             trFirstModelSeasonRowNumbers = 0;
                         }
                         if (productGroupId == rowProductGroupId && i == trFirstModelSeasonRowNumbers) {
                             used = 1;
+                            console.log("used3:" + used);
 
                         }
 
                     }
-                });
+               
 
                 if (used !== 1) {
+                    
                     table.insertAdjacentHTML("beforeend",
                         "<tr id=\"trModelSeasonRowNumbers\" class=\"trModelSeasonRowNumbers\">"
                         + "<td>"
@@ -1394,11 +1437,11 @@
                         + "<label></label>"
                         + "</div>"
                         + "</td>"
-                        + "<td id=\"modelRowProductGroup'" + trModelSeasonRowNumbers + "'\" disabled=\"disabled\">"
+                        + "<td id=\"modelRowProductGroup'" + trModelSeasonRowNumbers + "'\">"
                         + "</td>"
                         + "<td>"
                         + "<div class=\"input-group\">"
-                        + "<input type=\"number\" class=\"form-control numericField\" id=\"modelRowNumber'" + trModelSeasonRowNumbers + "'\" name=\"modelRowNumber\"  value=" + i + " disabled=\"disabled\" />"
+                        + "<input class=\"form-control numericField\" id=\"modelRowNumber'" + trModelSeasonRowNumbers + "'\" name=\"modelRowNumber\" value=" + i + " disabled=\"disabled\"/>"
                         + "</div>"
                         + "</td>"
                         + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteModelSeasonRowNumbers(this)\">@Localizer["Delete"]</button>"
@@ -1414,8 +1457,6 @@
 
         });
         SortModelSeasonRowNumbers();
-
-
     }
 
     function AddModelSeasonRowNumbersByProductGroupId() {
@@ -1434,7 +1475,7 @@
 
         for (var i = 1; i <= maxNumber; i++) {
             trModelSeasonRowNumbers = trModelSeasonRowNumbers + 1;
-
+           
             var used = 0;
 
             $("#modelSeasonRowNumbersGrid tbody").each(function () {
@@ -1445,7 +1486,7 @@
                     var rowProductGroupId=0;
                     var rowNumber=0;
                     if (!document.getElementById("modelRowNumber'" + j + "'") && !document.getElementById("comboModelRowProductGroup" + j)) {
-                        j++;
+                      j++;
                     } else {
                         rowProductGroup = document.getElementById("comboModelRowProductGroup" + j);
                         rowProductGroupId = rowProductGroup.options[rowProductGroup.selectedIndex].value;
@@ -1483,11 +1524,11 @@
                     + "<label></label>"
                     + "</div>"
                     + "</td>"
-                    + "<td id=\"modelRowProductGroup'" + trModelSeasonRowNumbers + "'\" disabled=\"disabled\">"
+                    + "<td id=\"modelRowProductGroup'" + trModelSeasonRowNumbers + "'\">"
                     + "</td>"
                     + "<td>"
                     + "<div class=\"input-group\">"
-                    + "<input type=\"number\" class=\"form-control numericField\" id=\"modelRowNumber'" + trModelSeasonRowNumbers + "'\" name=\"modelRowNumber\"  value=" + i +" disabled=\"disabled\" />"
+                    + "<input class=\"form-control numericField\" id=\"modelRowNumber'" + trModelSeasonRowNumbers + "'\" name=\"modelRowNumber\" value=" + i +" disabled=\"disabled\"/>"
                     + "</div>"
                     + "</td>"
                     + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteModelSeasonRowNumbers(this)\">@Localizer["Delete"]</button>"
@@ -1510,7 +1551,7 @@
 
         var table, rows, switching, switching2, i, iPlus, x, y, j,jPlus, a, b, shouldSwitch, shouldSwitch2;
         table = document.getElementById("modelSeasonRowNumbersGrid");
-
+        console.log(table);
         switching = true;
         switching2 = true;
 
@@ -1519,14 +1560,13 @@
 
             switching2 = false;
             rows = table.rows;
-
+            console.log("rows:" + rows);
             for (j = 1; j < (rows.length - 1); j++) {
                 jPlus = j + 1;
                 shouldSwitch2 = false;
-
-                a = rows[j].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
-                b = rows[jPlus].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value;
-
+                a = rows[j].getElementsByTagName("TD")[2].getElementsByTagName("input")[0].value;
+                b = rows[jPlus].getElementsByTagName("TD")[2].getElementsByTagName("input")[0].value;
+               
                 if (a.toLowerCase() > b.toLowerCase()) {
 
                     shouldSwitch2 = true;
@@ -1546,14 +1586,14 @@
            for (i = 1; i < (rows.length - 1); i++) {
                 iPlus = i + 1;
                 shouldSwitch = false;
-
-                x = rows[i].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
-                x = x.options[x.selectedIndex];
-
-                y = rows[iPlus].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
-                y = y.options[y.selectedIndex];
-
-                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+               
+               x = rows[i].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
+               x = x.options[x.selectedIndex].innerHTML;
+              
+               y = rows[iPlus].getElementsByTagName("TD")[1].getElementsByTagName("select")[0];
+               y = y.options[y.selectedIndex].innerHTML;
+              
+                if (x.toLowerCase() > y.toLowerCase()) {
                     shouldSwitch = true;
                     break;
                 }
@@ -1563,13 +1603,15 @@
                 switching = true;
             }
         }
-
+        
         for (var k = 1; k < (rows.length); k++) {
+            
             rows[k].getElementsByTagName("TD")[0].getElementsByTagName("div")[0].getElementsByTagName("div")[0].getElementsByTagName("input")[0].name = "ListModelSeasonRowNumbers[" + k + "].IsActive";
             rows[k].getElementsByTagName("TD")[1].id = "modelRowProductGroup'" + k + "'";
             rows[k].getElementsByTagName("TD")[1].getElementsByTagName("select")[0].id = "comboModelRowProductGroup" + k;
-            rows[k].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].id = "modelRowNumber'" + k + "'";
-            //rows[k].getElementsByTagName("TD")[2].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value =  k ;
+            
+            rows[k].getElementsByTagName("TD")[2].getElementsByTagName("input")[0].id = "modelRowNumber'" + k + "'";
+            
             rows[k].getElementsByTagName("TD")[3].getElementsByTagName("input")[0].name = "ListModelSeasonRowNumbers[" + k + "].Id";
 
         }
@@ -1592,14 +1634,16 @@
 
         $("#tableSeasonPlanning tbody").each(function () {
 
-            //var rows = document.getElementsByTagName("table")[1].rows;
-            //var aa=rows[1].attributes[1].value;
-            //console.log(rows);
             var row = $(this);
-            
+
             var data = {};
 
             data.id = row.find("#trProductGroup")[0].attributes[1].value;
+            if (data.id > 0) {
+                data.id = row.find("#trProductGroup")[0].attributes[1].value;
+            } else {
+                data.id = 0;
+            }
             data.productGroupId = row.find("#trProductGroup").find("td").find("select").eq(0).val();
             data.planUnitQuantity = row.find("#trProductGroup").find("td").find("input").eq(0).val();
             data.planTotalQuantity = row.find("#trProductGroup").find("td").find("input").eq(1).val();
@@ -1644,7 +1688,7 @@
                 data.id = row.find("td").find("input").eq(3).val();
             } else {
                 data.id = 0;
-            }     
+            }
 
             dataListSeasonCurrency.push(data);
         });
@@ -1662,12 +1706,13 @@
             data.centerShareEuro = row.find("td").find("input").eq(3).val();
             data.accessoryCenterShareEuro = row.find("td").find("input").eq(4).val();
             data.id = row.find("td").find("input").eq(5).val();
+
             if (data.id > 0) {
                 data.id = row.find("td").find("input").eq(5).val();
             } else {
                 data.id = 0;
-            }     
-                      
+            }
+
             dataListPaymentMethodShare.push(data);
         });
 
@@ -1688,7 +1733,11 @@
             data.insurancePercentage = row.find("td").find("input").eq(6).val();
             data.freightPercentage = row.find("td").find("input").eq(7).val();
             data.id = row.find("td").find("input").eq(8).val();
-
+            if (data.id > 0) {
+                data.id = row.find("td").find("input").eq(8).val();
+            } else {
+                data.id = 0;
+            }
             dataListCountryShippingMultiplier.push(data);
         });
 
@@ -1705,7 +1754,11 @@
             data.productGroupId = row.find("td").find("select").eq(0).val();
             data.rowNumber = row.find("td").find("input").eq(1).val();
             data.id = row.find("td").find("input").eq(2).val();
-
+            if (data.id > 0) {
+                data.id = row.find("td").find("input").eq(2).val();
+            } else {
+                data.id = 0;
+            }
             dataListModelSeasonRowNumber.push(data);
         });
 
