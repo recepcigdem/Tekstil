@@ -1,0 +1,431 @@
+﻿
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Hierarchy.Hierarchy
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("Detail", "Hierarchy", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+    @Html.HiddenFor(x => x.BrandId)
+    @Html.HiddenFor(x => x.GenderId)
+    @Html.HiddenFor(x => x.MainProductGroupId)
+    @Html.HiddenFor(x => x.DetailId)
+    @Html.HiddenFor(x => x.ProductGroupId)
+    @Html.HiddenFor(x => x.SubProductGroupId)
+
+    <div class="page-header page-header-bordered">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Home/Index">@Localizer["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Hierarchy/Index">@Localizer["List"]</a></li>
+
+            @if (Model.EntityId == 0)
+            {
+                <li class="breadcrumb-item active">@Localizer["NewHierarchy"]</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active">@Model.Code </li>
+            }
+        </ol>
+    </div>
+    <div class="page-content">
+        <div class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions"></div>
+                <h3 class="panel-title">@Localizer["PageTitle"]</h3>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top:20px;">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
+                                                        @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive" })
+                                                        @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
+                                                        @Html.CheckBoxFor(x => x.IsGarmentAccessory, new { @id = "isGarmentAccessory" })
+                                                        @Html.LabelFor(x => x.IsGarmentAccessory, "")@Localizer["isGarmentAccessory"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["Code"]
+                                                    @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Localizer["TotalDescription"]
+                                                    @Html.TextBoxFor(x => x.TotalDescription, new { @class = "form-control", @disabled="disabled" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["Brand"]
+                                                    <select id="comboBrand" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["Gender"]
+                                                    <select id="comboGender" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["MainProductGroup"]
+                                                    <select id="comboMainProductGroup" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["Detail"]
+                                                    <select id="comboDetail" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["ProductGroup"]
+                                                    <select id="comboProductGroup" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["SubProductGroup"]
+                                                    <select id="comboSubProductGroup" class="form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Localizer["Description1"]
+                                                    @Html.TextBoxFor(x => x.Description1, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Localizer["Description2"]
+                                                    @Html.TextBoxFor(x => x.Description2, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Localizer["Description3"]
+                                                    @Html.TextBoxFor(x => x.Description3, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Localizer["Description4"]
+                                                    @Html.TextBoxFor(x => x.Description4, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-success" id="buttonSave" onclick="Save();">@Localizer["Save"]</button>
+                        </div>
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-danger" onclick="window.location.href='Index'">@Localizer["Cancel"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        Brand();
+
+        Gender();
+
+        MainProductGroup();
+
+        Detail();
+
+        ProductGroup();
+
+        SubProductGroup();
+
+    });
+
+    function Brand() {
+
+        var comboBrandUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 1;
+
+        $.ajax({
+            url: comboBrandUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboBrand").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectBrand"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboBrand').val($('#BrandId').val()).trigger("change");
+            }
+        }, 'json');
+
+        $('#comboBrand').on('select2:select', function (evt) {
+            $('#BrandId').val(this.value);
+        });
+    }
+
+    function Gender() {
+
+        var comboGenderUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 2;
+
+        $.ajax({
+            url: comboGenderUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboGender").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectGender"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboGender').val($('#GenderId').val()).trigger("change");
+            }
+        }, 'json');
+
+        $('#comboGender').on('select2:select', function (evt) {
+            $('#GenderId').val(this.value);
+        });
+    }
+
+    function MainProductGroup() {
+
+        var comboMainProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 4;
+
+        $.ajax({
+            url: comboMainProductGroupUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboMainProductGroup").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectMainProductGroup"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboMainProductGroup').val($('#MainProductGroupId').val()).trigger("change");
+            }
+        }, 'json');
+
+        $('#comboMainProductGroup').on('select2:select', function (evt) {
+            $('#MainProductGroupId').val(this.value);
+        });
+    }
+
+    function Detail() {
+
+        var comboDetailUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 34;
+
+        $.ajax({
+            url: comboDetailUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboDetail").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectDetail"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboDetail').val($('#DetailId').val()).trigger("change");
+            }
+        }, 'json');
+
+        $('#comboDetail').on('select2:select', function (evt) {
+            $('#DetailId').val(this.value);
+        });
+    }
+
+    function ProductGroup() {
+
+        var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
+
+        $.ajax({
+            url: comboProductGroupUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboProductGroup").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectProductGroup"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboProductGroup').val($('#ProductGroupId').val()).trigger("change");
+            }
+        }, 'json');
+
+        $('#comboProductGroup').on('select2:select', function (evt) {
+            $('#ProductGroupId').val(this.value);
+        });
+    }
+
+    function SubProductGroup() {
+
+        var comboSubProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 11;
+
+        $.ajax({
+            url: comboSubProductGroupUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboSubProductGroup").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectSubProductGroup"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboSubProductGroup').val($('#SubProductGroupId').val()).trigger("change");
+            }
+        }, 'json');
+
+        $('#comboSubProductGroup').on('select2:select', function (evt) {
+            $('#SubProductGroupId').val(this.value);
+        });
+    }
+
+    var newID = 0;
+    function Save(){
+            var url = "@Url.Action("Save", "Hierarchy")";
+            $.post(url,
+                $("form").serialize(),
+                function(data) {
+                    if (data.result == false) {
+                        ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
+                    }
+                    if (data.result == true) {
+                        newID = data.obj;
+                        ShowSuccess('@SharedLocaLizer.GetLocalizedHtmlString("SaveMessage")');
+                    }
+                });
+            };
+
+    function ShowError(title, message) {
+                Swal.fire({
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: 'error',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    padding: '4em'
+                });
+            }
+
+    function ShowSuccess(title, message) {
+
+                Swal.fire({
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: 'success',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    padding: '4em'
+                }).then(function() {
+                    window.location.href = "@Url.Action("Index", "Hierarchy")";
+                });
+            }
+
+</script>

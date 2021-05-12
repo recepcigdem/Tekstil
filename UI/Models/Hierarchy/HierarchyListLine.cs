@@ -1,48 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace UI.Models.Hierarchy
 {
-    [Table("Hierarchy", Schema = "definition")]
-    public class Hierarchy : BaseCustomerEntity
+    public class HierarchyListLine
     {
-        [Column("isActive")]
+        public int Id { get; set; }
         public bool IsActive { get; set; }
-        [Column("isUsed")]
         public bool IsUsed { get; set; }
-        [Column("isGarmentAccessory")]
         public bool IsGarmentAccessory { get; set; }
-        [Column("code")]
         public string Code { get; set; }
-        [Column("totalDescription")]
         public string TotalDescription { get; set; }
-        [Column("brandId")]
         public int BrandId { get; set; }
-        [Column("genderId")]
         public int GenderId { get; set; }
-        [Column("mainProductGroupId")]
         public int MainProductGroupId { get; set; }
-        [Column("detailId")]
         public int DetailId { get; set; }
-        [Column("productGroupId")]
         public int ProductGroupId { get; set; }
-        [Column("subProductGroupId")]
         public int SubProductGroupId { get; set; }
-        [Column("description1")]
         public string Description1 { get; set; }
-        [Column("description2")]
         public string Description2 { get; set; }
-        [Column("description3")]
         public string Description3 { get; set; }
-        [Column("description4")]
         public string Description4 { get; set; }
 
-        public Hierarchy()
+        public HierarchyListLine() : base()
         {
+            Id = 0;
             IsActive = true;
             IsUsed = false;
             IsGarmentAccessory = true;
@@ -58,7 +42,26 @@ namespace Entities.Concrete
             Description2 = string.Empty;
             Description3 = string.Empty;
             Description4 = string.Empty;
-            
+
+        }
+
+        public HierarchyListLine(Entities.Concrete.Hierarchy hierarchy)
+        {
+            Id = hierarchy.Id;
+            IsActive = hierarchy.IsActive;
+            IsGarmentAccessory = hierarchy.IsGarmentAccessory;
+            Code = hierarchy.Code;
+            TotalDescription = hierarchy.TotalDescription;
+            BrandId = hierarchy.BrandId;
+            GenderId = hierarchy.GenderId;
+            MainProductGroupId = hierarchy.MainProductGroupId;
+            DetailId = hierarchy.DetailId;
+            ProductGroupId = hierarchy.ProductGroupId;
+            SubProductGroupId = hierarchy.SubProductGroupId;
+            Description1 = hierarchy.Description1;
+            Description2 = hierarchy.Description2;
+            Description3 = hierarchy.Description3;
+            Description4 = hierarchy.Description4;
         }
     }
 }

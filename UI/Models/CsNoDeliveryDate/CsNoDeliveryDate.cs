@@ -19,7 +19,7 @@ namespace UI.Models.CsNoDeliveryDate
 
         private ICsNoDeliveryDateHistoryService _csNoDeliveryDateHistoryService;
 
-        public CsNoDeliveryDate()
+        public CsNoDeliveryDate() : base()
         {
             SeasonId = 0;
             Csno = string.Empty;
@@ -49,7 +49,7 @@ namespace UI.Models.CsNoDeliveryDate
                     ListCsNoDeliveryDateHistories.Add(csNoDeliveryDateHistory);
                 }
             }
-            
+
             #endregion
         }
 

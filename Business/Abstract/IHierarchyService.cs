@@ -10,10 +10,9 @@ namespace Business.Abstract
 {
     public interface IHierarchyService
     {
-        IDataResult<List<Hierarchy>> GetAll();
-        IDataResult<Hierarchy> GetById(int hierarchyId);
-        IResult Add(Hierarchy hierarchy);
-        IResult Update(Hierarchy hierarchy);
-        IResult Delete(Hierarchy hierarchy);
+        IDataServiceResult<List<Hierarchy>> GetAll(int customerId);
+        IDataServiceResult<Hierarchy> GetById(int hierarchyId);
+        IDataServiceResult<Hierarchy> Save(Hierarchy hierarchy);
+        IServiceResult Delete(Hierarchy hierarchy);
     }
 }

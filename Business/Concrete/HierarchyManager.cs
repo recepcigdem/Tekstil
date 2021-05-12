@@ -15,70 +15,143 @@ namespace Business.Concrete
     public class HierarchyManager : IHierarchyService
     {
         private IHierarchyDal _hierarchyDal;
+        private IDefinitionService _definitionService;
 
-        public HierarchyManager(IHierarchyDal hierarchyDal)
+        public HierarchyManager(IHierarchyDal hierarchyDal, IDefinitionService definitionService)
         {
             _hierarchyDal = hierarchyDal;
+            _definitionService = definitionService;
         }
 
-        public IDataResult<List<Hierarchy>> GetAll()
+        public IDataServiceResult<List<Hierarchy>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<Hierarchy>>(true, "Listed", _hierarchyDal.GetAll());
+            var dbResult = _hierarchyDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Hierarchy> GetById(int hierarchyId)
+
+        public IDataServiceResult<Hierarchy> GetById(int hierarchyId)
         {
-            return new SuccessDataResult<Hierarchy>(true, "Listed", _hierarchyDal.Get(p => p.Id == hierarchyId));
+            var dbResult = _hierarchyDal.Get(p => p.Id == hierarchyId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Hierarchy>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Hierarchy>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,definition.add")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(HierarchyValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Hierarchy hierarchy)
+        public IServiceResult Add(Hierarchy hierarchy)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(hierarchy));
+            ServiceResult result = BusinessRules.Run(CheckIfHierarchyExists(hierarchy));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _hierarchyDal.Add(hierarchy);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _hierarchyDal.Add(hierarchy);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
 
-        [SecuredOperation("admin,definition.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(HierarchyValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Hierarchy hierarchy)
+        public IServiceResult Update(Hierarchy hierarchy)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(hierarchy));
+            ServiceResult result = BusinessRules.Run(CheckIfHierarchyExists(hierarchy));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _hierarchyDal.Update(hierarchy);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _hierarchyDal.Add(hierarchy);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,definition.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [TransactionScopeAspect]
-        public IResult Delete(Hierarchy hierarchy)
+        public IServiceResult Delete(Hierarchy hierarchy)
         {
-            _hierarchyDal.Delete(hierarchy);
+            ServiceResult result = BusinessRules.Run(CheckIfHierarchyIsUsed(hierarchy));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            return new SuccessResult("Deleted");
+            var deleteResult = _hierarchyDal.Delete(hierarchy);
+            if (deleteResult == false)
+                return new ErrorServiceResult(false, "SystemError");
+
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfCodeExists(Hierarchy hierarchy)
+        public IDataServiceResult<Hierarchy> Save(Hierarchy hierarchy)
         {
-            var result = _hierarchyDal.GetAll(x => x.Code == hierarchy.Code).Any();
 
-            if (result)
-                new ErrorResult("CodeAlreadyExists");
+            var brand = _definitionService.GetById(hierarchy.BrandId);
+            var gender = _definitionService.GetById(hierarchy.GenderId);
+            var mainProductGroupId = _definitionService.GetById(hierarchy.MainProductGroupId);
+            var detail = _definitionService.GetById(hierarchy.DetailId);
+            var productGroupId = _definitionService.GetById(hierarchy.ProductGroupId);
+            var subProductGroupId = _definitionService.GetById(hierarchy.SubProductGroupId);
 
-            return new SuccessResult();
+            if (subProductGroupId.Result)
+                hierarchy.TotalDescription = hierarchy.TotalDescription + subProductGroupId.Data.DescriptionTr + "-";
+            if (productGroupId.Result)
+                hierarchy.TotalDescription = hierarchy.TotalDescription + productGroupId.Data.DescriptionTr + "-";
+            if (detail.Result)
+                hierarchy.TotalDescription = hierarchy.TotalDescription + detail.Data.DescriptionTr + "-";
+            if (mainProductGroupId.Result)
+                hierarchy.TotalDescription = hierarchy.TotalDescription + mainProductGroupId.Data.DescriptionTr + "-";
+            if (gender.Result)
+                hierarchy.TotalDescription = hierarchy.TotalDescription + gender.Data.DescriptionTr + "-";
+            if (brand.Result)
+                hierarchy.TotalDescription = hierarchy.TotalDescription + brand.Data.DescriptionTr + "-";
+            if (!string.IsNullOrEmpty(hierarchy.Description1))
+                hierarchy.TotalDescription = hierarchy.TotalDescription + hierarchy.Description1 + "-";
+            if (!string.IsNullOrEmpty(hierarchy.Description2))
+                hierarchy.TotalDescription = hierarchy.TotalDescription + hierarchy.Description2 + "-";
+            if (!string.IsNullOrEmpty(hierarchy.Description3))
+                hierarchy.TotalDescription = hierarchy.TotalDescription + hierarchy.Description3 + "-";
+            if (!string.IsNullOrEmpty(hierarchy.Description4))
+                hierarchy.TotalDescription = hierarchy.TotalDescription + hierarchy.Description4 + "-";
+
+            hierarchy.TotalDescription = hierarchy.TotalDescription.Substring(0, hierarchy.TotalDescription.Length - 1);
+
+            if (hierarchy.Id > 0)
+            {
+                Update(hierarchy);
+            }
+            else
+            {
+                Add(hierarchy);
+            }
+
+            return new SuccessDataServiceResult<Hierarchy>(true, "Saved");
         }
+
+        private ServiceResult CheckIfHierarchyExists(Hierarchy hierarchy)
+        {
+            var result = _hierarchyDal.GetAll(x => x.CustomerId == hierarchy.CustomerId && x.Code == hierarchy.Code);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "HierarchyAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfHierarchyIsUsed(Hierarchy hierarchy)
+        {
+            var result = GetById(hierarchy.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "HierarchyIsUsed");
+
+            return new ServiceResult(true, "");
+        }
+
+
     }
 }
