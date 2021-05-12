@@ -18,6 +18,8 @@ namespace Entities.Concrete
         public int RowNumber { get; set; }
         [Column("isActive")]
         public bool IsActive { get; set; }
+        [Column("isUsed")]
+        public bool IsUsed { get; set; }
 
         public ModelSeasonRowNumber()
         {
@@ -25,6 +27,7 @@ namespace Entities.Concrete
             ProductGroupId = 0;
             RowNumber = 0;
             IsActive = false;
+            IsUsed = false;
         }
     }
 }

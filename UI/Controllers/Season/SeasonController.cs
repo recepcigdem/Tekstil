@@ -147,12 +147,27 @@ namespace UI.Controllers.Season
                 List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
                 foreach (SeasonCurrency entity in seasonCurrencyList.Data)
                 {
-                    Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.CurrencyType,entity.ExchangeRate);
+                    Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.CurrencyType, entity.ExchangeRate);
                     data.Add(model);
                 }
                 return Json(data);
             }
             return null;
+        }
+
+        public JsonResult ActiveControl(int modelSeasonRowNumberId)
+        {
+            var result = false;
+            var modelSeasonRowNumber = _modelSeasonRowNumberService.GetById(modelSeasonRowNumberId);
+            if (modelSeasonRowNumber.Result == true)
+            {
+                if (modelSeasonRowNumber.Data.IsUsed)
+                {
+                    result = true;
+
+                }
+            }
+            return Json(result);
         }
     }
 }

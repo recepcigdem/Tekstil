@@ -44,7 +44,16 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<ModelSeasonRowNumber>(dbResult, true, "Listed");
         }
-        
+
+        public IDataServiceResult<ModelSeasonRowNumber> GetByProductGroupIdAndRowNumber(int productGroupId, int rowNumber)
+        {
+            var dbResult = _modelSeasonRowNumberDal.Get(p => p.ProductGroupId == productGroupId && p.RowNumber == rowNumber);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
+
+            return new SuccessDataServiceResult<ModelSeasonRowNumber>(dbResult, true, "Listed");
+        }
+
         //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
         public IServiceResult Delete(ModelSeasonRowNumber modelSeasonRowNumbers)
@@ -55,7 +64,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Delated");
         }
-        
+
         //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
         public IServiceResult DeleteBySeason(Season season)
@@ -73,19 +82,41 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Delated");
         }
-       
+
         //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
         public IDataServiceResult<ModelSeasonRowNumber> Save(int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers)
         {
+            foreach (var modelSeasonRowNumber in modelSeasonRowNumbers)
+            {
+                if (modelSeasonRowNumber.Id < 1)
+                {
+                    var idControl = GetByProductGroupIdAndRowNumber(modelSeasonRowNumber.ProductGroupId, modelSeasonRowNumber.RowNumber);
+                    if (idControl.Result)
+                    {
+                        modelSeasonRowNumber.Id = idControl.Data.Id;
+                    }
+
+                    var usedControl = GetById(modelSeasonRowNumber.Id);
+                    if (usedControl.Result)
+                    {
+                        if (usedControl.Data.IsUsed)
+                        {
+                            return new DataServiceResult<ModelSeasonRowNumber>(false, "ProductGroupRowNumberUsed");
+                        }
+                    }
+                }
+            }
+
             var dbModelSeasonRowNumbers = GetAll(customerId).Data;
             foreach (var dbModelSeasonRowNumber in dbModelSeasonRowNumbers)
             {
-                var control = modelSeasonRowNumbers.Any(x => x.Id == dbModelSeasonRowNumber.Id);
-                if (control != true)
+                var idControl = modelSeasonRowNumbers.Any(x => x.Id == dbModelSeasonRowNumber.Id);
+                if (idControl != true)
                 {
                     Delete(dbModelSeasonRowNumber);
                 }
+                
             }
 
             foreach (var modelSeasonRowNumber in modelSeasonRowNumbers)
@@ -106,5 +137,7 @@ namespace Business.Concrete
             }
             return new SuccessDataServiceResult<ModelSeasonRowNumber>(true, "Saved");
         }
+
+
     }
 }
