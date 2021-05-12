@@ -10,10 +10,9 @@ namespace Business.Abstract
 {
     public interface IChannelService
     {
-        IDataResult<List<Channel>> GetAll();
-        IDataResult<Channel> GetById(int channelId);
-        IResult Add(Channel channel);
-        IResult Update(Channel channel);
-        IResult Delete(Channel channel);
+        IDataServiceResult<List<Channel>> GetAll(int customerId);
+        IDataServiceResult<Channel> GetById(int channelId);
+        IServiceResult Delete(Channel channel);
+        IDataServiceResult<Channel> Save(Channel channel);
     }
 }

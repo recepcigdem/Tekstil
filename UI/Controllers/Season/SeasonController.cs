@@ -139,6 +139,24 @@ namespace UI.Controllers.Season
             return null;
         }
 
+        public JsonResult ComboListSeason()
+        {
+            var customerId = SessionHelper.GetStaff(Request).CustomerId;
+
+            var seasonList = _seasonService.GetAll(customerId);
+            if (seasonList.Result)
+            {
+                List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
+                foreach (Entities.Concrete.Season entity in seasonList.Data)
+                {
+                    Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.Code);
+                    data.Add(model);
+                }
+                return Json(data);
+            }
+            return null;
+        }
+
         public JsonResult ComboListSeasonCurrency(int seasonId)
         {
             var seasonCurrencyList = _seasonCurrencyService.GetAllBySeasonId(seasonId);

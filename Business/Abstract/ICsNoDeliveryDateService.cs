@@ -10,10 +10,9 @@ namespace Business.Abstract
 {
     public interface ICsNoDeliveryDateService
     {
-        IDataResult<List<CsNoDeliveryDate>> GetAll();
-        IDataResult<CsNoDeliveryDate> GetById(int csNoDeliveryDateId);
-        IResult Add(CsNoDeliveryDate csNoDeliveryDate);
-        IResult Update(CsNoDeliveryDate csNoDeliveryDate);
-        IResult Delete(CsNoDeliveryDate csNoDeliveryDate);
+        IDataServiceResult<List<CsNoDeliveryDate>> GetAll(int customerId);
+        IDataServiceResult<CsNoDeliveryDate> GetById(int csNoDeliveryDateId);
+        IDataServiceResult<CsNoDeliveryDate> Save(int staffId,CsNoDeliveryDate csNoDeliveryDate);
+        IServiceResult Delete(CsNoDeliveryDate csNoDeliveryDate);
     }
 }

@@ -7,6 +7,7 @@ using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,71 +16,123 @@ namespace Business.Concrete
     public class CsNoDeliveryDateManager : ICsNoDeliveryDateService
     {
         private ICsNoDeliveryDateDal _csNoDeliveryDateDal;
-
-        public CsNoDeliveryDateManager(ICsNoDeliveryDateDal csNoDeliveryDateDal)
+        private ICsNoDeliveryDateHistoryService _csNoDeliveryDateHistoryService;
+        private IStaffService _staffService;
+        public CsNoDeliveryDateManager(ICsNoDeliveryDateDal csNoDeliveryDateDal, IStaffService staffService, ICsNoDeliveryDateHistoryService csNoDeliveryDateHistoryService)
         {
             _csNoDeliveryDateDal = csNoDeliveryDateDal;
+            _staffService = staffService;
+            _csNoDeliveryDateHistoryService = csNoDeliveryDateHistoryService;
         }
 
-        public IDataResult<List<CsNoDeliveryDate>> GetAll()
+        public IDataServiceResult<List<CsNoDeliveryDate>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<CsNoDeliveryDate>>(true, "Listed", _csNoDeliveryDateDal.GetAll());
+            var dbResult = _csNoDeliveryDateDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<CsNoDeliveryDate>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<CsNoDeliveryDate> GetById(int csNoDeliveryDateId)
+        public IDataServiceResult<CsNoDeliveryDate> GetById(int csNoDeliveryDateId)
         {
-            return new SuccessDataResult<CsNoDeliveryDate>(true, "Listed", _csNoDeliveryDateDal.Get(p => p.Id == csNoDeliveryDateId));
+            var dbResult = _csNoDeliveryDateDal.Get(p => p.Id == csNoDeliveryDateId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<CsNoDeliveryDate>(false, "SystemError");
+
+            return new SuccessDataServiceResult<CsNoDeliveryDate>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,definition.add")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(CsNoDeliveryDateValidator))]
         [TransactionScopeAspect]
-        public IResult Add(CsNoDeliveryDate csNoDeliveryDate)
+        public IServiceResult Add(CsNoDeliveryDate csNoDeliveryDate)
         {
-            IResult result = BusinessRules.Run(CheckIfCsNoExists(csNoDeliveryDate));
+            ServiceResult result = BusinessRules.Run(CheckIfCsNoExists(csNoDeliveryDate));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _csNoDeliveryDateDal.Add(csNoDeliveryDate);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _csNoDeliveryDateDal.Add(csNoDeliveryDate);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
 
-        [SecuredOperation("admin,definition.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(CsNoDeliveryDateValidator))]
         [TransactionScopeAspect]
-        public IResult Update(CsNoDeliveryDate csNoDeliveryDate)
+        public IServiceResult Update(CsNoDeliveryDate csNoDeliveryDate)
         {
-            IResult result = BusinessRules.Run(CheckIfCsNoExists(csNoDeliveryDate));
+            ServiceResult result = BusinessRules.Run(CheckIfCsNoExists(csNoDeliveryDate));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _csNoDeliveryDateDal.Update(csNoDeliveryDate);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _csNoDeliveryDateDal.Add(csNoDeliveryDate);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,definition.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [TransactionScopeAspect]
-        public IResult Delete(CsNoDeliveryDate csNoDeliveryDate)
+        public IServiceResult Delete(CsNoDeliveryDate csNoDeliveryDate)
         {
-            _csNoDeliveryDateDal.Delete(csNoDeliveryDate);
+            var result = _csNoDeliveryDateDal.Delete(csNoDeliveryDate);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Deleted");
+            var historyResult = _csNoDeliveryDateHistoryService.DeleteByCsNoDeliveryDateId(csNoDeliveryDate.Id);
+            if (historyResult.Result == false)
+                return new ErrorServiceResult(false, "SystemError");
+
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfCsNoExists(CsNoDeliveryDate csNoDeliveryDate)
+        public IDataServiceResult<CsNoDeliveryDate> Save(int staffId,CsNoDeliveryDate csNoDeliveryDate)
         {
-            var result = _csNoDeliveryDateDal.GetAll(x => x.SeasonId == csNoDeliveryDate.SeasonId && x.Csno==csNoDeliveryDate.Csno).Any();
+            if (csNoDeliveryDate.Id > 0)
+            {
+                Update(csNoDeliveryDate);
+            }
+            else
+            {
+                Add(csNoDeliveryDate);
+            }
 
-            if (result)
-                new ErrorResult("CsNoAlreadyExists");
+            #region CsNoDeliveryDateHistory
 
-            return new SuccessResult();
+            CsNoDeliveryDateHistory csNoDeliveryDateHistory = new CsNoDeliveryDateHistory();
+
+            csNoDeliveryDateHistory.CsNoDeliveryDateId = csNoDeliveryDate.Id;
+            csNoDeliveryDateHistory.CustomerId = csNoDeliveryDate.CustomerId;
+            csNoDeliveryDateHistory.Datetime = DateTime.UtcNow;
+
+            var date = String.Format("{0:dd.MM.yyyy}",csNoDeliveryDate.Date);
+            var staff = _staffService.GetById(staffId);
+            if (staff.Result == true)
+            {
+                csNoDeliveryDateHistory.Description = ("Tarih: " + csNoDeliveryDateHistory.Datetime.ToString("dd.MM.yyyy HH:mm:ss") + " Kişi: " + staff.Data.FirstName + " " + staff.Data.LastName + " CsNo: " + csNoDeliveryDate.Csno + " DeliveryDate: " + date);
+            }
+
+            var history= _csNoDeliveryDateHistoryService.Add(csNoDeliveryDateHistory);
+            if (history.Result==false)
+                return new DataServiceResult<CsNoDeliveryDate>(false, "SystemError");
+            #endregion
+
+            
+
+            return new SuccessDataServiceResult<CsNoDeliveryDate>(true, "Saved");
         }
-        
+
+        private ServiceResult CheckIfCsNoExists(CsNoDeliveryDate csNoDeliveryDate)
+        {
+            var result = _csNoDeliveryDateDal.GetAll(x => x.CustomerId == csNoDeliveryDate.CustomerId && x.SeasonId == csNoDeliveryDate.SeasonId && x.Csno == csNoDeliveryDate.Csno);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "CsNoDeliveryDateAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+ 
     }
 }

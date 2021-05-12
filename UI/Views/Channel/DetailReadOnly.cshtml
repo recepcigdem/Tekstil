@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Channel.Channel
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+
+@using (Html.BeginForm("DetailReadOnly", "Channel", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top:20px;">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
+                            @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive", @disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Localizer["Code"]
+                        @Html.TextBoxFor(x => x.Code, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Localizer["ChannelName"]
+                        @Html.TextBoxFor(x => x.ChannelName, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Localizer["CurrencyType"]
+                        @Html.TextBoxFor(x => x.CurrencyType, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-2" style="float:right">
+                <button class="btn btn-success" onclick="location.href = '@Url.Action("Detail", "Channel",new {id=Model.EntityId })'" data-dismiss="modal" type="button">@Localizer["Edit"]</button>
+
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $('.form-group').css('pointer-events', 'none');
+</script>

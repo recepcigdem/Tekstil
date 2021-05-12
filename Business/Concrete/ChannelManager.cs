@@ -21,73 +21,102 @@ namespace Business.Concrete
             _channelDal = channelDal;
         }
 
-        public IDataResult<List<Channel>> GetAll()
+        public IDataServiceResult<List<Channel>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<Channel>>(true, "Listed", _channelDal.GetAll());
+            var dbResult = _channelDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<Channel>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Channel> GetById(int channelId)
+        
+        public IDataServiceResult<Channel> GetById(int channelId)
         {
-            return new SuccessDataResult<Channel>(true, "Listed", _channelDal.Get(p => p.Id == channelId));
-        }
+            var dbResult = _channelDal.Get(p => p.Id == channelId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Channel>(false, "SystemError");
 
-        [SecuredOperation("admin,definition.add")]
+            return new SuccessDataServiceResult<Channel>(dbResult, true, "Listed");
+        }
+        
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(ChannelValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Channel channel)
+        public IServiceResult Add(Channel channel)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(channel), CheckIfDescriptionExists(channel));
+            ServiceResult result = BusinessRules.Run(CheckIfChannelExists(channel));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _channelDal.Add(channel);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _channelDal.Add(channel);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
-
-        [SecuredOperation("admin,definition.updated")]
+        
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(ChannelValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Channel channel)
+        public IServiceResult Update(Channel channel)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(channel), CheckIfDescriptionExists(channel));
+            ServiceResult result = BusinessRules.Run(CheckIfChannelExists(channel));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _channelDal.Update(channel);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _channelDal.Add(channel);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
-
-        [SecuredOperation("admin,definition.deleted")]
+        
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [TransactionScopeAspect]
-        public IResult Delete(Channel channel)
+        public IServiceResult Delete(Channel channel)
         {
-            _channelDal.Delete(channel);
+            ServiceResult result = BusinessRules.Run(CheckIfChannelIsUsed(channel));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            return new SuccessResult("Deleted");
+            var deleteResult = _channelDal.Delete(channel);
+            if (deleteResult == false)
+                return new ErrorServiceResult(false, "SystemError");
+
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfDescriptionExists(Channel channel)
-        {
-            var result = _channelDal.GetAll(x => x.ChannelName == channel.ChannelName).Any();
-
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
-
-            return new SuccessResult();
+        public IDataServiceResult<Channel> Save(Channel channel)
+        {  
+                if (channel.Id > 0)
+                {
+                    Update(channel);
+                }
+                else
+                {
+                    Add(channel);
+                }
+           
+            return new SuccessDataServiceResult<Channel>(true, "Saved");
         }
-        private IResult CheckIfCodeExists(Channel channel)
+
+        private ServiceResult CheckIfChannelExists(Channel channel)
         {
-            var result = _channelDal.GetAll(x => x.Code == channel.Code).Any();
+            var result = _channelDal.GetAll(x => x.CustomerId == channel.CustomerId && x.Code == channel.Code && x.ChannelName == channel.ChannelName && x.CurrencyType == channel.CurrencyType);
 
-            if (result)
-                new ErrorResult("CodeAlreadyExists");
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "ChannelAlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfChannelIsUsed(Channel channel)
+        {
+            var result = GetById(channel.Id);
+            if (result.Result==true)
+                if(result.Data.IsUsed==true)
+                new ErrorServiceResult(false, "ChannelIsUsed");
+
+            return new ServiceResult(true, "");
         }
     }
 }

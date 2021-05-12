@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class CsNoDeliveryDate : BaseEntity
+    [Table("CsNoDeliveryDate", Schema = "definition")]
+    public class CsNoDeliveryDate : BaseCustomerEntity
     {
+        [Column("seasonId")]
         public int SeasonId { get; set; }
+        [Column("csno")]
         public string Csno { get; set; }
+        [Column("date")]
         public DateTime Date { get; set; }
 
         public CsNoDeliveryDate()

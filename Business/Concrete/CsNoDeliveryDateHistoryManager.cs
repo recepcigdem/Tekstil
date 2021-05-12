@@ -21,45 +21,76 @@ namespace Business.Concrete
             _csNoDeliveryDateHistoryDal = csNoDeliveryDateHistoryDal;
         }
 
-        public IDataResult<List<CsNoDeliveryDateHistory>> GetAll()
+        public IDataServiceResult<List<CsNoDeliveryDateHistory>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<CsNoDeliveryDateHistory>>(true, "Listed", _csNoDeliveryDateHistoryDal.GetAll());
+            var dbResult = _csNoDeliveryDateHistoryDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<CsNoDeliveryDateHistory>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<CsNoDeliveryDateHistory> GetByCsNoDeliveryDateId(int csNoDeliveryDateId)
+        public IDataServiceResult<List<CsNoDeliveryDateHistory>> GetAllByCsNoDeliveryDate(int csNoDeliveryDateId)
         {
-            return new SuccessDataResult<CsNoDeliveryDateHistory>(true, "Listed", _csNoDeliveryDateHistoryDal.Get(p => p.CsNoDeliveryDateId == csNoDeliveryDateId));
+            var dbResult = _csNoDeliveryDateHistoryDal.GetAll(x => x.CsNoDeliveryDateId == csNoDeliveryDateId);
+
+            return new SuccessDataServiceResult<List<CsNoDeliveryDateHistory>>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,csno.add")]
+        public IDataServiceResult<CsNoDeliveryDateHistory> GetById(int csNoDeliveryDateHistoryId)
+        {
+            var dbResult = _csNoDeliveryDateHistoryDal.Get(p => p.Id == csNoDeliveryDateHistoryId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(false, "SystemError");
+
+            return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<CsNoDeliveryDateHistory> GetByCsNoDeliveryDateId(int csNoDeliveryDateId)
+        {
+            var dbResult = _csNoDeliveryDateHistoryDal.Get(p => p.CsNoDeliveryDateId == csNoDeliveryDateId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(false, "SystemError");
+
+            return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(dbResult, true, "Listed");
+        }
+
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(CsNoDeliveryDateHistoryValidator))]
         [TransactionScopeAspect]
-        public IResult Add(CsNoDeliveryDateHistory csNoDeliveryDateHistory)
+        public IServiceResult Add(CsNoDeliveryDateHistory csNoDeliveryDateHistory)
         {
-            _csNoDeliveryDateHistoryDal.Add(csNoDeliveryDateHistory);
+            var dbResult = _csNoDeliveryDateHistoryDal.Add(csNoDeliveryDateHistory);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
 
-        [SecuredOperation("admin,csno.updated")]
-        [ValidationAspect(typeof(CsNoDeliveryDateHistoryValidator))]
+
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [TransactionScopeAspect]
-        public IResult Update(CsNoDeliveryDateHistory csNoDeliveryDateHistory)
+        public IServiceResult Delete(CsNoDeliveryDateHistory csNoDeliveryDateHistory)
         {
-            _csNoDeliveryDateHistoryDal.Add(csNoDeliveryDateHistory);
+            var result = _csNoDeliveryDateHistoryDal.Delete(csNoDeliveryDateHistory);
+            if (result == false)
+                return new ErrorServiceResult(false, "SystemError");
 
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Delated");
         }
 
-        [SecuredOperation("admin,csno.deleted")]
-        [TransactionScopeAspect]
-        public IResult Delete(CsNoDeliveryDateHistory csNoDeliveryDateHistory)
+        public IServiceResult DeleteByCsNoDeliveryDateId(int csNoDeliveryDateId)
         {
-            _csNoDeliveryDateHistoryDal.Delete(csNoDeliveryDateHistory);
+            var list = GetAllByCsNoDeliveryDate(csNoDeliveryDateId);
+            if (list.Result == true)
+            {
+                foreach (var item in list.Data)
+                {
+                    var result = _csNoDeliveryDateHistoryDal.Delete(item);
+                    if (result == false)
+                        return new ErrorServiceResult(false, "SystemError");
+                }
+            }
 
-            return new SuccessResult("Deleted");
+            return new ServiceResult(true, "Delated");
         }
-
     }
 }
