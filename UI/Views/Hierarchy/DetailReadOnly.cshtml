@@ -1,5 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Hierarchy.Hierarchy
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+
+@using (Html.BeginForm("DetailReadOnly", "Hierarchy", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top:20px;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Localizer["TotalDescription"]
+                        @Html.TextBoxFor(x => x.TotalDescription, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-2" style="float:right">
+                <button class="btn btn-success" onclick="location.href = '@Url.Action("Detail", "Hierarchy",new {id=Model.EntityId })'" data-dismiss="modal" type="button">@Localizer["Edit"]</button>
+
+            </div>
+        </div>
+    </div>
 }
+<script type="text/javascript">
+    $('.form-group').css('pointer-events', 'none');
+</script>

@@ -50,7 +50,7 @@
                                 <div class="row">
                                     <div class="col-md-12" style="margin-top:20px;">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
                                                         @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive" })
@@ -58,7 +58,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
                                                         @Html.CheckBoxFor(x => x.IsGarmentAccessory, new { @id = "isGarmentAccessory" })
@@ -71,6 +71,9 @@
                                                     @Localizer["Code"]
                                                     @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
                                                 </div>
+                                            </div>
+                                            <div class="col-md-2" style="float:right">
+                                                <button type="button" class="btn btn-block btn-success" id="buttonUpdate" onclick="UpdateModel();">@Localizer["UpdateModel"]</button>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -383,6 +386,10 @@
         $('#comboSubProductGroup').on('select2:select', function (evt) {
             $('#SubProductGroupId').val(this.value);
         });
+    }
+
+    function UpdateModel() {
+
     }
 
     var newID = 0;
