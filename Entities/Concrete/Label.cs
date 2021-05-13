@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class Label : BaseEntity
+    [Table("Label", Schema = "definition")]
+    public class Label : BaseCustomerEntity
     {
-        public int ProductGroupId { get; set; }
+        [Column("isUsed")]
+        public bool IsUsed { get; set; }
+        [Column("isActive")]
         public bool IsActive { get; set; }
+        [Column("code")]
         public string Code { get; set; }
+        [Column("description")]
         public string Description { get; set; }
+        [Column("image")]
         public string Image { get; set; }
 
         public Label()
         {
-            ProductGroupId = 0;
-            IsActive = false;
+            IsUsed = false;
+            IsActive = true;
             Code = string.Empty;
             Description = string.Empty;
             Image = string.Empty;

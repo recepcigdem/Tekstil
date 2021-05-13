@@ -10,10 +10,9 @@ namespace Business.Abstract
 {
     public interface ITestService
     {
-        IDataResult<List<Test>> GetAll();
-        IDataResult<Test> GetById(int testId);
-        IResult Add(Test test);
-        IResult Update(Test test);
-        IResult Delete(Test test);
+        IDataServiceResult<List<Test>> GetAll(int customerId);
+        IDataServiceResult<Test> GetById(int testId);
+        IDataServiceResult<Test> Save(Test test);
+        IServiceResult Delete(Test test);
     }
 }

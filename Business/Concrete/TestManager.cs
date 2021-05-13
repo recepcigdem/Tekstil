@@ -21,73 +21,111 @@ namespace Business.Concrete
             _testDal = testDal;
         }
 
-        public IDataResult<List<Test>> GetAll()
+        public IDataServiceResult<List<Test>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<Test>>(true, "Listed", _testDal.GetAll());
+            var dbResult = _testDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<Test>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Test> GetById(int testId)
+        public IDataServiceResult<Test> GetById(int testId)
         {
-            return new SuccessDataResult<Test>(true, "Listed", _testDal.Get(p => p.Id == testId));
+            var dbResult = _testDal.Get(p => p.Id == testId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Test>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Test>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,definition.add")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(TestValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Test test)
+        public IServiceResult Add(Test test)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(test), CheckIfDescriptionExists(test));
+            ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(test), CheckIfCodeExists(test));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _testDal.Add(test);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _testDal.Add(test);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
 
-        [SecuredOperation("admin,definition.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(TestValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Test test)
+        public IServiceResult Update(Test test)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(test), CheckIfDescriptionExists(test));
+            ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(test), CheckIfCodeExists(test));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _testDal.Update(test);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _testDal.Add(test);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,definition.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [TransactionScopeAspect]
-        public IResult Delete(Test test)
+        public IServiceResult Delete(Test test)
         {
-            _testDal.Delete(test);
+            ServiceResult result = BusinessRules.Run(CheckIfTestIsUsed(test));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            return new SuccessResult("Deleted");
+            var deleteResult = _testDal.Delete(test);
+            if (deleteResult == false)
+                return new ErrorServiceResult(false, "SystemError");
+
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfDescriptionExists(Test test)
+        public IDataServiceResult<Test> Save(Test test)
         {
-            var result = _testDal.GetAll(x => x.Description == test.Description).Any();
+            if (test.Id > 0)
+            {
+                Update(test);
+            }
+            else
+            {
+                Add(test);
+            }
 
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
-
-            return new SuccessResult();
+            return new SuccessDataServiceResult<Test>(true, "Saved");
         }
-        private IResult CheckIfCodeExists(Test test)
+
+        private ServiceResult CheckIfDescriptionExists(Test test)
         {
-            var result = _testDal.GetAll(x => x.Code == test.Code).Any();
+            var result = _testDal.GetAll(x => x.CustomerId==test.CustomerId && x.Description == test.Description);
 
-            if (result)
-                new ErrorResult("CodeAlreadyExists");
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "DescriptionAlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfCodeExists(Test test)
+        {
+            var result = _testDal.GetAll(x => x.CustomerId == test.CustomerId && x.Code == test.Code);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "CodeAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfTestIsUsed(Test test)
+        {
+            var result = GetById(test.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "TestIsUsed");
+
+            return new ServiceResult(true, "");
         }
     }
 }

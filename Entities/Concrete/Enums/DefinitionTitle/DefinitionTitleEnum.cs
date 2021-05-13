@@ -46,7 +46,8 @@ namespace Entities.Concrete.Enums.DefinitionTitle
             Detail = 34,
             Country = 35,
             BuyingMethod = 36,
-            ShippingMethod = 37
+            ShippingMethod = 37,
+            MaterialContent = 38
         }
     }
 }

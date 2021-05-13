@@ -21,73 +21,111 @@ namespace Business.Concrete
             _labelDal = labelDal;
         }
 
-        public IDataResult<List<Label>> GetAll()
+        public IDataServiceResult<List<Label>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<Label>>(true, "Listed", _labelDal.GetAll());
+            var dbResult = _labelDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<Label>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<Label> GetById(int labelId)
+        public IDataServiceResult<Label> GetById(int labelId)
         {
-            return new SuccessDataResult<Label>(true, "Listed", _labelDal.Get(p => p.Id == labelId));
+            var dbResult = _labelDal.Get(p => p.Id == labelId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<Label>(false, "SystemError");
+
+            return new SuccessDataServiceResult<Label>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,definition.add")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(LabelValidator))]
         [TransactionScopeAspect]
-        public IResult Add(Label label)
+        public IServiceResult Add(Label label)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(label), CheckIfDescriptionExists(label));
+            ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(label), CheckIfCodeExists(label));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _labelDal.Add(label);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _labelDal.Add(label);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
 
-        [SecuredOperation("admin,definition.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(LabelValidator))]
         [TransactionScopeAspect]
-        public IResult Update(Label label)
+        public IServiceResult Update(Label label)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(label), CheckIfDescriptionExists(label));
+            ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(label), CheckIfCodeExists(label));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _labelDal.Update(label);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _labelDal.Add(label);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,definition.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [TransactionScopeAspect]
-        public IResult Delete(Label label)
+        public IServiceResult Delete(Label label)
         {
-            _labelDal.Delete(label);
+            ServiceResult result = BusinessRules.Run(CheckIfLabelIsUsed(label));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            return new SuccessResult("Deleted");
+            var deleteResult = _labelDal.Delete(label);
+            if (deleteResult == false)
+                return new ErrorServiceResult(false, "SystemError");
+
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfDescriptionExists(Label label)
+        public IDataServiceResult<Label> Save(Label label)
         {
-            var result = _labelDal.GetAll(x => x.Description == label.Description).Any();
+            if (label.Id > 0)
+            {
+                Update(label);
+            }
+            else
+            {
+                Add(label);
+            }
 
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
-
-            return new SuccessResult();
+            return new SuccessDataServiceResult<Label>(true, "Saved");
         }
-        private IResult CheckIfCodeExists(Label label)
+
+        private ServiceResult CheckIfDescriptionExists(Label label)
         {
-            var result = _labelDal.GetAll(x => x.Code == label.Code).Any();
+            var result = _labelDal.GetAll(x => x.CustomerId == label.CustomerId && x.Description == label.Description);
 
-            if (result)
-                new ErrorResult("CodeAlreadyExists");
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "DescriptionAlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfCodeExists(Label label)
+        {
+            var result = _labelDal.GetAll(x => x.CustomerId == label.CustomerId && x.Code == label.Code);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "CodeAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfLabelIsUsed(Label label)
+        {
+            var result = GetById(label.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "LabelIsUsed");
+
+            return new ServiceResult(true, "");
         }
     }
 }

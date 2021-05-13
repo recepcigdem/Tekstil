@@ -10,10 +10,9 @@ namespace Business.Abstract
 {
     public interface ILabelService
     {
-        IDataResult<List<Label>> GetAll();
-        IDataResult<Label> GetById(int labelId);
-        IResult Add(Label label);
-        IResult Update(Label label);
-        IResult Delete(Label label);
+        IDataServiceResult<List<Label>> GetAll(int customerId);
+        IDataServiceResult<Label> GetById(int labelId);
+        IDataServiceResult<Label> Save(Label label);
+        IServiceResult Delete(Label label);
     }
 }
