@@ -15,79 +15,124 @@ namespace Business.Concrete
     public class TariffNoManager : ITariffNoService
     {
         private ITariffNoDal _tariffNoDal;
-
-        public TariffNoManager(ITariffNoDal tariffNoDal)
+        private ITariffNoDetailService _tariffNoDetailService;
+        public TariffNoManager(ITariffNoDal tariffNoDal, ITariffNoDetailService tariffNoDetailService)
         {
             _tariffNoDal = tariffNoDal;
+            _tariffNoDetailService = tariffNoDetailService;
         }
 
-        public IDataResult<List<TariffNo>> GetAll()
+        public IDataServiceResult<List<TariffNo>> GetAll(int customerId)
         {
-            return new SuccessDataResult<List<TariffNo>>(true, "Listed", _tariffNoDal.GetAll());
+            var dbResult = _tariffNoDal.GetAll(x => x.CustomerId == customerId);
+
+            return new SuccessDataServiceResult<List<TariffNo>>(dbResult, true, "Listed");
         }
 
-        public IDataResult<TariffNo> GetById(int tariffNoId)
+        public IDataServiceResult<TariffNo> GetById(int tariffNoId)
         {
-            return new SuccessDataResult<TariffNo>(true, "Listed", _tariffNoDal.Get(p => p.Id == tariffNoId));
+            var dbResult = _tariffNoDal.Get(p => p.Id == tariffNoId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<TariffNo>(false, "SystemError");
+
+            return new SuccessDataServiceResult<TariffNo>(dbResult, true, "Listed");
         }
 
-        [SecuredOperation("admin,definition.add")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(TariffNoValidator))]
         [TransactionScopeAspect]
-        public IResult Add(TariffNo tariffNo)
+        public IServiceResult Add(TariffNo tariffNo)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(tariffNo), CheckIfDescriptionExists(tariffNo));
+            ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(tariffNo), CheckIfCodeExists(tariffNo));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _tariffNoDal.Add(tariffNo);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _tariffNoDal.Add(tariffNo);
-
-            return new SuccessResult("Added");
-
+            return new ServiceResult(true, "Added");
         }
 
-        [SecuredOperation("admin,definition.updated")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [ValidationAspect(typeof(TariffNoValidator))]
         [TransactionScopeAspect]
-        public IResult Update(TariffNo tariffNo)
+        public IServiceResult Update(TariffNo tariffNo)
         {
-            IResult result = BusinessRules.Run(CheckIfCodeExists(tariffNo), CheckIfDescriptionExists(tariffNo));
+            ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(tariffNo), CheckIfCodeExists(tariffNo));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            if (result != null)
-                return result;
+            var dbResult = _tariffNoDal.Update(tariffNo);
+            if (dbResult == null)
+                return new ErrorServiceResult(false, "SystemError");
 
-            _tariffNoDal.Add(tariffNo);
-
-            return new SuccessResult("Updated");
+            return new ServiceResult(true, "Updated");
         }
 
-        [SecuredOperation("admin,definition.deleted")]
+        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
         [TransactionScopeAspect]
-        public IResult Delete(TariffNo tariffNo)
+        public IServiceResult Delete(TariffNo tariffNo)
         {
-            _tariffNoDal.Delete(tariffNo);
+            ServiceResult result = BusinessRules.Run(CheckIfTariffNoIsUsed(tariffNo));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
 
-            return new SuccessResult("Deleted");
+            var deleteTariffNoDetail = _tariffNoDetailService.DeleteByTariffNo(tariffNo);
+            if (deleteTariffNoDetail.Result == false)
+                return new ErrorServiceResult(false, "TariffNoDetailIsUsed");
+
+            var deleteResult = _tariffNoDal.Delete(tariffNo);
+            if (deleteResult == false)
+                return new ErrorServiceResult(false, "SystemError");
+
+            return new ServiceResult(true, "Delated");
         }
 
-        private IResult CheckIfDescriptionExists(TariffNo tariffNo)
+        public IDataServiceResult<TariffNo> Save(TariffNo tariffNo, List<TariffNoDetail> tariffNoDetails)
         {
-            var result = _tariffNoDal.GetAll(x => x.Description == tariffNo.Description).Any();
+            if (tariffNo.Id > 0)
+            {
+                Update(tariffNo);
+            }
+            else
+            {
+                Add(tariffNo);
+            }
 
-            if (result)
-                new ErrorResult("DescriptionAlreadyExists");
+            _tariffNoDetailService.Save(tariffNo.CustomerId, tariffNoDetails);
 
-            return new SuccessResult();
+            return new SuccessDataServiceResult<TariffNo>(true, "Saved");
         }
-        private IResult CheckIfCodeExists(TariffNo tariffNo)
+
+        private ServiceResult CheckIfDescriptionExists(TariffNo tariffNo)
         {
-            var result = _tariffNoDal.GetAll(x => x.Code == tariffNo.Code).Any();
+            var result = _tariffNoDal.GetAll(x => x.CustomerId == tariffNo.CustomerId && x.Description == tariffNo.Description);
 
-            if (result)
-                new ErrorResult("CodeAlreadyExists");
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "DescriptionAlreadyExists");
 
-            return new SuccessResult();
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfCodeExists(TariffNo tariffNo)
+        {
+            var result = _tariffNoDal.GetAll(x => x.CustomerId == tariffNo.CustomerId && x.Code == tariffNo.Code);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "CodeAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfTariffNoIsUsed(TariffNo tariffNo)
+        {
+            var result = GetById(tariffNo.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "TariffNoIsUsed");
+
+            return new ServiceResult(true, "");
         }
     }
 }

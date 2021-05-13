@@ -10,10 +10,9 @@ namespace Business.Abstract
 {
     public interface ITariffNoService
     {
-        IDataResult<List<TariffNo>> GetAll();
-        IDataResult<TariffNo> GetById(int tariffNoId);
-        IResult Add(TariffNo tariffNo);
-        IResult Update(TariffNo tariffNo);
-        IResult Delete(TariffNo tariffNo);
+        IDataServiceResult<List<TariffNo>> GetAll(int customerId);
+        IDataServiceResult<TariffNo> GetById(int tariffNoId);
+        IDataServiceResult<TariffNo> Save(TariffNo tariffNo,List<TariffNoDetail> tariffNoDetails);
+        IServiceResult Delete(TariffNo tariffNo);
     }
 }

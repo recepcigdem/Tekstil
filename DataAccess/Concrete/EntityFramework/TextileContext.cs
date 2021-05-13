@@ -45,6 +45,7 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<StaffEmail> StaffEmail { get; set; }
         public DbSet<StaffPhone> StaffPhone { get; set; }
         public DbSet<TariffNo> TariffNo { get; set; }
+        public DbSet<TariffNoDetail> TariffNoDetail { get; set; }
         public DbSet<Test> Test { get; set; }
     }
 }
