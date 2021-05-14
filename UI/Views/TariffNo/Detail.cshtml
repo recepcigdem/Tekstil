@@ -1,0 +1,698 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.TariffNo.TariffNo
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<link href="~/css/customerDetail.css" rel="stylesheet" />
+<link href="~/js/panel-structure.js" rel="stylesheet" />
+<link href="~/css/AccordionTables.css" rel="stylesheet" />
+
+@using (Html.BeginForm("Detail", "TariffNo", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+    @Html.HiddenFor(x => x.ListTariffNoDetails)
+    @Html.HiddenFor(x => x.SubTariffNoDetailString)
+
+
+    <div class="page-header page-header-bordered">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/@Model.Culture/Home/Index">@Localizer["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="/@Model.Culture/TariffNo/Index">@Localizer["List"]</a></li>
+
+            @if (Model.EntityId == 0)
+            {
+                <li class="breadcrumb-item active">@Localizer["NewTariffNo"]</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active">@Model.Code @Model.Description </li>
+            }
+        </ol>
+    </div>
+    <div class="page-content">
+        <div class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions"></div>
+                <h3 class="panel-title">@Localizer["PageTitle"]</h3>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top:20px;">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
+                                                        @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive" })
+                                                        @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Localizer["Code"]
+                                                    @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    @Localizer["Description"]
+                                                    @Html.TextBoxFor(x => x.Description, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- Example Tabs Line Top -->
+                                    <div class="example-wrap col-md-12">
+                                        <div class="nav-tabs-horizontal" data-plugin="tabs">
+                                            <ul class="nav nav-tabs nav-tabs-line tabs-line-top" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link active" data-toggle="tab" href="#tabTariffNoDetail"
+                                                       aria-controls="tabTariffNoDetail" role="tab">@Localizer["Details"]</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content pt-20">
+                                                <div class="tab-pane active" id="tabTariffNoDetail" role="tabpanel">
+                                                    @Html.HiddenFor(x => x.SubTariffNoDetailString)
+                                                    <div class="col-md-12">
+                                                        <div class="panel panel-primary panel-line">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <h4 class="col mb-0 align-self-end">@Localizer["TariffNoDetail"]</h4>
+                                                                    <div class="col-md-auto text-right mt-2">
+                                                                        <button type="button" class="col btn btn-sm btn-outline-success px-4" onclick="AddTariffNoDetail()">@Localizer["NewTariffNoDetail"]</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <table id="tariffNoDetailGrid" class="fold-table table-bordered table-hover table table-striped">
+                                                                <thead class="col-md-12">
+                                                                    <tr>
+                                                                        <th>@Localizer["Season"]</th>
+                                                                        <th>@Localizer["Country"]</th>
+                                                                        <th>@Localizer["SeasonCurrency"]</th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="col-md-12">
+
+                                                                    @for (int i = 0; i < Model.ListTariffNoDetails.Count; i++)
+                                                                    {
+                                                                        <tr class="view" id="view'@i'" onclick="tableOpenClosed(@i);">
+                                                                            <td id="topSeason'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                            <td id="topCountry'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].CountryId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                            <td id="topSeasonCurrency'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonCurrencyId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                            <td>
+                                                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteListLine(@i);">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListTariffNoDetails[i].Id)
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr class="fold" id="fold'@i'">
+                                                                            <td colspan="7">
+                                                                                <div class="fold-content">
+                                                                                    <table id="tableTariffNoDetail">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th width="17%">@Localizer["Season"]</th>
+                                                                                                <th width="17%">@Localizer["Country"]</th>
+                                                                                                <th width="17%">@Localizer["SeasonCurrency"]</th>
+                                                                                                <th width="17%"></th>
+                                                                                                <th width="16%"></th>
+                                                                                                <th width="16%"></th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr id="trTariffNoDetail1">
+                                                                                                <td id="season'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonId, new { @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                                <td id="country'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].CountryId, new { @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                                <td id="seasonCurrency'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonCurrencyId, new { @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th>@Localizer["Tax"]</th>
+                                                                                                <th>@Localizer["Stamp"]</th>
+                                                                                                <th>@Localizer["AzoTest"]</th>
+                                                                                                <th>@Localizer["DifferentExpense"]</th>
+                                                                                                <th>@Localizer["Commission"]</th>
+                                                                                                <th>@Localizer["Kkdf"]</th>
+                                                                                            </tr>
+                                                                                            <tr id="trTariffNoDetail2">
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].Tax, new { @class = "form-control numericField" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].Stamp, new { @class = "form-control numericField" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].AzoTest, new { @class = "form-control numericField" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].DifferentExpense, new { @class = "form-control numericField" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].Commission, new { @class = "form-control numericField" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].Kkdf, new { @class = "form-control numericField" })</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th>@Localizer["AdditionalTax"]</th>
+                                                                                                <th>@Localizer["AdditionalTax1"]</th>
+                                                                                                <th>@Localizer["Superintendence"]</th>
+                                                                                                <th>@Localizer["UnitKg"]</th>
+                                                                                                <th>@Localizer["KgTranslation"]</th>
+                                                                                            </tr>
+                                                                                            <tr id="trTariffNoDetail3">
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].AdditionalTax, new { @class = "form-control numericField" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].AdditionalTax1, new { @class = "form-control numericField" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].Superintendence, new { @class = "form-control numericField" , @id= "trSuperintendence'" + i + "'", @onchange= "KgChangeCalc(" + i + ");" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].UnitKg, new { @class = "form-control numericField", @id = "trUnitKg'" + i + "'", @onchange = "KgChangeCalc(" + i + ");" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].KgTranslation, new { @class = "form-control numericField", @id = "trKgTranslation'" + i + "'" , @disabled="disabled" })</td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-success" id="buttonSave" onclick="Save();">@Localizer["Save"]</button>
+                        </div>
+                        <div class="col-md-2" style="float:right">
+                            <button type="button" class="btn btn-block btn-danger" onclick="window.location.href='Index'">@Localizer["Cancel"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+
+    var count = 0;
+    var countSeason = 0;
+    var dataListSeason = [];
+    var dataListCountry = [];
+    var dataListCurrency = [];
+
+    $(document).ready(function() {
+        dataListSeason = [];
+        count = 0;
+        $("#tariffNoDetailGrid tbody").each(function () {
+            var row = $(this);
+
+            var data = {};
+
+            data.seasonId = row.find("#trTariffNoDetail1").find("td").find("input").eq(0).val();
+            if (data.seasonId > 0) {
+
+                ComboSeasonList(data.seasonId, count);
+                ComboTopSeasonList(data.seasonId, count);
+            }
+
+            data.countryId = row.find("#trTariffNoDetail1").find("td").find("input").eq(1).val();
+
+            if (data.countryId > 0) {
+                ComboCountryList(data.countryId, count);
+                ComboTopCountryList(data.countryId, count);
+            }
+
+            setTimeout(function () {
+                data.seasonCurrencyId = row.find("#trTariffNoDetail1").find("td").find("input").eq(0).val();
+
+                if (data.seasonCurrencyId > 0) {
+
+                    ComboCurrencyList(data.seasonCurrencyId, count);
+                    ComboTopCurrencyList(data.seasonCurrencyId, count);
+                }
+                count++;
+            }, 500);
+
+
+        });
+
+    });
+
+    function ComboSeasonList(seasonId, count) {
+        dataListSeason = [];
+
+        document.getElementById("season'" + count + "'").innerHTML = "<select id=\"comboSeason" + count + "\" class=\"form-control season comboSeason\" onchange =\"SeasonCountryChangeCalc(" + count + ");\">" + "</select>";
+        var selectitem = document.getElementById("comboSeason" + count);
+
+        var comboSeasonUrl = "@Url.Action("ComboListSeason", "Season")";
+        var index = 0;
+        $.ajax({
+            url: comboSeasonUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                data.forEach(element => {
+                    dataListSeason.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+
+                    if (option.value == seasonId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
+                    });
+            }
+        });
+    }
+
+    function ComboTopSeasonList(seasonId, count) {
+        dataListSeason = [];
+
+        document.getElementById("topSeason'" + count + "'").innerHTML = "<select id=\"comboTopSeason" + count + "\" class=\"form-control season comboTopSeason\" disabled=\"disabled\">" + "</select>";
+        var selectitem = document.getElementById("comboTopSeason" + count);
+
+        var comboTopSeasonUrl = "@Url.Action("ComboListSeason", "Season")";
+        var index = 0;
+        $.ajax({
+            url: comboTopSeasonUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                data.forEach(element => {
+                    dataListSeason.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+
+                    if (option.value == seasonId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
+                    });
+            }
+        });
+    }
+
+    function ComboCountryList(countryId, count) {
+        dataListCountry = [];
+
+        document.getElementById("country'" + count + "'").innerHTML = "<select id=\"comboCountry" + count + "\" class=\"form-control country comboCountry\" onchange =\"SeasonCountryChangeCalc(" + count + ");\">" + "</select>";
+        var selectitem = document.getElementById("comboCountry" + count);
+
+        var comboCountryUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 35;
+        var index = 0;
+        $.ajax({
+            url: comboCountryUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                data.forEach(element => {
+                    dataListCountry.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+
+                    if (option.value == countryId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
+                    });
+            }
+        });
+    }
+
+    function ComboTopCountryList(countryId, count) {
+        dataListCountry = [];
+
+         document.getElementById("topCountry'" + count + "'").innerHTML = "<select id=\"comboTopCountry" + count + "\" class=\"form-control topCountry comboTopCountry\" disabled=\"disabled\">" + "</select>";
+        var selectitem = document.getElementById("comboTopCountry" + count);
+
+        var comboCountryUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 35;
+        var index = 0;
+        $.ajax({
+            url: comboCountryUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                data.forEach(element => {
+                    dataListCountry.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectitem.appendChild(option);
+
+                    if (option.value == countryId) {
+                        selectitem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
+                    });
+            }
+        });
+    }
+
+    function ComboCurrencyList(seasonCurrencyId, count) {
+        dataListCurrency = [];
+
+        var season = document.getElementById("season'" + count + "'").children[0].children[0].value;
+
+        document.getElementById("seasonCurrency'" + count + "'").innerHTML = "<select id=\"comboCurrency" + count + "\" class=\"form-control currency comboCurrency\">" + "</select>";
+        var selectItem = document.getElementById("comboCurrency" + count);
+
+
+
+        var comboCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + season;
+        var index = 0;
+        $.ajax({
+            url: comboCurrencyUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.forEach(element => {
+                    dataListCurrency.push(element);
+                   
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+                    selectItem.appendChild(option);
+
+                    if (option.value == seasonCurrencyId) {
+                        selectItem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
+                });
+            }
+        });
+    }
+
+    function ComboTopCurrencyList(currencyId, count) {
+        dataListCurrency = [];
+
+        var season = document.getElementById("season'" + count + "'").children[0].children[0].value;
+
+        document.getElementById("topSeasonCurrency'" + count + "'").innerHTML = "<select id=\"comboTopCurrency" + count + "\" class=\"form-control topCurrency comboTopCurrency\"  disabled=\"disabled\">" + "</select>";
+        var selectItem = document.getElementById("comboTopCurrency" + count);
+
+        var comboCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + season;
+        var index = 0;
+        $.ajax({
+            url: comboCurrencyUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.forEach(element => {
+                    dataListCurrency.push(element);
+
+                    var option = document.createElement("option");
+                    option.textContent = element.text;
+                    option.value = element.id;
+
+                    selectItem.appendChild(option);
+
+                    if (option.value == currencyId) {
+                        selectItem.options.selectedIndex = index;
+                    }
+                    index = index + 1;
+                });
+
+                
+            }
+        });
+
+    }
+
+    function SeasonCountryChangeCalc(count) {
+
+        var season = document.getElementById("comboSeason" + count);
+        var topSeason = document.getElementById("comboTopSeason" + count);
+        
+       
+        var country = document.getElementById("comboCountry" + count);
+        var topCountry = document.getElementById("comboTopCountry" + count);
+       
+
+        if (season.value != topSeason.value) {
+            console.log("ok");
+
+            setTimeout(function () {
+                
+                    ComboCurrencyList(0, count);
+                    ComboTopCurrencyList(0, count);
+               
+            }, 500);
+
+            //document.getElementById("comboCurrency" + count).value = 0;
+            //document.getElementById("comboTopCurrency" + count).value = 0;
+
+            var currency = document.getElementById("comboCurrency" + count);
+            currency.options[0].setAttribute("selected", "selected");
+
+            var topCurrency = document.getElementById("comboTopCurrency" + count);
+            topCurrency.options[0].setAttribute("selected", "selected");
+        }
+
+        topSeason.options[season.options.selectedIndex].setAttribute("selected", "selected");
+        topCountry.options[country.options.selectedIndex].setAttribute("selected", "selected");
+    }
+
+    function KgChangeCalc(count) {
+        var superIntendence = document.getElementById("trSuperintendence'" + count + "'").value;
+        var trUnitKg = document.getElementById("trUnitKg'" + count + "'").value;
+        if (trUnitKg == "Ton") {
+            document.getElementById("trKgTranslation'" + count + "'").value = superIntendence / 1000;
+        }
+        else {
+            document.getElementById("trKgTranslation'" + count + "'").value = superIntendence;
+        }
+    }
+
+    var count = $('.view').length;
+    function AddTariffNoDetail() {
+
+        event.preventDefault();
+        var table = document.querySelector("#tariffNoDetailGrid tbody");
+        table.insertAdjacentHTML("beforeend",
+            "<tr class=\"view\" id=\"view'" + count + "'\" onclick=\"tableOpenClosed(" + count + ");\">"
+            + "<td id=\"topSeason'" + count + "'\">"
+            + "</td>"
+            + "<td id=\"topCountry'" + count + "'\">"
+            + "</td>"
+            + "<td id=\"topSeasonCurrency'" + count + "'\">"
+            + "</td>"
+            + "<td>"
+            + "<button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteListLine(" + count + ")\">@Localizer["Delete"]</button>"
+            + "<input type=\"hidden\" class=\"form-control\" name=\"ListTariffNoDetails[" + count + "].Id\">"
+            + "</td>"
+            + "</tr>"
+            + "<tr class=\"fold open\" id=\"fold'" + count + "'\">"
+            + "<td colspan=\"7\">"
+            + "<div class=\"fold-content\">"
+            + "<table id=\"tableTariffNoDetail\">"
+            + "<thead>"
+            + "<tr>"
+            + "<th width=\"17%\">@Localizer["Season"]</th>"
+            + "<th width=\"17%\">@Localizer["Country"]</th>"
+            + "<th width=\"17%\">@Localizer["SeasonCurrency"]</th>"
+            + "<th width=\"17%\"></th>"
+            + "<th width=\"16%\"></th>"
+            + "<th width=\"16%\"></th>"
+            + "</tr>"
+            + "</thead>"
+            + "<tbody>"
+            + "<tr id=\"trTariffNoDetail1\">"
+            + "<td id=\"season'" + count + "'\">"
+            + "</td>"
+            + "<td id=\"country'" + count + "'\">"
+            + "</td>"
+            + "<td id=\"seasonCurrency'" + count + "'\">"
+            + "</td>"
+            + "</tr>"
+            + "<tr>"
+            + "<th>@Localizer["Tax"]</th>"
+            + "<th>@Localizer["Stamp"]</th>"
+            + "<th>@Localizer["AzoTest"]</th>"
+            + "<th>@Localizer["DifferentExpense"]</th>"
+            + "<th>@Localizer["Commission"]</th>"
+            + "<th>@Localizer["Kkdf"]</th>"
+            + "</tr>"
+            + "<tr id=\"trTariffNoDetail2\">"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trTax'" + count + "'\" name='ListTariffNoDetails[" + count + "].Tax' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trStamp'" + count + "'\" name='ListTariffNoDetails[" + count + "].Stamp' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trAzoTest'" + count + "'\" name='ListTariffNoDetails[" + count + "].AzoTest' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trDifferentExpense'" + count + "'\" name='ListTariffNoDetails[" + count + "].DifferentExpense' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trCommission'" + count + "'\" name='ListTariffNoDetails[" + count + "].Commission' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trKkdf'" + count + "'\" name='ListTariffNoDetails[" + count + "].Kkdf' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "</tr>"
+            + "<tr>"
+            + "<th>@Localizer["AdditionalTax"]</th>"
+            + "<th>@Localizer["AdditionalTax1"]</th>"
+            + "<th>@Localizer["Superintendence"]</th>"
+            + "<th>@Localizer["UnitKg"]</th>"
+            + "<th>@Localizer["KgTranslation"]</th>"
+            + "</tr>"
+            + "<tr id=\"trTariffNoDetail3\">"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trAdditionalTax'" + count + "'\" name='ListTariffNoDetails[" + count + "].AdditionalTax' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trAdditionalTax1'" + count + "'\" name='ListTariffNoDetails[" + count + "].AdditionalTax1' class='form-control numericField'>"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trSuperintendence'" + count + "'\" name='ListTariffNoDetails[" + count + "].Superintendence' class='form-control numericField' onchange=\"KgChangeCalc(" + count + ");\">"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input id=\"trUnitKg'" + count + "'\" name='ListTariffNoDetails[" + count + "].UnitKg' class='form-control numericField' onchange=\"KgChangeCalc(" + count + ");\">"
+            + "</div>"
+            + "</td>"
+            + "<td>"
+            + "<div class=\"input-group\">"
+            + "<input class='form-control numericField' id=\"trKgTranslation'" + count + "'\" name='ListTariffNoDetails[" + count + "].KgTranslation' disabled='disabled'>"
+            + "</div>"
+            + "</td>"
+            + "</tr>"
+            + "</tbody>"
+            + "</table>"
+            + "</div>"
+            + "</td>"
+            + "</tr>"
+        );
+
+        ComboSeasonList(0, count);
+        ComboTopSeasonList(0, count);
+
+        ComboCountryList(0, count);
+        ComboTopCountryList(0, count);
+
+        setTimeout(function () {
+            ComboCurrencyList(0, count)
+            ComboTopCurrencyList(0, count)
+            count++;
+        }, 100);
+       //ComboCurrencyList(0, count);
+
+
+    }
+
+    function deleteSeasonCurrency(button) {
+        button.closest("tr").remove();
+    }
+
+    var newID = 0;
+    function Save() {
+
+        var url = "@Url.Action("Save", "Season")";
+        $.post(url,
+            $("form").serialize(), function (data) {
+                if (data.result == false) {
+                    ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
+
+                }
+                if (data.result == true) {
+                    newID = data.obj;
+                    ShowSuccess('@SharedLocaLizer.GetLocalizedHtmlString("SaveMessage")');
+                }
+            });
+
+    }
+
+    function tableOpenClosed(Count) {
+        document.getElementById("view'" + Count + "'").onclick = function(){
+            if (document.getElementById("view'" + Count + "'").classList.contains("open")) {
+                document.getElementById("view'" + Count + "'").classList.remove("open");
+                document.getElementById("fold'" + Count + "'").classList.remove("open");
+            } else {
+                document.getElementById("view'" + Count + "'").classList.add("open");
+                document.getElementById("fold'" + Count + "'").classList.add("open");
+            }
+
+        }
+
+    }
+
+    function ShowError(title, message) {
+        Swal.fire({
+            position: 'top-end',
+            title: title,
+            text: message,
+            icon: 'error',
+            showCloseButton: true,
+            showConfirmButton: true,
+            padding: '4em'
+        });
+    }
+
+    function ShowSuccess(title, message) {
+
+        Swal.fire({
+            position: 'top-end',
+            title: title,
+            text: message,
+            icon: 'success',
+            showCloseButton: true,
+            showConfirmButton: true,
+            padding: '4em'
+        }).then(function () {
+            window.location.href = "@Url.Action("Detail","Season")" + "?Detail=" + id;;
+        });
+    }
+</script>

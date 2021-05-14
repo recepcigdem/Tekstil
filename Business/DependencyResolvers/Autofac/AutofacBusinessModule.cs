@@ -85,6 +85,9 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<TariffNoManager>().As<ITariffNoService>().SingleInstance();
             builder.RegisterType<EfTariffNoDal>().As<ITariffNoDal>().SingleInstance();
 
+            builder.RegisterType<TariffNoDetailManager>().As<ITariffNoDetailService>().SingleInstance();
+            builder.RegisterType<EfTariffNoDetailDal>().As<ITariffNoDetailDal>().SingleInstance();
+
             builder.RegisterType<TestManager>().As<ITestService>().SingleInstance();
             builder.RegisterType<EfTestDal>().As<ITestDal>().SingleInstance();
 
