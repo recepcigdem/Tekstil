@@ -13,7 +13,7 @@ namespace Business.Abstract
         IDataServiceResult<List<TariffNoDetail>> GetAll(int customerId);
         IDataServiceResult<List<TariffNoDetail>> GetAllByTariffNo(int tariffNoId);
         IDataServiceResult<TariffNoDetail> GetById(int tariffNoDetailId);
-        IDataServiceResult<TariffNoDetail> Save(int customerId, List<TariffNoDetail> tariffNoDetail);
+        IDataServiceResult<TariffNoDetail> Save(int tariffNoId,int customerId, List<TariffNoDetail> tariffNoDetail);
         IServiceResult Delete(TariffNoDetail tariffNoDetail);
         IServiceResult DeleteByTariffNo(TariffNo tariffNo);
     }

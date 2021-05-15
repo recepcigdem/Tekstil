@@ -164,7 +164,8 @@
                                                                                                 <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].AdditionalTax, new { @class = "form-control numericField" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].AdditionalTax1, new { @class = "form-control numericField" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].Superintendence, new { @class = "form-control numericField", @id = "trSuperintendence'" + i + "'", @onchange = "KgChangeCalc(" + i + ");" })</td>
-                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].UnitKg, new { @class = "form-control numericField", @id = "trUnitKg'" + i + "'", @onchange = "KgChangeCalc(" + i + ");" })</td>
+                                                                                                <td id="unitKg'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].UnitKg, new { @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                                                @*<td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].UnitKg, new { @class = "form-control numericField", @id = "trUnitKg'" + i + "'", @onchange = "KgChangeCalc(" + i + ");" })</td>*@
                                                                                                 <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].KgTranslation, new { @class = "form-control numericField", @id = "trKgTranslation'" + i + "'", @disabled = "disabled" })</td>
                                                                                             </tr>
                                                                                         </tbody>
@@ -209,49 +210,57 @@
     var dataListSeason = [];
     var dataListCountry = [];
     var dataListCurrency = [];
+    var dataListUnitKg = [];
 
 
     $(document).ready(function() {
         dataListSeason = [];
         count = 0;
-        $("#tariffNoDetailGrid tbody").each(function () {
+
+        
+        $("#tableTariffNoDetail tbody").each(function () {
             var row = $(this);
 
             var data = {};
 
             data.seasonId = row.find("#trTariffNoDetail1").find("td").find("input").eq(0).val();
-            if (data.seasonId > 0) {
 
+            if (data.seasonId > 0) {
                 ComboSeasonList(data.seasonId, count);
                 ComboTopSeasonList(data.seasonId, count);
             }
 
-            data.countryId = row.find("#trTariffNoDetail1").find("td").find("input").eq(1).val();
-
+            data.countryId = row.find("#trTariffNoDetail1").find("td").find("input").eq(0).val();
+            console.log(data.countryId);
             if (data.countryId > 0) {
                 ComboCountryList(data.countryId, count);
                 ComboTopCountryList(data.countryId, count);
             }
 
-            setTimeout(function () {
-                data.seasonCurrencyId = row.find("#trTariffNoDetail1").find("td").find("input").eq(0).val();
-
-                if (data.seasonCurrencyId > 0) {
-
-                    ComboCurrencyList(data.seasonCurrencyId, count);
-                    ComboTopCurrencyList(data.seasonCurrencyId, count);
-                }
-                count++;
-            }, 500);
 
 
+            data.unitKg = row.find("#trTariffNoDetail3").find("td").find("input").eq(3).val();
+            if (data.unitKg != "") {
+              
+                ComboUnitKgList(data.unitKg, count);
+            }
+
+
+            data.seasonCurrencyId = row.find("#trTariffNoDetail1").find("td").find("input").eq(0).val();
+
+            if (data.seasonCurrencyId > 0) {
+                ComboCurrencyList(data.seasonId, data.seasonCurrencyId, count);
+                ComboTopCurrencyList(data.seasonId, data.seasonCurrencyId, count);
+            }
+
+            count++;
         });
 
     });
 
     function ComboSeasonList(seasonId, count) {
         dataListSeason = [];
-
+      
         document.getElementById("season'" + count + "'").innerHTML = "<select id=\"comboSeason" + count + "\" class=\"form-control season comboSeason\" onchange =\"SeasonCountryChangeCalc(" + count + ");\">" + "</select>";
         var selectitem = document.getElementById("comboSeason" + count);
 
@@ -274,6 +283,8 @@
 
                     if (option.value == seasonId) {
                         selectitem.options.selectedIndex = index;
+                        selectitem.options[selectitem.options.selectedIndex].setAttribute("selected", true);
+
                     }
                     index = index + 1;
                     });
@@ -306,6 +317,7 @@
 
                     if (option.value == seasonId) {
                         selectitem.options.selectedIndex = index;
+                        selectitem.options[selectitem.options.selectedIndex].setAttribute("selected", true);
                     }
                     index = index + 1;
                     });
@@ -338,6 +350,8 @@
 
                     if (option.value == countryId) {
                         selectitem.options.selectedIndex = index;
+                        selectitem.options[selectitem.options.selectedIndex].setAttribute("selected", true);
+
                     }
                     index = index + 1;
                     });
@@ -370,6 +384,7 @@
 
                     if (option.value == countryId) {
                         selectitem.options.selectedIndex = index;
+                        selectitem.options[selectitem.options.selectedIndex].setAttribute("selected", true);
                     }
                     index = index + 1;
                     });
@@ -377,19 +392,14 @@
         });
     }
 
-    function ComboCurrencyList(seasonCurrencyId, count) {
+    function ComboCurrencyList(seasonId, seasonCurrencyId, count) {
         dataListCurrency = [];
-        var seasonSelectedIndex = document.getElementById("season'" + count + "'").children[0].selectedIndex;
-        var season = document.getElementById("season'" + count + "'").children[0].children[seasonSelectedIndex].value;
 
-        //console.log(season);
 
         document.getElementById("seasonCurrency'" + count + "'").innerHTML = "<select id=\"comboCurrency" + count + "\" class=\"form-control currency comboCurrency\" onchange =\"SeasonCurrencyChange(" + count + ");\">" + "</select>";
         var selectItem = document.getElementById("comboCurrency" + count);
 
-
-
-        var comboCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + season;
+        var comboCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + seasonId;
         var index = 0;
         $.ajax({
             url: comboCurrencyUrl,
@@ -408,23 +418,24 @@
 
                     if (option.value == seasonCurrencyId) {
                         selectItem.options.selectedIndex = index;
+                        selectitem.options[selectitem.options.selectedIndex].setAttribute("selected", true);
                     }
                     index = index + 1;
                 });
             }
         });
+       
     }
 
-    function ComboTopCurrencyList(currencyId, count) {
+    function ComboTopCurrencyList(seasonId, currencyId, count) {
         dataListCurrency = [];
 
-        var seasonSelectedIndex = document.getElementById("season'" + count + "'").children[0].selectedIndex;
-        var season = document.getElementById("season'" + count + "'").children[0].children[seasonSelectedIndex].value;
+      
 
         document.getElementById("topSeasonCurrency'" + count + "'").innerHTML = "<select id=\"comboTopCurrency" + count + "\" class=\"form-control topCurrency comboTopCurrency\"  disabled=\"disabled\">" + "</select>";
         var selectItem = document.getElementById("comboTopCurrency" + count);
 
-        var comboCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + season;
+        var comboCurrencyUrl = "@Url.Action("ComboListSeasonCurrency", "Season")" + "?seasonId=" + seasonId;
         var index = 0;
         $.ajax({
             url: comboCurrencyUrl,
@@ -454,6 +465,40 @@
 
     }
 
+    function ComboUnitKgList(unitKg, count) {
+        dataListUnitKg = [];
+
+        document.getElementById("unitKg'" + count + "'").innerHTML = "<select id=\"comboUnitKg" + count + "\" class=\"form-control unitKg comboUnitKg\" onchange =\"KgChangeCalc(" + count + ");\">" + "</select>";
+        var selectItem = document.getElementById("comboUnitKg" + count);
+
+        var index = 0;
+
+        var option = document.createElement("option");
+        option.textContent = "Kg";
+        option.value = 1;
+
+        dataListUnitKg.push(option);
+        selectItem.appendChild(option);
+
+        if (option.textContent == unitKg) {
+            selectItem.options.selectedIndex = index;
+        }
+        index = index + 1;
+
+        var option = document.createElement("option");
+        option.textContent = "Ton";
+        option.value = 2;
+
+        dataListUnitKg.push(option);
+        selectItem.appendChild(option);
+
+        if (option.textContent == unitKg) {
+            selectItem.options.selectedIndex = index;
+        }
+
+        index = index + 1;
+    }
+
     function SeasonCountryChangeCalc(count) {
 
         var season = document.getElementById("comboSeason" + count);
@@ -467,8 +512,8 @@
 
             setTimeout(function () {
 
-                ComboCurrencyList(0, count);
-                ComboTopCurrencyList(0, count);
+                ComboCurrencyList(season.value, 0, count);
+                ComboTopCurrencyList(season.value, 0, count);
 
             }, 200);
 
@@ -494,7 +539,15 @@
 
     function KgChangeCalc(count) {
         var superIntendence = document.getElementById("trSuperintendence'" + count + "'").value;
-        var trUnitKg = document.getElementById("trUnitKg'" + count + "'").value;
+        var trUnitKg = document.getElementById("comboUnitKg" + count);
+
+        $(trUnitKg).find('option').removeAttr("selected");
+        trUnitKg.options[trUnitKg.options.selectedIndex].setAttribute("selected", true);
+
+        var unitKgSelectedIndex = document.getElementById("comboUnitKg" + count).selectedIndex;
+
+        trUnitKg = document.getElementById("comboUnitKg" + count).children[unitKgSelectedIndex].text;
+
         if (trUnitKg == "Ton") {
             document.getElementById("trKgTranslation'" + count + "'").value = superIntendence / 1000;
         }
@@ -607,10 +660,7 @@
             + "<input id=\"trSuperintendence'" + count + "'\" name='ListTariffNoDetails[" + count + "].Superintendence' class='form-control numericField' onchange=\"KgChangeCalc(" + count + ");\">"
             + "</div>"
             + "</td>"
-            + "<td>"
-            + "<div class=\"input-group\">"
-            + "<input id=\"trUnitKg'" + count + "'\" name='ListTariffNoDetails[" + count + "].UnitKg' class='form-control numericField' onchange=\"KgChangeCalc(" + count + ");\">"
-            + "</div>"
+            + "<td id=\"unitKg'" + count + "'\">"
             + "</td>"
             + "<td>"
             + "<div class=\"input-group\">"
@@ -630,6 +680,8 @@
 
         ComboCountryList(0, count);
         ComboTopCountryList(0, count);
+
+        ComboUnitKgList(0, count);
 
         setTimeout(function () {
             ComboCurrencyList(0, count)
@@ -681,8 +733,9 @@
             data.additionalTax = row.find("#trTariffNoDetail3").find("td").find("input").eq(0).val();
             data.additionalTax1 = row.find("#trTariffNoDetail3").find("td").find("input").eq(1).val();
             data.superintendence = row.find("#trTariffNoDetail3").find("td").find("input").eq(2).val();
-            data.unitKg = row.find("#trTariffNoDetail3").find("td").find("input").eq(3).val();
-            data.kgTranslation = row.find("#trTariffNoDetail3").find("td").find("input").eq(4).val();
+            data.unitKg = row.find("#trTariffNoDetail3").find("td").find("select").eq(0)[0].selectedOptions[0].text;
+
+            data.kgTranslation = row.find("#trTariffNoDetail3").find("td").find("input").eq(3).val();
 
 
             dataListTariffNoDetail.push(data);

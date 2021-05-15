@@ -118,9 +118,9 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        public IDataServiceResult<TariffNoDetail> Save(int customerId, List<TariffNoDetail> tariffNoDetails)
+        public IDataServiceResult<TariffNoDetail> Save(int tariffNoId,int customerId, List<TariffNoDetail> tariffNoDetails)
         {
-            var dbTariffNoDetails = GetAll(customerId).Data;
+            var dbTariffNoDetails = GetAllByTariffNo(tariffNoId).Data;
             foreach (var dbTariffNoDetail in dbTariffNoDetails)
             {
                 var control = tariffNoDetails.Any(x => x.Id == dbTariffNoDetail.Id);

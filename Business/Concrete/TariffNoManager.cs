@@ -100,7 +100,7 @@ namespace Business.Concrete
                 Add(tariffNo);
             }
 
-            _tariffNoDetailService.Save(tariffNo.CustomerId, tariffNoDetails);
+            _tariffNoDetailService.Save(tariffNo.Id, tariffNo.CustomerId, tariffNoDetails);
 
             return new SuccessDataServiceResult<TariffNo>(true, "Saved");
         }
