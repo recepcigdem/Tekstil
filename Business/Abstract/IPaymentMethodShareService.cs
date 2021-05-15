@@ -17,6 +17,6 @@ namespace Business.Abstract
         IServiceResult Update(PaymentMethodShare paymentMethodShare);
         IServiceResult Delete(PaymentMethodShare paymentMethodShare);
         IServiceResult DeleteBySeason(Season season);
-        IDataServiceResult<PaymentMethodShare> Save(int customerId, List<PaymentMethodShare> paymentMethodShares);
+        IDataServiceResult<PaymentMethodShare> Save(int seasonId, int customerId, List<PaymentMethodShare> paymentMethodShares);
     }
 }

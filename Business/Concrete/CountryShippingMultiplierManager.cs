@@ -104,9 +104,9 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        public IDataServiceResult<CountryShippingMultiplier> Save(int customerId, List<CountryShippingMultiplier> countryShippingMultipliers)
+        public IDataServiceResult<CountryShippingMultiplier> Save(int seasonId, int customerId, List<CountryShippingMultiplier> countryShippingMultipliers)
         {
-            var dbCountryShippingMultipliers = GetAll(customerId).Data;
+            var dbCountryShippingMultipliers = GetAllBySeasonId(seasonId).Data;
             foreach (var dbCountryShippingMultiplier in dbCountryShippingMultipliers)
             {
                 var control = countryShippingMultipliers.Any(x => x.Id == dbCountryShippingMultiplier.Id);

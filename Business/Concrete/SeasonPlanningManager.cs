@@ -101,9 +101,9 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        public IDataServiceResult<SeasonPlaning> Save(int customerId, List<SeasonPlaning> seasonPlanings)
+        public IDataServiceResult<SeasonPlaning> Save(int seasonId, int customerId, List<SeasonPlaning> seasonPlanings)
         {
-            var dbSeasonPlanings = GetAll(customerId).Data;
+            var dbSeasonPlanings = GetAllBySeasonId(seasonId).Data;
             foreach (var dbSeasonPlaning in dbSeasonPlanings)
             {
                 var control = seasonPlanings.Any(x => x.Id == dbSeasonPlaning.Id);

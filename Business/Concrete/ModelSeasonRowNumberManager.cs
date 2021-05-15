@@ -85,7 +85,7 @@ namespace Business.Concrete
 
         //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
         [TransactionScopeAspect]
-        public IDataServiceResult<ModelSeasonRowNumber> Save(int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers)
+        public IDataServiceResult<ModelSeasonRowNumber> Save(int seasonId , int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers)
         {
             foreach (var modelSeasonRowNumber in modelSeasonRowNumbers)
             {
@@ -108,7 +108,7 @@ namespace Business.Concrete
                 }
             }
 
-            var dbModelSeasonRowNumbers = GetAll(customerId).Data;
+            var dbModelSeasonRowNumbers = GetAllBySeasonId(seasonId).Data;
             foreach (var dbModelSeasonRowNumber in dbModelSeasonRowNumbers)
             {
                 var idControl = modelSeasonRowNumbers.Any(x => x.Id == dbModelSeasonRowNumber.Id);

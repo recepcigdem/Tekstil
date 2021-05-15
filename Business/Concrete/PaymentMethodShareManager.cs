@@ -101,9 +101,9 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        public IDataServiceResult<PaymentMethodShare> Save(int customerId, List<PaymentMethodShare> paymentMethodShares)
+        public IDataServiceResult<PaymentMethodShare> Save(int seasonId, int customerId, List<PaymentMethodShare> paymentMethodShares)
         {
-            var dbPaymentMethodShares = GetAll(customerId).Data;
+            var dbPaymentMethodShares = GetAllBySeasonId(seasonId).Data;
             foreach (var dbPaymentMethodShare in dbPaymentMethodShares)
             {
                 var control = paymentMethodShares.Any(x => x.Id == dbPaymentMethodShare.Id);

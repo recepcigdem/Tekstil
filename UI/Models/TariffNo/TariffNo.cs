@@ -103,8 +103,8 @@ namespace UI.Models.TariffNo
                     tariffNoDetail.Id = item.Id;
                 }
 
-                tariffNoDetail.CustomerId = item.CustomerId;
-                tariffNoDetail.TariffNoId = item.TariffNoId;
+                tariffNoDetail.CustomerId = CustomerId;
+                tariffNoDetail.TariffNoId = EntityId;
                 tariffNoDetail.SeasonId = item.SeasonId;
                 tariffNoDetail.CountryId = item.CountryId;
                 tariffNoDetail.SeasonCurrencyId = item.SeasonCurrencyId;

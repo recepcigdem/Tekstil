@@ -17,6 +17,6 @@ namespace Business.Abstract
         IServiceResult Update(CountryShippingMultiplier countryShippingMultiplier);
         IServiceResult Delete(CountryShippingMultiplier countryShippingMultiplier);
         IServiceResult DeleteBySeason(Season season);
-        IDataServiceResult<CountryShippingMultiplier> Save(int customerId, List<CountryShippingMultiplier> countryShippingMultipliers);
+        IDataServiceResult<CountryShippingMultiplier> Save(int seasonId, int customerId, List<CountryShippingMultiplier> countryShippingMultipliers);
     }
 }

@@ -109,12 +109,12 @@
 
                                                                     @for (int i = 0; i < Model.ListTariffNoDetails.Count; i++)
                                                                     {
-                                                                        <tr class="view" id="view'@i'" onclick="tableOpenClosed(@i);">
+                                                                        <tr class="view" id="view'@i'" onclick="tableOpenClosed(@i)">
                                                                             <td id="topSeason'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                             <td id="topCountry'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].CountryId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                             <td id="topSeasonCurrency'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonCurrencyId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                             <td>
-                                                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteListLine(@i);">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListTariffNoDetails[i].Id)
+                                                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteListLine(@i)">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListTariffNoDetails[i].Id)
                                                                             </td>
                                                                         </tr>
                                                                         <tr class="fold" id="fold'@i'">
@@ -132,7 +132,7 @@
                                                                                             </tr>
                                                                                         </thead>
                                                                                         <tbody>
-                                                                                            <tr id="trTariffNoDetail1">
+                                                                                            <tr id="trTariffNoDetail1" value="@Model.ListTariffNoDetails[i].Id">
                                                                                                 <td id="season'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonId, new { @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td id="country'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].CountryId, new { @class = "form-control", @style = "background-color:#fff" })</td>
                                                                                                 <td id="seasonCurrency'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonCurrencyId, new { @class = "form-control", @style = "background-color:#fff" })</td>
@@ -163,9 +163,9 @@
                                                                                             <tr id="trTariffNoDetail3">
                                                                                                 <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].AdditionalTax, new { @class = "form-control numericField" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].AdditionalTax1, new { @class = "form-control numericField" })</td>
-                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].Superintendence, new { @class = "form-control numericField" , @id= "trSuperintendence'" + i + "'", @onchange= "KgChangeCalc(" + i + ");" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].Superintendence, new { @class = "form-control numericField", @id = "trSuperintendence'" + i + "'", @onchange = "KgChangeCalc(" + i + ");" })</td>
                                                                                                 <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].UnitKg, new { @class = "form-control numericField", @id = "trUnitKg'" + i + "'", @onchange = "KgChangeCalc(" + i + ");" })</td>
-                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].KgTranslation, new { @class = "form-control numericField", @id = "trKgTranslation'" + i + "'" , @disabled="disabled" })</td>
+                                                                                                <td>@Html.TextBoxFor(x => x.ListTariffNoDetails[i].KgTranslation, new { @class = "form-control numericField", @id = "trKgTranslation'" + i + "'", @disabled = "disabled" })</td>
                                                                                             </tr>
                                                                                         </tbody>
                                                                                     </table>
@@ -209,6 +209,7 @@
     var dataListSeason = [];
     var dataListCountry = [];
     var dataListCurrency = [];
+
 
     $(document).ready(function() {
         dataListSeason = [];
@@ -378,10 +379,12 @@
 
     function ComboCurrencyList(seasonCurrencyId, count) {
         dataListCurrency = [];
+        var seasonSelectedIndex = document.getElementById("season'" + count + "'").children[0].selectedIndex;
+        var season = document.getElementById("season'" + count + "'").children[0].children[seasonSelectedIndex].value;
 
-        var season = document.getElementById("season'" + count + "'").children[0].children[0].value;
+        //console.log(season);
 
-        document.getElementById("seasonCurrency'" + count + "'").innerHTML = "<select id=\"comboCurrency" + count + "\" class=\"form-control currency comboCurrency\">" + "</select>";
+        document.getElementById("seasonCurrency'" + count + "'").innerHTML = "<select id=\"comboCurrency" + count + "\" class=\"form-control currency comboCurrency\" onchange =\"SeasonCurrencyChange(" + count + ");\">" + "</select>";
         var selectItem = document.getElementById("comboCurrency" + count);
 
 
@@ -397,7 +400,7 @@
             success: function (data) {
                 data.forEach(element => {
                     dataListCurrency.push(element);
-                   
+
                     var option = document.createElement("option");
                     option.textContent = element.text;
                     option.value = element.id;
@@ -415,7 +418,8 @@
     function ComboTopCurrencyList(currencyId, count) {
         dataListCurrency = [];
 
-        var season = document.getElementById("season'" + count + "'").children[0].children[0].value;
+        var seasonSelectedIndex = document.getElementById("season'" + count + "'").children[0].selectedIndex;
+        var season = document.getElementById("season'" + count + "'").children[0].children[seasonSelectedIndex].value;
 
         document.getElementById("topSeasonCurrency'" + count + "'").innerHTML = "<select id=\"comboTopCurrency" + count + "\" class=\"form-control topCurrency comboTopCurrency\"  disabled=\"disabled\">" + "</select>";
         var selectItem = document.getElementById("comboTopCurrency" + count);
@@ -444,7 +448,7 @@
                     index = index + 1;
                 });
 
-                
+
             }
         });
 
@@ -454,34 +458,38 @@
 
         var season = document.getElementById("comboSeason" + count);
         var topSeason = document.getElementById("comboTopSeason" + count);
-        
-       
+
+
         var country = document.getElementById("comboCountry" + count);
         var topCountry = document.getElementById("comboTopCountry" + count);
-       
 
         if (season.value != topSeason.value) {
-            console.log("ok");
 
             setTimeout(function () {
-                
-                    ComboCurrencyList(0, count);
-                    ComboTopCurrencyList(0, count);
-               
-            }, 500);
 
-            //document.getElementById("comboCurrency" + count).value = 0;
-            //document.getElementById("comboTopCurrency" + count).value = 0;
+                ComboCurrencyList(0, count);
+                ComboTopCurrencyList(0, count);
 
-            var currency = document.getElementById("comboCurrency" + count);
-            currency.options[0].setAttribute("selected", "selected");
+            }, 200);
 
-            var topCurrency = document.getElementById("comboTopCurrency" + count);
-            topCurrency.options[0].setAttribute("selected", "selected");
         }
 
-        topSeason.options[season.options.selectedIndex].setAttribute("selected", "selected");
-        topCountry.options[country.options.selectedIndex].setAttribute("selected", "selected");
+            $(topSeason).find('option').removeAttr("selected");
+            topSeason.options[season.options.selectedIndex].setAttribute("selected", true);
+
+            $(topCountry).find('option').removeAttr("selected");
+            topCountry.options[country.options.selectedIndex].setAttribute("selected", "selected");
+
+
+    }
+
+    function SeasonCurrencyChange(count) {
+
+        var seasonCurrency = document.getElementById("comboCurrency" + count);
+        var topSeasonCurrency = document.getElementById("comboTopCurrency" + count);
+
+        $(topSeasonCurrency).find('option').removeAttr("selected");
+        topSeasonCurrency.options[seasonCurrency.options.selectedIndex].setAttribute("selected", true);
     }
 
     function KgChangeCalc(count) {
@@ -501,7 +509,7 @@
         event.preventDefault();
         var table = document.querySelector("#tariffNoDetailGrid tbody");
         table.insertAdjacentHTML("beforeend",
-            "<tr class=\"view\" id=\"view'" + count + "'\" onclick=\"tableOpenClosed(" + count + ");\">"
+            "<tr class=\"view\" id=\"view'" + count + "'\"  onclick=\"tableOpenClosed(" + count + ")\">"
             + "<td id=\"topSeason'" + count + "'\">"
             + "</td>"
             + "<td id=\"topCountry'" + count + "'\">"
@@ -528,7 +536,7 @@
             + "</tr>"
             + "</thead>"
             + "<tbody>"
-            + "<tr id=\"trTariffNoDetail1\">"
+            + "<tr id=\"trTariffNoDetail1\" value='0'>"
             + "<td id=\"season'" + count + "'\">"
             + "</td>"
             + "<td id=\"country'" + count + "'\">"
@@ -633,19 +641,62 @@
 
     }
 
-    function deleteSeasonCurrency(button) {
-        button.closest("tr").remove();
+    function deleteListLine(rowNo) {
+        let rowDocument = document.getElementById("view'" + rowNo + "'");
+        rowDocument.remove();
+
+        let foldDocument = document.getElementById("fold'" + rowNo + "'");;
+        foldDocument.remove();
+
     }
 
     var newID = 0;
     function Save() {
+        var dataListTariffNoDetail = [];
 
-        var url = "@Url.Action("Save", "Season")";
+        $("#tableTariffNoDetail tbody").each(function () {
+
+            var row = $(this);
+
+            var data = {};
+
+            data.id = row.find("#trTariffNoDetail1")[0].attributes[1].value;
+            if (data.id > 0) {
+                data.id = row.find("#trTariffNoDetail1")[0].attributes[1].value;
+            } else {
+                data.id = 0;
+            }
+
+            data.seasonId = row.find("#trTariffNoDetail1").find("td").find("select").eq(0).val();
+            data.countryId = row.find("#trTariffNoDetail1").find("td").find("select").eq(1).val();
+            data.seasonCurrencyId = row.find("#trTariffNoDetail1").find("td").find("select").eq(2).val();
+
+            data.tax = row.find("#trTariffNoDetail2").find("td").find("input").eq(0).val();
+            data.stamp = row.find("#trTariffNoDetail2").find("td").find("input").eq(1).val();
+            data.azoTest = row.find("#trTariffNoDetail2").find("td").find("input").eq(2).val();
+            data.differentExpense = row.find("#trTariffNoDetail2").find("td").find("input").eq(3).val();
+            data.commission = row.find("#trTariffNoDetail2").find("td").find("input").eq(4).val();
+            data.kkdf = row.find("#trTariffNoDetail2").find("td").find("input").eq(5).val();
+
+            data.additionalTax = row.find("#trTariffNoDetail3").find("td").find("input").eq(0).val();
+            data.additionalTax1 = row.find("#trTariffNoDetail3").find("td").find("input").eq(1).val();
+            data.superintendence = row.find("#trTariffNoDetail3").find("td").find("input").eq(2).val();
+            data.unitKg = row.find("#trTariffNoDetail3").find("td").find("input").eq(3).val();
+            data.kgTranslation = row.find("#trTariffNoDetail3").find("td").find("input").eq(4).val();
+
+
+            dataListTariffNoDetail.push(data);
+        });
+
+        $('#SubTariffNoDetailString').val(JSON.stringify(dataListTariffNoDetail));
+
+
+        var url = "@Url.Action("Save", "TariffNo")";
         $.post(url,
             $("form").serialize(), function (data) {
                 if (data.result == false) {
                     ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', data.message);
-
+                    $('#SubTariffNoDetailString').val(dataListTariffNoDetail);
                 }
                 if (data.result == true) {
                     newID = data.obj;

@@ -276,7 +276,7 @@
                                                                                                         <input type="text" class="form-control numericField" name="exchangeRate" id="exchangeRate" value="@Model.ListSeasonCurrencies[i].ExchangeRate" />
                                                                                                     </div>
                                                                                                 </td>
-                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteSeasonCurrency(this)">@Localizer["Delete"]</button> @Html.HiddenFor(x => x.ListSeasonCurrencies[i].Id)</td>
+                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteSeasonCurrency(this)">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListSeasonCurrencies[i].Id, new { @id= "seasonCurrencyId'" + i + "'" })</td>
                                                                                             </tr>
 
                                                                                         }
@@ -911,7 +911,7 @@
         var isUsed = rows[row].getElementsByTagName("TD")[0].children[0].children[0].children[1];
         console.log(isUsed);
         isUsed = '::before';
-       
+
         var comboModelSeasonRowNumberUrl = "@Url.Action("ActiveControl", "Season")" + "?modelSeasonRowNumberId=" + modelSeasonRowNumberId;
 
         $.ajax({
@@ -923,7 +923,7 @@
             success: function (data) {
                 if (data.result) {
                     ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', "ProductGroupRowNumberUsed");
-                   
+
                 }
                 else {
 
@@ -1253,7 +1253,7 @@
             + "</div>"
             + "</td>"
             + "<td><button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteSeasonCurrency(this)\">@Localizer["Delete"]</button>"
-             + "<input type=\"hidden\" class=\"form-control\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].Id\">"
+             + "<input type=\"hidden\" class=\"form-control\" name=\"ListSeasonCurrencies[" + countSeasonCurrency + "].Id\" id=\"seasonCurrencyId'" + i + "'\">"
             + "</td>"
             + "</tr>"
         );
@@ -1578,7 +1578,7 @@
 
                 }
             }
-            
+
             if (used != 1) {
 
                 table.insertAdjacentHTML("beforeend",
@@ -1676,7 +1676,7 @@
             for (var k = 1; k < (rows.length); k++) {
 
                 rows[k].getElementsByTagName("TD")[0].getElementsByTagName("div")[0].getElementsByTagName("div")[0].getElementsByTagName("input")[0].name = "ListModelSeasonRowNumbers[" + k + "].IsActive";
-             
+
                 rows[k].getElementsByTagName("TD")[1].id = "modelRowProductGroup'" + k + "'";
                 rows[k].getElementsByTagName("TD")[1].getElementsByTagName("select")[0].id = "comboModelRowProductGroup" + k;
 

@@ -121,11 +121,11 @@ namespace Business.Concrete
                 Add(season);
             }
 
-            _seasonPlaningService.Save(season.CustomerId, seasonPlanings);
-            _seasonCurrencyService.Save(season.CustomerId, seasonCurrencies);
-            _paymentMethodShareService.Save(season.CustomerId, paymentMethodShares);
-            _countryShippingMultiplierService.Save(season.CustomerId, countryShippingMultipliers);
-            _modelSeasonRowNumberService.Save(season.CustomerId, modelSeasonRowNumbers);
+            _seasonPlaningService.Save(season.Id, season.CustomerId, seasonPlanings);
+            _seasonCurrencyService.Save(season.Id, season.CustomerId, seasonCurrencies);
+            _paymentMethodShareService.Save(season.Id, season.CustomerId, paymentMethodShares);
+            _countryShippingMultiplierService.Save(season.Id, season.CustomerId, countryShippingMultipliers);
+            _modelSeasonRowNumberService.Save(season.Id, season.CustomerId, modelSeasonRowNumbers);
 
             return new SuccessDataServiceResult<Season>(season, true, "Saved");
         }

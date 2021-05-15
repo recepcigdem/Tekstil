@@ -17,6 +17,6 @@ namespace Business.Abstract
         IServiceResult Update(SeasonCurrency seasonCurrency);
         IServiceResult Delete(SeasonCurrency seasonCurrency);
         IServiceResult DeleteBySeason(Season season);
-        IDataServiceResult<SeasonCurrency> Save(int customerId, List<SeasonCurrency> seasonCurrencies);
+        IDataServiceResult<SeasonCurrency> Save(int seasonId, int customerId, List<SeasonCurrency> seasonCurrencies);
     }
 }

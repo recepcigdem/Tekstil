@@ -16,6 +16,6 @@ namespace Business.Abstract
         IDataServiceResult<ModelSeasonRowNumber> GetByProductGroupIdAndRowNumber(int productGroupId, int rowNumber);
         IServiceResult Delete(ModelSeasonRowNumber modelSeasonRowNumbers);
         IServiceResult DeleteBySeason(Season season);
-        IDataServiceResult<ModelSeasonRowNumber> Save(int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers);
+        IDataServiceResult<ModelSeasonRowNumber> Save(int seasonId, int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers);
     }
 }
