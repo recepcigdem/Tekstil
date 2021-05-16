@@ -149,10 +149,10 @@ namespace UI.Controllers.Login
             if (resetPassword.Result == false)
             {
                resetPassword.Message = _localizer.GetString(resetPassword.Message);
-                return Json(new SuccessResult(true, resetPassword.Message));
+                return Json(new ServiceResult(true, resetPassword.Message));
             }
 
-            return Json(new SuccessResult(true, _localizer.GetString("Error_UserPasswordChanges")));
+            return Json(new ServiceResult(true, _localizer.GetString("Error_UserPasswordChanges")));
 
         }
 

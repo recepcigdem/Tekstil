@@ -13,7 +13,7 @@ namespace Business.ValidationRules.FluentValidation
         public AuthorizationValidator()
         {
            // RuleFor(x => x.IsActive).Must(x=>x==true);
-            RuleFor(x => x.AuthorizationName).NotEmpty();
+            RuleFor(x => x.AuthorizationName).NotEmpty().WithMessage("AuthorizationNameNotEmpty");
         }
     }
 }

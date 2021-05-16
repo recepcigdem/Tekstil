@@ -10,21 +10,27 @@ namespace Core.Aspects.Autofac.Transaction
 {
     public class TransactionScopeAspect : MethodInterception
     {
+        public static int Number { get; set; }
+        public static string Message { get; set; }
+
         public override void Intercept(IInvocation invocation)
         {
             using (TransactionScope transactionScope = new TransactionScope())
             {
                 try
                 {
+                    Message = "";
                     invocation.Proceed();
                     transactionScope.Complete();
                 }
                 catch (System.Exception e)
                 {
+                    
+                    Message = e.Message;
                     transactionScope.Dispose();
-                    throw new System.Exception(e.Message);
-                   //new ServiceResult(false, e.Message);
+                   
                 }
+               
             }
         }
     }

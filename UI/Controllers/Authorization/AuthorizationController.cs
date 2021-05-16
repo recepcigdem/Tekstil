@@ -11,6 +11,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using UI.Models;
 using UI.Models.Authorization;
+using Core.Aspects.Autofac.Transaction;
 
 namespace UI.Controllers.Authorization
 {
@@ -81,7 +82,22 @@ namespace UI.Controllers.Authorization
 
             if (Id > 0)
             {
+                
                 var res = _authorizationService.Delete(entity);
+                
+                #region SystemError
+                if (TransactionScopeAspect.Message.ToString() != "")
+                {
+                    ServiceResult service = new ServiceResult();
+                    service.Result = false;
+                    service.Message = _localizerShared.GetString("Error_SystemError");
+                    return Json(service);
+                }
+                #endregion
+
+                if (res.Result == false)
+                    res.Message = _localizer.GetString(res.Message);
+               
                 return Json(res);
             }
             return null;
@@ -105,19 +121,31 @@ namespace UI.Controllers.Authorization
                     return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_SystemError")));
 
                 var result = _authorizationService.Save(entity);
-                if (result.Result == false)
+                
+                #region SystemError
+                if (TransactionScopeAspect.Message.ToString() != "")
                 {
+                    ServiceResult service = new ServiceResult();
+                    service.Result = false;
+                    service.Message = _localizerShared.GetString("Error_SystemError");
+                    return Json(service);
+                }
+                #endregion
+
+                if (result.Result == false)
                     result.Message = _localizer.GetString(result.Message);
-                    return Json(result);
+                else
+                {   
+                    result.Message = _localizerShared.GetString(result.Message);
+                    result.Data = entity;
                 }
 
-                result.Message = _localizerShared.GetString(result.Message);
-                result.Data = entity;
                 return Json(result);
             }
 
             return null;
         }
+
         public JsonResult ComboList()
         {
             var authorizationList = _authorizationService.GetAll().Data;

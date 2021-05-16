@@ -41,7 +41,7 @@ namespace UI
             });
             //services.AddSingleton<IAgeGroupService, AgeGroupManager>();
             //services.AddSingleton<IAgeGroupDal, EfAgeGroupDal>();
-            //services.AddControllersWithViews();
+            services.AddControllersWithViews();
             services.AddSingleton<LocalizationService>();
 
             services.AddLocalization(o =>
@@ -56,7 +56,7 @@ namespace UI
             });
 
             
-            //services.AddCors();
+            services.AddCors();
 
             services.AddControllersWithViews().AddViewLocalization();
 

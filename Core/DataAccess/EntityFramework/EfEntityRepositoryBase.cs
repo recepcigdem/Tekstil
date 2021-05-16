@@ -63,7 +63,15 @@ namespace Core.DataAccess.EntityFramework
                 var deletedEntity = context.Entry(entity);
                 deletedEntity.State = EntityState.Deleted;
 
-                context.SaveChanges();
+                if (context.SaveChanges(false)!=1)
+                {
+                    context.SaveChanges();
+                }
+                else
+                {
+
+                    return false;
+                }
 
                 return true;
             }

@@ -16,10 +16,12 @@ namespace Business.Concrete
     public class AuthorizationManager : IAuthorizationService
     {
         private IAuthorizationDal _authorizationDal;
+        private IStaffAuthorizationService _staffAuthorizationService;
 
-        public AuthorizationManager(IAuthorizationDal authorizationDal)
+        public AuthorizationManager(IAuthorizationDal authorizationDal, IStaffAuthorizationService staffAuthorizationService)
         {
             _authorizationDal = authorizationDal;
+            _staffAuthorizationService = staffAuthorizationService;
         }
 
         public IDataServiceResult<List<Authorization>> GetAll()
@@ -76,8 +78,12 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IServiceResult Delete(Authorization authorization)
         {
-            var result = _authorizationDal.Delete(authorization);
-            if (result == false)
+            IServiceResult result = BusinessRules.Run(CheckIfAuthorizationIsUsed(authorization));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
+
+            var dbResult = _authorizationDal.Delete(authorization);
+            if (dbResult == false)
                 return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Message_Delated");
@@ -109,6 +115,15 @@ namespace Business.Concrete
             var result = _authorizationDal.GetAll(x => x.AuthorizationName == authorization.AuthorizationName);
             if (result.Count > 1)
                 return new ErrorServiceResult(false, "Message_AuthorizationAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfAuthorizationIsUsed(Authorization authorization)
+        {
+            var result = _staffAuthorizationService.GetAllByAuthorizationId(authorization.Id);
+            if (result.Data.Count>0)
+                return new ErrorServiceResult(false, "Message_AuthorizationIsUsed");
 
             return new ServiceResult(true, "");
         }

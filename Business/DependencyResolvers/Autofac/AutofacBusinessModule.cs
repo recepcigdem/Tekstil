@@ -49,9 +49,6 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<LabelManager>().As<ILabelService>().SingleInstance();
             builder.RegisterType<EfLabelDal>().As<ILabelDal>().SingleInstance();
 
-            builder.RegisterType<MaterialContentManager>().As<IMaterialContentService>().SingleInstance();
-            builder.RegisterType<EfMaterialContentDal>().As<IMaterialContentDal>().SingleInstance();
-
             builder.RegisterType<ModelSeasonRowNumberManager>().As<IModelSeasonRowNumberService>().SingleInstance();
             builder.RegisterType<EfModelSeasonRowNumberDal>().As<IModelSeasonRowNumberDal>().SingleInstance();
 

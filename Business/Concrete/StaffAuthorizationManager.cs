@@ -36,6 +36,13 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<StaffAuthorization>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<StaffAuthorization>> GetAllByAuthorizationId(int authorizationId)
+        {
+            var dbResult = _staffAuthorizationDal.GetAll(x => x.AuthorizationId == authorizationId);
+
+            return new SuccessDataServiceResult<List<StaffAuthorization>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<StaffAuthorization> GetById(int staffAuthorizationId)
         {
             var dbResult = _staffAuthorizationDal.Get(p => p.Id == staffAuthorizationId);

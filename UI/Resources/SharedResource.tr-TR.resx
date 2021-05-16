@@ -183,6 +183,9 @@
   <data name="ErrorTitle" xml:space="preserve">
     <value>Hata</value>
   </data>
+  <data name="Error_RecordIsUsed" xml:space="preserve">
+    <value>Kayıt kullanılmaktadır!</value>
+  </data>
   <data name="Error_SystemError" xml:space="preserve">
     <value>Sistem Hatası</value>
   </data>

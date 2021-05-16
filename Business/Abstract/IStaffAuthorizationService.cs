@@ -12,6 +12,7 @@ namespace Business.Abstract
     {
         IDataServiceResult<List<StaffAuthorization>> GetAll(int customerId);
         IDataServiceResult<List<StaffAuthorization>> GetAllByStaffId(int staffId);
+        IDataServiceResult<List<StaffAuthorization>> GetAllByAuthorizationId(int authorizationId);
         IDataServiceResult<StaffAuthorization> GetById(int staffAuthorizationId);
         IServiceResult GetByStaffId(int staffId);
         IServiceResult Add(StaffAuthorization staffAuthorization);
