@@ -22,8 +22,8 @@ namespace Core.Aspects.Autofac.Transaction
                 catch (System.Exception e)
                 {
                     transactionScope.Dispose();
-                   // throw;
-                   new ErrorResult(e.Message);
+                    throw new System.Exception(e.Message);
+                   //new ServiceResult(false, e.Message);
                 }
             }
         }

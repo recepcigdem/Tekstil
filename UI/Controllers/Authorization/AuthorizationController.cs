@@ -72,7 +72,7 @@ namespace UI.Controllers.Authorization
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorServiceResult(false, _localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_UserNotFound")));
             }
             #endregion
 
@@ -94,7 +94,7 @@ namespace UI.Controllers.Authorization
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
             {
-                return Json(new ErrorServiceResult(false, _localizer.GetString("Error_UserNotFound")));
+                return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_UserNotFound")));
             }
             #endregion
 
@@ -111,7 +111,7 @@ namespace UI.Controllers.Authorization
                     return Json(result);
                 }
 
-
+                result.Message = _localizerShared.GetString(result.Message);
                 result.Data = entity;
                 return Json(result);
             }
