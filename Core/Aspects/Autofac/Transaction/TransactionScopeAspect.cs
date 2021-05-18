@@ -9,9 +9,7 @@ using Core.Utilities.Results;
 namespace Core.Aspects.Autofac.Transaction
 {
     public class TransactionScopeAspect : MethodInterception
-    {
-        public static int Number { get; set; }
-        public static string Message { get; set; }
+    { 
 
         public override void Intercept(IInvocation invocation)
         {
@@ -25,10 +23,10 @@ namespace Core.Aspects.Autofac.Transaction
                 }
                 catch (System.Exception e)
                 {
-                    
-                    Message = e.Message;
+                    //Result = false;
+                    //Message = e.Message;
                     transactionScope.Dispose();
-                   
+                    throw e; 
                 }
                
             }

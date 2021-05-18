@@ -68,6 +68,7 @@ namespace UI.Controllers.Login
             staffSession.Token = login.Obj.ToString();
             staffSession.IsCompanyAdmin = login.Data.IsCompanyAdmin;
             staffSession.IsSuperAdmin = login.Data.IsSuperAdmin;
+            staffSession.OperationClaims = login.Data.OperationClaims;
 
             SessionHelper.SetStaff(Request, staffSession);
 

@@ -18,6 +18,13 @@ namespace Core.Utilities.Results
             this.Message = message;
             this.Obj = (object)null;
         }
+        public SuccessDataServiceResult(T data, string message)
+        {
+            this.Data = data;
+            this.Message = message;
+            this.Obj = (object)null;
+           
+        }
         public SuccessDataServiceResult(T data, bool result, string message)
         {
             this.Result = result;

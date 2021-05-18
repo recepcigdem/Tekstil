@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Entities.Concrete;
 
-namespace UI.Models.Common
+namespace Core.Entities.Concrete
 {
     public class StaffSession
     {

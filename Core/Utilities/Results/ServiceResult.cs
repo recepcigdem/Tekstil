@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using Castle.DynamicProxy;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,6 @@ namespace Core.Utilities.Results
         public bool Result { get; set; }
         public string Message { get; set; }
         public object Obj { get; set; }
-        
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.DynamicProxy;
 
 namespace Core.Utilities.Results
 {
@@ -37,6 +38,5 @@ namespace Core.Utilities.Results
            this.Obj =obj;
            this.Data = data;
        }
-
     }
 }

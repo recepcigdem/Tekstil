@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Core.Aspects.Autofac.Transaction;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,7 +56,7 @@ namespace Core.DataAccess.EntityFramework
                 return context.Set<TEntity>().FirstOrDefault();
             }
         }
-
+       
         public bool Delete(TEntity entity)
         {
             using (TContext context = new TContext())
@@ -63,15 +64,8 @@ namespace Core.DataAccess.EntityFramework
                 var deletedEntity = context.Entry(entity);
                 deletedEntity.State = EntityState.Deleted;
 
-                if (context.SaveChanges(false)!=1)
-                {
-                    context.SaveChanges();
-                }
-                else
-                {
-
-                    return false;
-                }
+                context.SaveChanges();
+              
 
                 return true;
             }

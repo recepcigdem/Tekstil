@@ -84,15 +84,15 @@ namespace UI.Controllers.Authorization
             {
                 
                 var res = _authorizationService.Delete(entity);
-                
+               
                 #region SystemError
-                if (TransactionScopeAspect.Message.ToString() != "")
-                {
-                    ServiceResult service = new ServiceResult();
-                    service.Result = false;
-                    service.Message = _localizerShared.GetString("Error_SystemError");
-                    return Json(service);
-                }
+                //if (TransactionScopeAspect.Message.ToString() != "")
+                //{
+                //    ServiceResult service = new ServiceResult();
+                //    service.Result = false;
+                //    service.Message = _localizerShared.GetString("Error_SystemError");
+                //    return Json(service);
+                //}
                 #endregion
 
                 if (res.Result == false)
@@ -123,13 +123,13 @@ namespace UI.Controllers.Authorization
                 var result = _authorizationService.Save(entity);
                 
                 #region SystemError
-                if (TransactionScopeAspect.Message.ToString() != "")
-                {
-                    ServiceResult service = new ServiceResult();
-                    service.Result = false;
-                    service.Message = _localizerShared.GetString("Error_SystemError");
-                    return Json(service);
-                }
+                //if (TransactionScopeAspect.Message.ToString() != "")
+                //{
+                //    ServiceResult service = new ServiceResult();
+                //    service.Result = false;
+                //    service.Message = _localizerShared.GetString("Error_SystemError");
+                //    return Json(service);
+                //}
                 #endregion
 
                 if (result.Result == false)

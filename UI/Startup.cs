@@ -13,10 +13,14 @@ using Business.Concrete;
 using Core.DependencyResolvers;
 using Core.Extensions;
 using Core.Utilities.IoC;
+using Core.Utilities.Security.Encryption;
+using Core.Utilities.Security.JWT;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using UI.Utils;
 
 namespace UI
@@ -57,7 +61,6 @@ namespace UI
 
             
             services.AddCors();
-
             services.AddControllersWithViews().AddViewLocalization();
 
             services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache

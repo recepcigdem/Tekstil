@@ -20,6 +20,8 @@ namespace Core.Utilities.Interceptors
             }
             catch (Exception e)
             {
+                Result = false;
+                Message = e.Message;
                 isSuccess = false;
                 OnException(invocation, e);
             }

@@ -1,5 +1,10 @@
 {
-
+  "TokenOptions": {
+    "Audience": "www.recep.com",
+    "Issuer": "www.recep.com",
+    "AccessTokenExpiration": 60,
+    "SecurityKey": "mysecretkeymysecretkey"
+  },
   "Info": {
     "ProjectUrl": "https://localhost:44354/",
     "BaseURL": "https://localhost:44354/",

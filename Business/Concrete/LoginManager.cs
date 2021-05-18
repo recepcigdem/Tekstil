@@ -6,9 +6,12 @@ using Core.Helper.Login;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Core.Entities.Concrete;
+
 
 namespace Business.Concrete
 {
@@ -17,12 +20,16 @@ namespace Business.Concrete
         private IEmailService _emailService;
         private IStaffEmailService _staffEmailService;
         private IStaffService _staffService;
+        private IAuthorizationService _authorizationService;
+       
 
-        public LoginManager(IEmailService emailService, IStaffEmailService staffEmailService, IStaffService staffService)
+        public LoginManager(IEmailService emailService, IStaffEmailService staffEmailService, IStaffService staffService, IAuthorizationService authorizationService)
         {
             _emailService = emailService;
             _staffEmailService = staffEmailService;
             _staffService = staffService;
+            _authorizationService = authorizationService;
+            
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -44,6 +51,12 @@ namespace Business.Concrete
             var dbLoginControl = DbLoginControl(email, password);
             if (dbLoginControl.Result == false)
                 return new DataServiceResult<Staff>(false, dbLoginControl.Message);
+
+            var roles = GetRoles(dbLoginControl.Data);
+            if (roles.Result == false)
+                return new DataServiceResult<Staff>(false, dbLoginControl.Message);
+
+            dbLoginControl.Data.OperationClaims = roles.Data;
 
             return new DataServiceResult<Staff>(dbLoginControl.Data,createLoginToken.Obj ,true, "Login");
         }
@@ -253,6 +266,23 @@ namespace Business.Concrete
                 return new ErrorServiceResult(false, "Error.Login_PasswordSaveUnSuccesful");
 
             return new ServiceResult(true, "ok");
+        }
+
+
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
+        public DataServiceResult<List<OperationClaim>> GetRoles(Staff staff)
+        {
+            var claims = _authorizationService.GetAllAuthorizationByStaffId(staff.Id);
+            List<OperationClaim> operationClaims = new List<OperationClaim>();
+            foreach (var authorization in claims.Data)
+            {
+                OperationClaim operationClaim = new OperationClaim();
+                operationClaim.Id = authorization.Id;
+                operationClaim.Name = authorization.AuthorizationName;
+                operationClaims.Add(operationClaim);
+            }
+            return new SuccessDataServiceResult<List<OperationClaim>> (operationClaims, true,"");
         }
     }
 }

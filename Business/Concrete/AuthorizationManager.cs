@@ -17,11 +17,13 @@ namespace Business.Concrete
     {
         private IAuthorizationDal _authorizationDal;
         private IStaffAuthorizationService _staffAuthorizationService;
+       //private AuthorizationValidator _authorizationValidator;
 
         public AuthorizationManager(IAuthorizationDal authorizationDal, IStaffAuthorizationService staffAuthorizationService)
         {
             _authorizationDal = authorizationDal;
             _staffAuthorizationService = staffAuthorizationService;
+           // _authorizationValidator = authorizationValidator;
         }
 
         public IDataServiceResult<List<Authorization>> GetAll()
@@ -29,6 +31,21 @@ namespace Business.Concrete
             var dbResult = _authorizationDal.GetAll();
 
             return new SuccessDataServiceResult<List<Authorization>>(dbResult, true, "Message_Listed");
+        }
+
+        public IDataServiceResult<List<Authorization>> GetAllAuthorizationByStaffId(int staffId)
+        {
+            var staffAuthorizationList = _staffAuthorizationService.GetAllByStaffId(staffId);
+
+            List<Authorization> authorizations = new List<Authorization>();
+            foreach (var staffAuthorization in staffAuthorizationList.Data)
+            {
+                var authorization = GetById(staffAuthorization.AuthorizationId);
+                if (authorization.Result)
+                    authorizations.Add(authorization.Data);
+            }
+
+            return new SuccessDataServiceResult<List<Authorization>>(authorizations, true, "Listed");
         }
 
         public IDataServiceResult<Authorization> GetById(int authorizationId)
@@ -74,26 +91,43 @@ namespace Business.Concrete
 
         }
 
-        //[SecuredOperation("SuperAdmin")]
+        [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Authorization authorization)
         {
-            IServiceResult result = BusinessRules.Run(CheckIfAuthorizationIsUsed(authorization));
-            if (result.Result == false)
-                return new ErrorServiceResult(false, result.Message);
+            //    IServiceResult result = BusinessRules.Run(CheckIfAuthorizationIsUsed(authorization));
+            //    if (result.Result == false)
+            //        return new ErrorServiceResult(false, result.Message);
 
-            var dbResult = _authorizationDal.Delete(authorization);
-            if (dbResult == false)
-                return new ErrorServiceResult(false, "Error_SystemError");
+            //try
+            //{
+                var dbResult = _authorizationDal.Delete(authorization);
+                if (dbResult == false)
+                    return new ErrorServiceResult(false, "Error_SystemError");
+            //}
+            //catch (Exception)
+            //{
+            //    return new ErrorServiceResult(false, "Error_SystemError");
+            //}
+          
 
             return new ServiceResult(true, "Message_Delated");
         }
 
         // [SecuredOperation("SuperAdmin")]
-        [ValidationAspect(typeof(AuthorizationValidator))]
+       
         [TransactionScopeAspect]
+        //[ValidationAspect(typeof(AuthorizationValidator))]
         public IDataServiceResult<Authorization> Save(Authorization authorization)
         {
+
+            AuthorizationValidator authorizationValidator = new AuthorizationValidator();
+            var validate= authorizationValidator.Validate(authorization);
+            if (!validate.IsValid)
+            {
+                return new DataServiceResult<Authorization>(false, validate.ToString());
+            }
+
             if (authorization.Id > 0)
             {
                 var result = Update(authorization);

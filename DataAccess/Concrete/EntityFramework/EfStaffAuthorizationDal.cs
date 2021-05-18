@@ -11,5 +11,6 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfStaffAuthorizationDal : EfEntityRepositoryBase<StaffAuthorization,TextileContext>, IStaffAuthorizationDal
     {
+       
     }
 }

@@ -26,6 +26,7 @@ namespace Core.Extensions
             catch (Exception e)
             {
                 await HandleExceptionAsync(httpContext, e);
+
             }
         }
 
@@ -34,11 +35,17 @@ namespace Core.Extensions
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            string message = "Internal Server Error";
+            string message = "Error_SystemError";
             IEnumerable<ValidationFailure> errors;
             if (e.GetType() == typeof(ValidationException))
             {
-                message = e.Message;
+                String str = e.Message;
+                var length= str.Length;
+                var lastLength = str.LastIndexOf(" ");
+                var sonuc = str.Substring(lastLength, length-lastLength).Trim();
+
+
+                message = sonuc;
                 errors = ((ValidationException)e).Errors;
                 httpContext.Response.StatusCode = 400;
 

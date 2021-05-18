@@ -6,6 +6,7 @@ using Core.CrossCuttingConcerns.Logging;
 using Core.CrossCuttingConcerns.Logging.Log4Net;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Messages;
+using Core.Utilities.Results;
 
 namespace Core.Aspects.Autofac.Exception
 {
@@ -27,6 +28,8 @@ namespace Core.Aspects.Autofac.Exception
             LogDetailWithException logDetailWithException = GetLogDetail(invocation);
             logDetailWithException.ExceptionMessage = e.Message;
             _loggerServiceBase.Error(logDetailWithException);
+
+           
         }
 
         private LogDetailWithException GetLogDetail(IInvocation invocation)

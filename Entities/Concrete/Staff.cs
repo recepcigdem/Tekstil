@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Entities.Concrete;
 
 namespace Entities.Concrete
 {
@@ -45,6 +46,8 @@ namespace Entities.Concrete
         [Column("isCompanyAdminControl")]
         public bool IsCompanyAdminControl { get; set; }
 
+        public List<OperationClaim> OperationClaims { get; set; }
+
 
         public Staff()
         {
@@ -65,6 +68,7 @@ namespace Entities.Concrete
             IsStandartUser = false;
             IsSuperAdminControl = false;
             IsCompanyAdminControl = false;
+            OperationClaims = new List<OperationClaim>();
         }
     }
 }
