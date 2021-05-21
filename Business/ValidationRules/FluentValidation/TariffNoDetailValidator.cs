@@ -12,11 +12,10 @@ namespace Business.ValidationRules.FluentValidation
     {
         public TariffNoDetailValidator()
         {
-            RuleFor(x => x.CustomerId).NotEmpty();
-            RuleFor(x => x.TariffNoId).NotEmpty();
-            RuleFor(x => x.SeasonId).NotEmpty();
-            RuleFor(x => x.CustomerId).NotEmpty();
-            RuleFor(x => x.IsUsed).NotEmpty();
+            RuleFor(x => x.CustomerId).NotEmpty().WithMessage("CustomerNotEmpty");
+            RuleFor(x => x.TariffNoId).NotEmpty().WithMessage("TariffNoNotEmpty");
+            RuleFor(x => x.SeasonId).NotEmpty().WithMessage("SeasonNotEmpty");
+            RuleFor(x => x.IsUsed).NotEmpty().WithMessage("IsUsedsNotEmpty");
         }
     }
 }

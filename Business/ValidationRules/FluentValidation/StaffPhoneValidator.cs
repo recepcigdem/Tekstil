@@ -12,8 +12,8 @@ namespace Business.ValidationRules.FluentValidation
     {
         public StaffPhoneValidator()
         {
-            RuleFor(x => x.PhoneId).GreaterThan(0);
-            RuleFor(x => x.StaffId).GreaterThan(0);
+            RuleFor(x => x.PhoneId).GreaterThan(0).WithMessage("PhoneNotEmpty");
+            RuleFor(x => x.StaffId).GreaterThan(0).WithMessage("StaffNotEmpty");
         }
     }
 }

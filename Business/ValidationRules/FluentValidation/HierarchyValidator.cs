@@ -12,7 +12,7 @@ namespace Business.ValidationRules.FluentValidation
     {
         public HierarchyValidator()
         {
-            RuleFor(x => x.Code).NotEmpty();
+            RuleFor(x => x.Code).NotEmpty().WithMessage("CodeNotEmpty");
         }
     }
 }

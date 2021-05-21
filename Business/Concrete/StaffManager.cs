@@ -10,6 +10,7 @@ using Entities.Concrete;
 using System.Collections.Generic;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.Dtos.Staff;
 
@@ -46,9 +47,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Staff>(dbResult, true, "Listed");
         }
 
-        //   [SecuredOperation("admin,staff.add")]
-        [ValidationAspect(typeof(StaffValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(Staff staff)
         {
             ServiceResult result = BusinessRules.Run(CheckIfExists(staff));
@@ -63,9 +61,6 @@ namespace Business.Concrete
 
         }
 
-        //   [SecuredOperation("admin,staff.updated")]
-        [ValidationAspect(typeof(StaffValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(Staff staff)
         {
             ServiceResult result = BusinessRules.Run(CheckIfExists(staff));
@@ -79,10 +74,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        //[SecuredOperation("admin,staff.deleted")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,staff.deleted")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Staff staff)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Staff>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _staffDal.Delete(staff);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -90,8 +93,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,staff.deleted")]
+        [TransactionScopeAspect]
         public IServiceResult DeleteAll(Staff staff)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Staff>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
 
             var staffAuth = _staffAuthorizationService.DeleteByStaff(staff);
             if (staffAuth.Result == false)
@@ -115,8 +127,19 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,staff.saved")]
+        [ValidationAspect(typeof(StaffValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<Staff> Save(Staff staff)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Staff>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (staff.Id > 0)
             {
                 var result = Update(staff);
@@ -133,8 +156,19 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Staff>(true, "Saved");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,staff.saved")]
+        [ValidationAspect(typeof(StaffValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<Staff> SaveAll(Staff staff, List<StaffEmailDto> staffEmailDtos, List<StaffPhoneDto> staffPhoneDtos, List<StaffAuthorization> staffAuthorizations, string password)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Staff>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (staff.Id > 0)
             {
                 Update(staff);

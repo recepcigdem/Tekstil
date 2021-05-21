@@ -10,6 +10,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.Dtos.Staff;
 
@@ -58,9 +61,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<StaffPhone>>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("admin,staff.add")]
-        [ValidationAspect(typeof(StaffPhoneValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(StaffPhone staffPhone)
         {
             IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(staffPhone));
@@ -75,9 +75,6 @@ namespace Business.Concrete
 
         }
 
-        //[SecuredOperation("admin,staff.updated")]
-        [ValidationAspect(typeof(StaffPhoneValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(StaffPhone staffPhone)
         {
             IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(staffPhone));
@@ -92,10 +89,17 @@ namespace Business.Concrete
 
         }
 
-        //[SecuredOperation("admin,staff.deleted")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(StaffPhone staffPhone)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<StaffPhone>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _staffPhoneDal.Delete(staffPhone);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -103,10 +107,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        //[SecuredOperation("admin,staff.deleted")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult DeleteByStaff(Staff staff)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<StaffPhone>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var staffPhoneList = GetAllByStaffId(staff.Id);
             if (staffPhoneList.Result == false)
                 return new ErrorServiceResult(false, "StaffPhoneNotFound");
@@ -129,21 +140,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        private ServiceResult CheckIfPhoneExists(StaffPhone staffPhone)
-        {
-            var result = _staffPhoneDal.GetAll(x => x.StaffId == staffPhone.StaffId && x.PhoneId == staffPhone.PhoneId);
-
-            if (result.Count > 1)
-                new ErrorServiceResult(false, "PhoneAlreadyExists");
-
-            return new ServiceResult(true, "");
-        }
-
-        // [SecuredOperation("admin,staff.saved")]
+        [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(StaffPhoneValidator))]
         [TransactionScopeAspect]
         public IDataServiceResult<StaffPhone> Save(Staff staff, List<StaffPhoneDto> staffPhoneDtos)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<StaffPhone>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             DeleteByStaff(staff);
 
             foreach (var staffPhoneDto in staffPhoneDtos)
@@ -172,6 +180,16 @@ namespace Business.Concrete
 
 
             return new SuccessDataServiceResult<StaffPhone>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfPhoneExists(StaffPhone staffPhone)
+        {
+            var result = _staffPhoneDal.GetAll(x => x.StaffId == staffPhone.StaffId && x.PhoneId == staffPhone.PhoneId);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "PhoneAlreadyExists");
+
+            return new ServiceResult(true, "");
         }
     }
 }

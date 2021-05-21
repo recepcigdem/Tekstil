@@ -12,8 +12,8 @@ namespace Business.ValidationRules.FluentValidation
     {
         public SeasonValidator()
         {
-            RuleFor(x => x.Code).NotEmpty();
-            RuleFor(x => x.Description).NotEmpty();
+            RuleFor(x => x.Code).NotEmpty().WithMessage("CodeNotEmpty");
+            RuleFor(x => x.Description).NotEmpty().WithMessage("DescriptionNotEmpty");
         }
     }
 }

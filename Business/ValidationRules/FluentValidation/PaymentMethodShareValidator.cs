@@ -12,11 +12,11 @@ namespace Business.ValidationRules.FluentValidation
     {
         public PaymentMethodShareValidator()
         {
-            RuleFor(x => x.SeasonId).GreaterThan(0);
-            RuleFor(x => x.SeasonCurrencyId).GreaterThan(0);
-            RuleFor(x => x.PaymentMethodId).GreaterThan(0);
-            RuleFor(x => x.CenterShareEuro).GreaterThan(0);
-            RuleFor(x => x.CenterShare).GreaterThan(0);
+            RuleFor(x => x.SeasonId).GreaterThan(0).WithMessage("SeasonNotEmpty");
+            RuleFor(x => x.SeasonCurrencyId).GreaterThan(0).WithMessage("SeasonCurrencyNotEmpty");
+            RuleFor(x => x.PaymentMethodId).GreaterThan(0).WithMessage("PaymentMethodNotEmpty");
+            RuleFor(x => x.CenterShareEuro).GreaterThan(0).WithMessage("CenterShareEuroMustBeGreaterThanZero");
+            RuleFor(x => x.CenterShare).GreaterThan(0).WithMessage("CenterShareMustBeGreaterThanZero");
         }
     }
 }

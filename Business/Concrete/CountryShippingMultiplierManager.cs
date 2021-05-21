@@ -9,6 +9,9 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -44,9 +47,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<CountryShippingMultiplier>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
-        [ValidationAspect(typeof(CountryShippingMultiplierValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(CountryShippingMultiplier countryShippingMultiplier)
         {
             ServiceResult result = BusinessRules.Run(CheckIfCountryAndShippingExists(countryShippingMultiplier));
@@ -59,9 +59,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Added");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
-        [ValidationAspect(typeof(CountryShippingMultiplierValidator))]
-        [TransactionScopeAspect]
+
         public IServiceResult Update(CountryShippingMultiplier countryShippingMultiplier)
         {
             ServiceResult result = BusinessRules.Run(CheckIfCountryAndShippingExists(countryShippingMultiplier));
@@ -75,21 +73,35 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(CountryShippingMultiplier countryShippingMultiplier)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<CountryShippingMultiplier>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _countryShippingMultiplierDal.Delete(countryShippingMultiplier);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
 
             return new ServiceResult(true, "Delated");
         }
-
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+        
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult DeleteBySeason(Season season)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<CountryShippingMultiplier>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var countryShippingMultipliers = GetAllBySeasonId(season.Id);
             if (countryShippingMultipliers.Result == false)
                 return new ErrorServiceResult(false, "CountryShippingMultiplierNotDeleted");
@@ -104,8 +116,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(CountryShippingMultiplierValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<CountryShippingMultiplier> Save(int seasonId, int customerId, List<CountryShippingMultiplier> countryShippingMultipliers)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<CountryShippingMultiplier>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var dbCountryShippingMultipliers = GetAllBySeasonId(seasonId).Data;
             foreach (var dbCountryShippingMultiplier in dbCountryShippingMultipliers)
             {

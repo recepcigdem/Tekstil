@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -20,7 +23,6 @@ namespace Business.Concrete
         {
             _modelSeasonRowNumberDal = modelSeasonRowNumberDal;
         }
-
 
         public IDataServiceResult<List<ModelSeasonRowNumber>> GetAll(int customerId)
         {
@@ -54,10 +56,17 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<ModelSeasonRowNumber>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(ModelSeasonRowNumber modelSeasonRowNumbers)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<ModelSeasonRowNumber>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _modelSeasonRowNumberDal.Delete(modelSeasonRowNumbers);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -65,10 +74,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult DeleteBySeason(Season season)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<ModelSeasonRowNumber>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var modelSeasonRowNumbers = GetAllBySeasonId(season.Id);
             if (modelSeasonRowNumbers.Result == false)
                 return new ErrorServiceResult(false, "ModelSeasonRowNumberNotFound");
@@ -82,11 +98,19 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Delated");
         }
-
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+        
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IDataServiceResult<ModelSeasonRowNumber> Save(int seasonId , int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers)
         {
+
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<ModelSeasonRowNumber>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             foreach (var modelSeasonRowNumber in modelSeasonRowNumbers)
             {
                 if (modelSeasonRowNumber.Id < 1)
@@ -135,9 +159,9 @@ namespace Business.Concrete
                         return new DataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
                 }
             }
+           
             return new SuccessDataServiceResult<ModelSeasonRowNumber>(true, "Saved");
         }
-
 
     }
 }

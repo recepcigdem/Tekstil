@@ -12,12 +12,12 @@ namespace Business.ValidationRules.FluentValidation
     {
         public CountryShippingMultiplierValidator()
         {
-            RuleFor(x => x.CountryId).GreaterThan(0);
-            RuleFor(x => x.SeasonId).GreaterThan(0);
-            RuleFor(x => x.SeasonCurrencyId).GreaterThan(0);
-            RuleFor(x => x.ShippingMethodId).GreaterThan(0);
-            RuleFor(x => x.Multiplier).GreaterThan(0);
-            RuleFor(x => x.TestPrice).GreaterThan(0);
+            RuleFor(x => x.CountryId).GreaterThan(0).WithMessage("CountryNotEmpty");
+            RuleFor(x => x.SeasonId).GreaterThan(0).WithMessage("SeasonNotEmpty");
+            RuleFor(x => x.SeasonCurrencyId).GreaterThan(0).WithMessage("SeasonCurrencyNotEmpty");
+            RuleFor(x => x.ShippingMethodId).GreaterThan(0).WithMessage("ShippingMethodNotEmpty");
+            RuleFor(x => x.Multiplier).GreaterThan(0).WithMessage("MultiplierMustBeGreaterThanZero");
+            RuleFor(x => x.TestPrice).GreaterThan(0).WithMessage("TestPriceMustBeGreaterThanZero");
         }
     }
 }

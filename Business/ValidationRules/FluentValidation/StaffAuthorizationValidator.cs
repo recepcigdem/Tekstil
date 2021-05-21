@@ -12,8 +12,8 @@ namespace Business.ValidationRules.FluentValidation
     {
         public StaffAuthorizationValidator()
         {
-            RuleFor(x => x.AuthorizationId).GreaterThan(0);
-            RuleFor(x => x.StaffId).GreaterThan(0);
+            RuleFor(x => x.AuthorizationId).GreaterThan(0).WithMessage("AuthorizationNotEmpty");
+            RuleFor(x => x.StaffId).GreaterThan(0).WithMessage("StaffNotEmpty");
         }
     }
 }

@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -37,9 +40,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Test>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(TestValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(Test test)
         {
             ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(test), CheckIfCodeExists(test));
@@ -53,9 +53,6 @@ namespace Business.Concrete
             return new ServiceResult(true, "Added");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(TestValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(Test test)
         {
             ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(test), CheckIfCodeExists(test));
@@ -69,10 +66,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.deleted")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Test test)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Test>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             ServiceResult result = BusinessRules.Run(CheckIfTestIsUsed(test));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);
@@ -84,8 +89,19 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.saved")]
+        [ValidationAspect(typeof(TestValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<Test> Save(Test test)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Test>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (test.Id > 0)
             {
                 Update(test);

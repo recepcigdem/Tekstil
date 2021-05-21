@@ -12,9 +12,9 @@ namespace Business.ValidationRules.FluentValidation
     {
         public ModelSeasonRowNumberValidator()
         {
-            RuleFor(x => x.ProductGroupId).GreaterThan(0);
-            RuleFor(x => x.SeasonId).GreaterThan(0);
-            RuleFor(x => x.RowNumber).GreaterThan(0);
+            RuleFor(x => x.ProductGroupId).GreaterThan(0).WithMessage("ProductNotEmpty"); 
+            RuleFor(x => x.SeasonId).GreaterThan(0).WithMessage("SeasonNotEmpty");
+            RuleFor(x => x.RowNumber).GreaterThan(0).WithMessage("RowNumberMustBeGreaterThanZero");
         }
     }
 }

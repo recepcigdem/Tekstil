@@ -12,9 +12,9 @@ namespace Business.ValidationRules.FluentValidation
     {
         public ChannelValidator()
         {
-            RuleFor(x => x.Code).NotEmpty();
-            RuleFor(x => x.ChannelName).NotEmpty();
-            RuleFor(x => x.CurrencyType).NotEmpty();
+            RuleFor(x => x.Code).NotEmpty().WithMessage("CodeNotEmpty");
+            RuleFor(x => x.ChannelName).NotEmpty().WithMessage("ChannelNameNotEmpty");
+            RuleFor(x => x.CurrencyType).NotEmpty().WithMessage("CurrencyTypeNotEmpty");
         }
     }
 }

@@ -12,10 +12,10 @@ namespace Business.ValidationRules.FluentValidation
     {
         public TestValidator()
         {
-            RuleFor(x => x.Code).NotEmpty();
-            RuleFor(x => x.Description).NotEmpty();
-            RuleFor(x => x.Norm).NotEmpty();
-            RuleFor(x => x.Value).NotEmpty();
+            RuleFor(x => x.Code).NotEmpty().WithMessage("CodeNotEmpty");
+            RuleFor(x => x.Description).NotEmpty().WithMessage("DescriptionNotEmpty");
+            RuleFor(x => x.Norm).NotEmpty().WithMessage("NormNotEmpty");
+            RuleFor(x => x.Value).NotEmpty().WithMessage("ValueNotEmpty");
         }
     }
 }

@@ -12,9 +12,9 @@ namespace Business.ValidationRules.FluentValidation
     {
         public LabelValidator()
         {
-            RuleFor(x => x.Code).NotEmpty();
-            RuleFor(x => x.Description).NotEmpty();
-            RuleFor(x => x.Image).NotEmpty();
+            RuleFor(x => x.Code).NotEmpty().WithMessage("CodeNotEmpty");
+            RuleFor(x => x.Description).NotEmpty().WithMessage("DescriptionNotEmpty");
+            RuleFor(x => x.Image).NotEmpty().WithMessage("ImageNotEmpty");
         }
     }
 }

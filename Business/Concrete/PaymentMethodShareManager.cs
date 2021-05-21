@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -20,7 +23,6 @@ namespace Business.Concrete
         {
             _paymentMethodShareDal = paymentMethodShareDal;
         }
-
 
         public IDataServiceResult<List<PaymentMethodShare>> GetAll(int customerId)
         {
@@ -44,9 +46,7 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<PaymentMethodShare>(dbResult, true, "Listed");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
-        [ValidationAspect(typeof(PaymentMethodShareValidator))]
-        [TransactionScopeAspect]
+
         public IServiceResult Add(PaymentMethodShare paymentMethodShare)
         {
             ServiceResult result = BusinessRules.Run(CheckIfPaymentMethodExists(paymentMethodShare));
@@ -59,9 +59,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Added");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
-        [ValidationAspect(typeof(PaymentMethodShareValidator))]
-        [TransactionScopeAspect]
+
         public IServiceResult Update(PaymentMethodShare paymentMethodShare)
         {
             ServiceResult result = BusinessRules.Run(CheckIfPaymentMethodExists(paymentMethodShare));
@@ -74,10 +72,18 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Updated");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(PaymentMethodShare paymentMethodShare)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<PaymentMethodShare>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _paymentMethodShareDal.Delete(paymentMethodShare);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -85,8 +91,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public IServiceResult DeleteBySeason(Season season)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<PaymentMethodShare>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var paymentMethodShares = GetAllBySeasonId(season.Id);
             if (paymentMethodShares.Result == false)
                 return new ErrorServiceResult(false, "PaymentMethodShareNotFound");
@@ -101,8 +116,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(PaymentMethodShareValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<PaymentMethodShare> Save(int seasonId, int customerId, List<PaymentMethodShare> paymentMethodShares)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<PaymentMethodShare>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var dbPaymentMethodShares = GetAllBySeasonId(seasonId).Data;
             foreach (var dbPaymentMethodShare in dbPaymentMethodShares)
             {

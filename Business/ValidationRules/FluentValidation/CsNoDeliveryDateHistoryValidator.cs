@@ -12,9 +12,9 @@ namespace Business.ValidationRules.FluentValidation
     {
         public CsNoDeliveryDateHistoryValidator()
         {
-            RuleFor(x => x.CsNoDeliveryDateId).GreaterThan(0);
-            RuleFor(x => x.Datetime).NotEmpty();
-            RuleFor(x => x.Description).NotEmpty();
+            RuleFor(x => x.CsNoDeliveryDateId).GreaterThan(0).WithMessage("CsNoDeliveryDateNotEmpty"); 
+            RuleFor(x => x.Datetime).NotEmpty().WithMessage("DateTimeNotEmpty");
+            RuleFor(x => x.Description).NotEmpty().WithMessage("DescriptionNotEmpty");
         }
     }
 }

@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -30,7 +33,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
         }
 
-
         public IDataServiceResult<Hierarchy> GetById(int hierarchyId)
         {
             var dbResult = _hierarchyDal.Get(p => p.Id == hierarchyId);
@@ -40,9 +42,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Hierarchy>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(HierarchyValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(Hierarchy hierarchy)
         {
             ServiceResult result = BusinessRules.Run(CheckIfHierarchyExists(hierarchy));
@@ -56,9 +55,6 @@ namespace Business.Concrete
             return new ServiceResult(true, "Added");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(HierarchyValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(Hierarchy hierarchy)
         {
             ServiceResult result = BusinessRules.Run(CheckIfHierarchyExists(hierarchy));
@@ -72,10 +68,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.deleted")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Hierarchy hierarchy)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Hierarchy>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             ServiceResult result = BusinessRules.Run(CheckIfHierarchyIsUsed(hierarchy));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);
@@ -87,8 +91,19 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.saved")]
+        [ValidationAspect(typeof(HierarchyValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<Hierarchy> Save(Hierarchy hierarchy)
         {
+
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Hierarchy>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
 
             var brand = _definitionService.GetById(hierarchy.BrandId);
             var gender = _definitionService.GetById(hierarchy.GenderId);

@@ -11,6 +11,9 @@ using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -39,9 +42,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Phone>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("admin,staff.add")]
-        [ValidationAspect(typeof(PhoneValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(Phone phone)
         {
             IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(phone));
@@ -56,9 +56,6 @@ namespace Business.Concrete
 
         }
 
-       // [SecuredOperation("admin,staff.updated")]
-        [ValidationAspect(typeof(PhoneValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(Phone phone)
         {
             IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(phone));
@@ -72,11 +69,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
 
         }
-
-       // [SecuredOperation("admin,staff.deleted")]
+        
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(Phone phone)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Phone>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _phoneDal.Delete(phone);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -84,11 +88,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        //[SecuredOperation("admin,staff.saved")]
+        [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(PhoneValidator))]
         [TransactionScopeAspect]
         public IDataServiceResult<Phone> Save(Phone phone)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Phone>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (phone.Id > 0)
             {
                 var result = Update(phone);

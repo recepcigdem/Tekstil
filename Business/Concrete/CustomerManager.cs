@@ -10,6 +10,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -38,9 +41,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Customer>(dbResult, true, "Listed");
         }
 
-        // [SecuredOperation("SuperAdmin")]
-        [ValidationAspect(typeof(CustomerValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(Customer customer)
         {
             IServiceResult result = BusinessRules.Run(CheckIfCustomerExists(customer));
@@ -55,9 +55,6 @@ namespace Business.Concrete
 
         }
 
-        // [SecuredOperation("SuperAdmin")]
-        [ValidationAspect(typeof(CustomerValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(Customer customer)
         {
             IServiceResult result = BusinessRules.Run(CheckIfCustomerExists(customer));
@@ -72,10 +69,19 @@ namespace Business.Concrete
 
         }
 
-        // [SecuredOperation("SuperAdmin")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Customer customer)
         {
+
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Customer>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _customerDal.Delete(customer);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -83,11 +89,20 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        // [SecuredOperation("SuperAdmin")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin")]
         [ValidationAspect(typeof(CustomerValidator))]
         [TransactionScopeAspect]
         public IDataServiceResult<Customer> Save(Customer customer)
         {
+
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Customer>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (customer.Id > 0)
             {
                 var result = Update(customer);

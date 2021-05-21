@@ -12,9 +12,9 @@ namespace Business.ValidationRules.FluentValidation
     {
         public CsNoDeliveryDateValidator()
         {
-            RuleFor(x => x.SeasonId).GreaterThan(0);
-            RuleFor(x => x.Csno).NotEmpty();
-            RuleFor(x => x.Date).NotEmpty();
+            RuleFor(x => x.SeasonId).GreaterThan(0).WithMessage("SeasonNotEmpty"); 
+            RuleFor(x => x.Csno).NotEmpty().WithMessage("CsNoNotEmpty");
+            RuleFor(x => x.Date).NotEmpty().WithMessage("DateNotEmpty");
         }
     }
 }

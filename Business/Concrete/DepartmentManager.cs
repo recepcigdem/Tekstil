@@ -10,6 +10,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -44,10 +47,7 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<Department>(dbResult, true, "Listed");
         }
-
-        // [SecuredOperation("SuperAdmin")]
-        [ValidationAspect(typeof(DepartmentValidator))]
-        [TransactionScopeAspect]
+        
         public IServiceResult Add(Department department)
         {
             IServiceResult result = BusinessRules.Run(CheckIfDepartmentExists(department));
@@ -62,9 +62,6 @@ namespace Business.Concrete
 
         }
 
-        // [SecuredOperation("SuperAdmin")]
-        [ValidationAspect(typeof(DepartmentValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(Department department)
         {
             IServiceResult result = BusinessRules.Run(CheckIfDepartmentExists(department));
@@ -79,10 +76,18 @@ namespace Business.Concrete
 
         }
 
-        // [SecuredOperation("SuperAdmin")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Department department)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Department>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _departmentDal.Delete(department);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -90,11 +95,19 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        // [SecuredOperation("SuperAdmin")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin")]
         [ValidationAspect(typeof(DepartmentValidator))]
         [TransactionScopeAspect]
         public IDataServiceResult<Department> Save(Department department)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Department>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (department.Id > 0)
             {
                 var result = Update(department);

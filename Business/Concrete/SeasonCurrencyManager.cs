@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -20,7 +23,6 @@ namespace Business.Concrete
         {
             _seasonCurrencyDal = seasonCurrencyDal;
         }
-
 
         public IDataServiceResult<List<SeasonCurrency>> GetAll(int customerId)
         {
@@ -44,9 +46,7 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<SeasonCurrency>(dbResult, true, "Listed");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
-        [ValidationAspect(typeof(SeasonCurrencyValidator))]
-        [TransactionScopeAspect]
+
         public IServiceResult Add(SeasonCurrency seasonCurrency)
         {
             ServiceResult result = BusinessRules.Run(CheckIfCurrencyTypeExists(seasonCurrency));
@@ -59,9 +59,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Added");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
-        [ValidationAspect(typeof(SeasonCurrencyValidator))]
-        [TransactionScopeAspect]
+
         public IServiceResult Update(SeasonCurrency seasonCurrency)
         {
             ServiceResult result = BusinessRules.Run(CheckIfCurrencyTypeExists(seasonCurrency));
@@ -74,10 +72,18 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Updated");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(SeasonCurrency seasonCurrency)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<SeasonCurrency>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _seasonCurrencyDal.Delete(seasonCurrency);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -85,10 +91,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult DeleteBySeason(Season season)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<SeasonCurrency>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var seasonCurrencies = GetAllBySeasonId(season.Id);
             if (seasonCurrencies.Result == false)
                 return new ErrorServiceResult(false, "SeasonCurrencyNotFound");
@@ -103,8 +116,19 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(SeasonCurrencyValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<SeasonCurrency> Save(int seasonId, int customerId, List<SeasonCurrency> seasonCurrencies)
         {
+
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<SeasonCurrency>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var dbSeasonCurrencies = GetAllBySeasonId(seasonId).Data;
             foreach (var dbSeasonCurrency in dbSeasonCurrencies)
             {

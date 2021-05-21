@@ -12,7 +12,7 @@ namespace Business.ValidationRules.FluentValidation
     {
         public CustomerValidator()
         {
-            RuleFor(x => x.CustomerName).NotEmpty();
+            RuleFor(x => x.CustomerName).NotEmpty().WithMessage("CustomerNameNotEmpty");
         }
     }
 }

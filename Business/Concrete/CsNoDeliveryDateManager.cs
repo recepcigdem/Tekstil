@@ -10,6 +10,9 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -41,9 +44,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<CsNoDeliveryDate>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(CsNoDeliveryDateValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(CsNoDeliveryDate csNoDeliveryDate)
         {
             ServiceResult result = BusinessRules.Run(CheckIfCsNoExists(csNoDeliveryDate));
@@ -57,9 +57,6 @@ namespace Business.Concrete
             return new ServiceResult(true, "Added");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(CsNoDeliveryDateValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(CsNoDeliveryDate csNoDeliveryDate)
         {
             ServiceResult result = BusinessRules.Run(CheckIfCsNoExists(csNoDeliveryDate));
@@ -73,10 +70,19 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.deleted")]
         [TransactionScopeAspect]
         public IServiceResult Delete(CsNoDeliveryDate csNoDeliveryDate)
         {
+
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<CsNoDeliveryDate>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _csNoDeliveryDateDal.Delete(csNoDeliveryDate);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -88,8 +94,19 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.saved")]
+        [ValidationAspect(typeof(CsNoDeliveryDateValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<CsNoDeliveryDate> Save(int staffId,CsNoDeliveryDate csNoDeliveryDate)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<CsNoDeliveryDate>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (csNoDeliveryDate.Id > 0)
             {
                 Update(csNoDeliveryDate);

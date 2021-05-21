@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -44,9 +47,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<TariffNoDetail>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(TariffNoDetailValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(TariffNoDetail tariffNoDetail)
         {
             ServiceResult result = BusinessRules.Run(CheckIfSeasonCountryExists(tariffNoDetail));
@@ -60,9 +60,6 @@ namespace Business.Concrete
             return new ServiceResult(true, "Added");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(TariffNoDetailValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(TariffNoDetail tariffNoDetail)
         {
             ServiceResult result = BusinessRules.Run(CheckIfSeasonCountryExists(tariffNoDetail));
@@ -76,10 +73,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(TariffNoDetail tariffNoDetail)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<TariffNoDetail>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             ServiceResult result = BusinessRules.Run(CheckIfTariffNoDetailIsUsed(tariffNoDetail));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);
@@ -91,10 +95,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult DeleteByTariffNo(TariffNo tariffNo)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<TariffNoDetail>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var tariffNoDetails = GetAllByTariffNo(tariffNo.Id);
             if (tariffNoDetails.Result == true)
             {
@@ -118,8 +129,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(TariffNoDetailValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<TariffNoDetail> Save(int tariffNoId,int customerId, List<TariffNoDetail> tariffNoDetails)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<TariffNoDetail>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var dbTariffNoDetails = GetAllByTariffNo(tariffNoId).Data;
             foreach (var dbTariffNoDetail in dbTariffNoDetails)
             {

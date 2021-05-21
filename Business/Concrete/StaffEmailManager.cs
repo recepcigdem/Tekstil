@@ -10,6 +10,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.Dtos.Staff;
 
@@ -58,9 +61,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<StaffEmail>>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("admin,staff.add")]
-        [ValidationAspect(typeof(StaffEmailValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(StaffEmail staffEmail)
         {
             IServiceResult result = BusinessRules.Run(CheckIfEmailExists(staffEmail));
@@ -75,9 +75,6 @@ namespace Business.Concrete
 
         }
 
-        //[SecuredOperation("admin,staff.updated")]
-        [ValidationAspect(typeof(StaffEmailValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(StaffEmail staffEmail)
         {
             IServiceResult result = BusinessRules.Run(CheckIfEmailExists(staffEmail));
@@ -92,10 +89,17 @@ namespace Business.Concrete
 
         }
 
-        //[SecuredOperation("admin,staff.deleted")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(StaffEmail staffEmail)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<StaffEmail>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _staffEmailDal.Delete(staffEmail);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -103,10 +107,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        //[SecuredOperation("admin,staff.deleted")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult DeleteByStaff(Staff staff)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<StaffEmail>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var staffEmailList = GetAllByStaffId(staff.Id);
             if (staffEmailList.Result == false)
                 return new ErrorServiceResult(false, "StaffEmailNotFound");
@@ -130,21 +141,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-        private ServiceResult CheckIfEmailExists(StaffEmail staffEmail)
-        {
-            var result = _staffEmailDal.GetAll(x => x.StaffId == staffEmail.StaffId && x.EmailId == staffEmail.EmailId);
-
-            if (result.Count > 1)
-                new ErrorServiceResult(false, "EmailAlreadyExists");
-
-            return new ServiceResult(true, "");
-        }
-
-        // [SecuredOperation("admin,staff.saved")]
+        [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(StaffEmailValidator))]
         [TransactionScopeAspect]
         public IDataServiceResult<StaffEmail> Save(Staff staff, List<StaffEmailDto> staffEmailDtos)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<StaffEmail>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             DeleteByStaff(staff);
 
             foreach (var staffEmailDto in staffEmailDtos)
@@ -171,6 +179,16 @@ namespace Business.Concrete
 
 
             return new SuccessDataServiceResult<StaffEmail>(true, "Saved");
+        }
+
+        private ServiceResult CheckIfEmailExists(StaffEmail staffEmail)
+        {
+            var result = _staffEmailDal.GetAll(x => x.StaffId == staffEmail.StaffId && x.EmailId == staffEmail.EmailId);
+
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "EmailAlreadyExists");
+
+            return new ServiceResult(true, "");
         }
     }
 }

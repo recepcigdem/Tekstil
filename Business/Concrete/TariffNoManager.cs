@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -38,9 +41,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<TariffNo>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(TariffNoValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(TariffNo tariffNo)
         {
             ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(tariffNo), CheckIfCodeExists(tariffNo));
@@ -54,9 +54,6 @@ namespace Business.Concrete
             return new ServiceResult(true, "Added");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(TariffNoValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(TariffNo tariffNo)
         {
             ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(tariffNo), CheckIfCodeExists(tariffNo));
@@ -70,10 +67,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.deleted")]
         [TransactionScopeAspect]
         public IServiceResult Delete(TariffNo tariffNo)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<TariffNo>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             ServiceResult result = BusinessRules.Run(CheckIfTariffNoIsUsed(tariffNo));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);
@@ -89,8 +94,19 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.saved")]
+        [ValidationAspect(typeof(TariffNoValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<TariffNo> Save(TariffNo tariffNo, List<TariffNoDetail> tariffNoDetails)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<TariffNo>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (tariffNo.Id > 0)
             {
                 Update(tariffNo);

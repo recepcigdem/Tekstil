@@ -268,7 +268,6 @@ namespace Business.Concrete
             return new ServiceResult(true, "ok");
         }
 
-
         [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public DataServiceResult<List<OperationClaim>> GetRoles(Staff staff)

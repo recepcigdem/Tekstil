@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -43,9 +46,7 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<SeasonPlaning>(dbResult, true, "Listed");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
-        [ValidationAspect(typeof(SeasonPlaningValidator))]
-        [TransactionScopeAspect]
+
         public IServiceResult Add(SeasonPlaning seasonPlaning)
         {
             ServiceResult result = BusinessRules.Run(CheckIfPlaningTypeExists(seasonPlaning));
@@ -58,9 +59,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Added");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
-        [ValidationAspect(typeof(SeasonPlaningValidator))]
-        [TransactionScopeAspect]
+       
         public IServiceResult Update(SeasonPlaning seasonPlaning)
         {
             ServiceResult result = BusinessRules.Run(CheckIfPlaningTypeExists(seasonPlaning));
@@ -73,20 +72,36 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Updated");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(SeasonPlaning seasonPlaning)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<SeasonPlaning>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _seasonPlaningDal.Delete(seasonPlaning);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
 
             return new ServiceResult(true, "Delated");
         }
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,seasonPlaning")]
+
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult DeleteBySeason(Season season)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<SeasonPlaning>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var seasonPlanning = GetAllBySeasonId(season.Id);
             if (seasonPlanning.Result == false)
                 return new ErrorServiceResult(false, "SeasonPlanningNotFound");
@@ -101,8 +116,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(SeasonPlaningValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<SeasonPlaning> Save(int seasonId, int customerId, List<SeasonPlaning> seasonPlanings)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<SeasonPlaning>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var dbSeasonPlanings = GetAllBySeasonId(seasonId).Data;
             foreach (var dbSeasonPlaning in dbSeasonPlanings)
             {

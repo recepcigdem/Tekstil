@@ -12,9 +12,9 @@ namespace Business.ValidationRules.FluentValidation
     {
         public DefinitionTitleValidator()
         {
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Value).NotEmpty();
-            RuleFor(x => x.Value).GreaterThan(0);
+            RuleFor(x => x.Title).NotEmpty().WithMessage("TitleNotEmpty");
+            RuleFor(x => x.Value).NotEmpty().WithMessage("ValueNotEmpty");
+            RuleFor(x => x.Value).GreaterThan(0).WithMessage("ValueMustBeGreaterThanZero");
         }
     }
 }

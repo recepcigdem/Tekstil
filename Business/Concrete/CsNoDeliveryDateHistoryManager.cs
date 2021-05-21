@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -52,12 +55,18 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(dbResult, true, "Listed");
         }
-
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(CsNoDeliveryDateHistoryValidator))]
         [TransactionScopeAspect]
         public IServiceResult Add(CsNoDeliveryDateHistory csNoDeliveryDateHistory)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<CsNoDeliveryDateHistory>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var dbResult = _csNoDeliveryDateHistoryDal.Add(csNoDeliveryDateHistory);
             if (dbResult == null)
                 return new ErrorServiceResult(false, "SystemError");
@@ -65,11 +74,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Added");
         }
 
-
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(CsNoDeliveryDateHistory csNoDeliveryDateHistory)
         {
+
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<CsNoDeliveryDateHistory>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _csNoDeliveryDateHistoryDal.Delete(csNoDeliveryDateHistory);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -77,8 +93,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [TransactionScopeAspect]
         public IServiceResult DeleteByCsNoDeliveryDateId(int csNoDeliveryDateId)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<CsNoDeliveryDateHistory>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var list = GetAllByCsNoDeliveryDate(csNoDeliveryDateId);
             if (list.Result == true)
             {

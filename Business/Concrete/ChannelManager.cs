@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -28,7 +31,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<Channel>>(dbResult, true, "Listed");
         }
 
-        
         public IDataServiceResult<Channel> GetById(int channelId)
         {
             var dbResult = _channelDal.Get(p => p.Id == channelId);
@@ -37,10 +39,7 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<Channel>(dbResult, true, "Listed");
         }
-        
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(ChannelValidator))]
-        [TransactionScopeAspect]
+
         public IServiceResult Add(Channel channel)
         {
             ServiceResult result = BusinessRules.Run(CheckIfChannelExists(channel));
@@ -53,10 +52,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Added");
         }
-        
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(ChannelValidator))]
-        [TransactionScopeAspect]
+
         public IServiceResult Update(Channel channel)
         {
             ServiceResult result = BusinessRules.Run(CheckIfChannelExists(channel));
@@ -69,11 +65,19 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Updated");
         }
-        
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.deleted")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Channel channel)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Channel>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             ServiceResult result = BusinessRules.Run(CheckIfChannelIsUsed(channel));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);
@@ -85,17 +89,28 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.saved")]
+        [ValidationAspect(typeof(ChannelValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<Channel> Save(Channel channel)
-        {  
-                if (channel.Id > 0)
-                {
-                    Update(channel);
-                }
-                else
-                {
-                    Add(channel);
-                }
-           
+        {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Channel>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
+            if (channel.Id > 0)
+            {
+                Update(channel);
+            }
+            else
+            {
+                Add(channel);
+            }
+
             return new SuccessDataServiceResult<Channel>(true, "Saved");
         }
 
@@ -112,9 +127,9 @@ namespace Business.Concrete
         private ServiceResult CheckIfChannelIsUsed(Channel channel)
         {
             var result = GetById(channel.Id);
-            if (result.Result==true)
-                if(result.Data.IsUsed==true)
-                new ErrorServiceResult(false, "ChannelIsUsed");
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "ChannelIsUsed");
 
             return new ServiceResult(true, "");
         }

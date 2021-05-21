@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -49,12 +51,19 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<Definition>(dbResult, true, "Listed");
         }
-
-        //[SecuredOperation("SuperAdmin")]
+        
         [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
         public IDataServiceResult<Definition> Save(Definition definition)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Definition>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (definition.Id > 0)
             {
                 var result = _definitionDal.Update(definition);
@@ -70,12 +79,19 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<Definition>(true, "Saved");
         }
-
-        //[SecuredOperation("SuperAdmin")]
+        
         [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Definition definition)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Definition>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _definitionDal.Delete(definition);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");

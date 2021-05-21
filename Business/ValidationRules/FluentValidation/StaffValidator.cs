@@ -12,11 +12,11 @@ namespace Business.ValidationRules.FluentValidation
     {
         public StaffValidator()
         {
-            RuleFor(x => x.CustomerId).GreaterThan(0);
-            RuleFor(x => x.DepartmentId).GreaterThan(0);
-            RuleFor(x => x.FirstName).NotEmpty();
-            RuleFor(x => x.LastName).NotEmpty();
-            RuleFor(x => x.Title).NotEmpty();
+            RuleFor(x => x.CustomerId).GreaterThan(0).WithMessage("CustomerNotEmpty");
+            RuleFor(x => x.DepartmentId).GreaterThan(0).WithMessage("DepartmentNotEmpty");
+            RuleFor(x => x.FirstName).NotEmpty().WithMessage("FirstNameNotEmpty");
+            RuleFor(x => x.LastName).NotEmpty().WithMessage("LastNameNotEmpty");
+            RuleFor(x => x.Title).NotEmpty().WithMessage("TitleNotEmpty");
         }
     }
 }

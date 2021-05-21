@@ -12,9 +12,9 @@ namespace Business.ValidationRules.FluentValidation
     {
         public PhoneValidator()
         {
-            RuleFor(x => x.CountryCode).NotEmpty();
-            RuleFor(x => x.AreaCode).NotEmpty();
-            RuleFor(x => x.PhoneNumber).NotEmpty();
+            RuleFor(x => x.CountryCode).NotEmpty().WithMessage("CountryCodeNotEmpty");
+            RuleFor(x => x.AreaCode).NotEmpty().WithMessage("AreaCodeNotEmpty");
+            RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage("PhoneNumberNotEmpty");
         }
     }
 }

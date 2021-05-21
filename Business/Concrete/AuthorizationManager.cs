@@ -10,6 +10,8 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
@@ -84,6 +86,7 @@ namespace Business.Concrete
 
         }
 
+        [LogAspect(typeof(FileLogger))]
         [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Authorization authorization)
@@ -106,6 +109,7 @@ namespace Business.Concrete
             return new ServiceResult(true, "Message_Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
         [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
         [ValidationAspect(typeof(AuthorizationValidator))]

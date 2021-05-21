@@ -12,8 +12,8 @@ namespace Business.ValidationRules.FluentValidation
     {
         public SeasonPlaningValidator()
         {
-            RuleFor(x => x.SeasonId).GreaterThan(0);
-            RuleFor(x => x.ProductGroupId).GreaterThan(0);
+            RuleFor(x => x.SeasonId).GreaterThan(0).WithMessage("SeasonNotEmpty");
+            RuleFor(x => x.ProductGroupId).GreaterThan(0).WithMessage("ProductGroupNotEmpty");
         }
     }
 }

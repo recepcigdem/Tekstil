@@ -12,7 +12,7 @@ namespace Business.ValidationRules.FluentValidation
     {
         public EmailValidator()
         {
-            RuleFor(x => x.EmailAddress).NotEmpty();
+            RuleFor(x => x.EmailAddress).NotEmpty().WithMessage("EmailAddressNotEmpty");
         }
     }
 }

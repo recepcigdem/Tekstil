@@ -9,6 +9,9 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -37,9 +40,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Label>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(LabelValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(Label label)
         {
             ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(label), CheckIfCodeExists(label));
@@ -52,10 +52,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Added");
         }
-
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
-        [ValidationAspect(typeof(LabelValidator))]
-        [TransactionScopeAspect]
+        
         public IServiceResult Update(Label label)
         {
             ServiceResult result = BusinessRules.Run(CheckIfDescriptionExists(label), CheckIfCodeExists(label));
@@ -69,10 +66,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Updated");
         }
 
-        //[SecuredOperation("SuperAdmin,CompanyAdmin,definition")]
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.deleted")]
         [TransactionScopeAspect]
         public IServiceResult Delete(Label label)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Label>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             ServiceResult result = BusinessRules.Run(CheckIfLabelIsUsed(label));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);
@@ -84,8 +89,20 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [SecuredOperation("SuperAdmin,CompanyAdmin,definition.saved")]
+        [ValidationAspect(typeof(LabelValidator))]
+        [TransactionScopeAspect]
         public IDataServiceResult<Label> Save(Label label)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Label>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
+
             if (label.Id > 0)
             {
                 Update(label);

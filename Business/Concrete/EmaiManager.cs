@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -48,9 +49,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Email>(dbResult, true, "Listed");
         }
 
-        //[SecuredOperation("admin,staff.add")]
-        [ValidationAspect(typeof(EmailValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(Email email)
         {
             IServiceResult result = BusinessRules.Run(CheckIfEmailExists(email));
@@ -65,9 +63,6 @@ namespace Business.Concrete
 
         }
 
-        //[SecuredOperation("admin,staff.updated")]
-        [ValidationAspect(typeof(EmailValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(Email email)
         {
             
@@ -83,10 +78,17 @@ namespace Business.Concrete
 
         }
 
-        //[SecuredOperation("admin,staff.deleted")]
+        [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
         public IServiceResult Delete(Email email)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Email>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             var result = _emailDal.Delete(email);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -94,11 +96,18 @@ namespace Business.Concrete
             return new ServiceResult(true, "Delated");
         }
 
-       // [SecuredOperation("admin,staff.saved")]
+        [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(EmailValidator))]
         [TransactionScopeAspect]
         public IDataServiceResult<Email> Save(Email email)
         {
+            #region AspectControl
+
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Email>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
             if (email.Id > 0)
             {
                 var result = Update(email);

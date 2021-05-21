@@ -12,8 +12,8 @@ namespace Business.ValidationRules.FluentValidation
     {
         public StaffEmailValidator()
         {
-            RuleFor(x => x.EmailId).GreaterThan(0);
-            RuleFor(x => x.StaffId).GreaterThan(0);
+            RuleFor(x => x.EmailId).GreaterThan(0).WithMessage("EmailNotEmpty");
+            RuleFor(x => x.StaffId).GreaterThan(0).WithMessage("StaffNotEmpty");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Business.ValidationRules.FluentValidation
     {
         public DepartmentValidator()
         {
-            RuleFor(x => x.DepartmentName).NotEmpty();
+            RuleFor(x => x.DepartmentName).NotEmpty().WithMessage("DepartmentNameNotEmpty");
         }
     }
 }
