@@ -27,8 +27,10 @@ namespace Business.BusinessAspects.Autofac
 
         protected override void OnBefore(IInvocation invocation)
         {
-            var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
+            // var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
 
+            _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
+            _httpRequest = _httpContextAccessor.HttpContext.Request;
             var value = _httpRequest.HttpContext.Session.GetString("Staff");
             StaffSession staffSession = value == null ? default(StaffSession) : JsonConvert.DeserializeObject<StaffSession>(value);
 
@@ -44,7 +46,9 @@ namespace Business.BusinessAspects.Autofac
                     }
             }
 
-            throw new Exception("AuthorizationDenied!");
+            //throw new Exception("AuthorizationDenied!");
+            MethodInterceptionBaseAttribute.Result = false;
+            MethodInterceptionBaseAttribute.Message = "AuthorizationDenied!";
         }
     }
 }

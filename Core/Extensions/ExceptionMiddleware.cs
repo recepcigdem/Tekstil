@@ -5,16 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Castle.DynamicProxy;
+using Core.Utilities.Interceptors;
+using Core.Utilities.Results;
 
 namespace Core.Extensions
 {
     public class ExceptionMiddleware
     {
         private RequestDelegate _next;
-
+       
         public ExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
+          
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -25,13 +29,16 @@ namespace Core.Extensions
             }
             catch (Exception e)
             {
-                await HandleExceptionAsync(httpContext, e);
-
+               
+                HandleExceptionAsync(httpContext, e);
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext httpContext, Exception e)
+        private void HandleExceptionAsync(HttpContext httpContext, Exception e)
         {
+            
+            IInvocation invocation=MethodInterceptionBaseAttribute.Invocation;
+            
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
@@ -40,28 +47,36 @@ namespace Core.Extensions
             if (e.GetType() == typeof(ValidationException))
             {
                 String str = e.Message;
-                var length= str.Length;
+                var length = str.Length;
                 var lastLength = str.LastIndexOf(" ");
-                var sonuc = str.Substring(lastLength, length-lastLength).Trim();
+                var sonuc = str.Substring(lastLength, length - lastLength).Trim();
 
 
                 message = sonuc;
                 errors = ((ValidationException)e).Errors;
                 httpContext.Response.StatusCode = 400;
 
-                return httpContext.Response.WriteAsync(new ValidationErrorDetails()
+               var taskValidation= httpContext.Response.WriteAsync(new ValidationErrorDetails()
                 {
                     StatusCode = 400,
                     Message = message,
                     Errors = errors
                 }.ToString());
+
+               invocation.Proceed();
+
+               //return taskValidation;
             }
 
-            return httpContext.Response.WriteAsync(new ErrorDetails
+            var task= httpContext.Response.WriteAsync(new ErrorDetails
             {
                 StatusCode = httpContext.Response.StatusCode,
                 Message = message
             }.ToString());
+
+            invocation.Proceed();
+
+            //return task;
         }
     }
 }

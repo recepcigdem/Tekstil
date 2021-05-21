@@ -10,6 +10,7 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Utilities.Interceptors;
 
 namespace Business.Concrete
 {
@@ -17,13 +18,11 @@ namespace Business.Concrete
     {
         private IAuthorizationDal _authorizationDal;
         private IStaffAuthorizationService _staffAuthorizationService;
-       //private AuthorizationValidator _authorizationValidator;
 
         public AuthorizationManager(IAuthorizationDal authorizationDal, IStaffAuthorizationService staffAuthorizationService)
         {
             _authorizationDal = authorizationDal;
             _staffAuthorizationService = staffAuthorizationService;
-           // _authorizationValidator = authorizationValidator;
         }
 
         public IDataServiceResult<List<Authorization>> GetAll()
@@ -57,9 +56,6 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Authorization>(dbResult, true, "Message_Listed");
         }
 
-        // [SecuredOperation("SuperAdmin")]
-        [ValidationAspect(typeof(AuthorizationValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Add(Authorization authorization)
         {
             IServiceResult result = BusinessRules.Run(CheckIfAuthorizationExists(authorization));
@@ -74,9 +70,6 @@ namespace Business.Concrete
 
         }
 
-        // [SecuredOperation("SuperAdmin")]
-        [ValidationAspect(typeof(AuthorizationValidator))]
-        [TransactionScopeAspect]
         public IServiceResult Update(Authorization authorization)
         {
             IServiceResult result = BusinessRules.Run(CheckIfAuthorizationExists(authorization));
@@ -95,39 +88,36 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IServiceResult Delete(Authorization authorization)
         {
-            //    IServiceResult result = BusinessRules.Run(CheckIfAuthorizationIsUsed(authorization));
-            //    if (result.Result == false)
-            //        return new ErrorServiceResult(false, result.Message);
+            #region AspectControl
 
-            //try
-            //{
-                var dbResult = _authorizationDal.Delete(authorization);
-                if (dbResult == false)
-                    return new ErrorServiceResult(false, "Error_SystemError");
-            //}
-            //catch (Exception)
-            //{
-            //    return new ErrorServiceResult(false, "Error_SystemError");
-            //}
-          
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Authorization>(false, MethodInterceptionBaseAttribute.Message);
+
+            #endregion
+
+            IServiceResult result = BusinessRules.Run(CheckIfAuthorizationIsUsed(authorization));
+            if (result.Result == false)
+                return new ErrorServiceResult(false, result.Message);
+
+            var dbResult = _authorizationDal.Delete(authorization);
+            if (dbResult == false)
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Message_Delated");
         }
 
-        // [SecuredOperation("SuperAdmin")]
-       
+        [SecuredOperation("SuperAdmin")]
         [TransactionScopeAspect]
-        //[ValidationAspect(typeof(AuthorizationValidator))]
+        [ValidationAspect(typeof(AuthorizationValidator))]
         public IDataServiceResult<Authorization> Save(Authorization authorization)
         {
+            #region AspectControl
 
-            AuthorizationValidator authorizationValidator = new AuthorizationValidator();
-            var validate= authorizationValidator.Validate(authorization);
-            if (!validate.IsValid)
-            {
-                return new DataServiceResult<Authorization>(false, validate.ToString());
-            }
+            if (MethodInterceptionBaseAttribute.Result == false)
+                return new DataServiceResult<Authorization>(false, MethodInterceptionBaseAttribute.Message);
 
+            #endregion
+            
             if (authorization.Id > 0)
             {
                 var result = Update(authorization);
@@ -156,7 +146,7 @@ namespace Business.Concrete
         private ServiceResult CheckIfAuthorizationIsUsed(Authorization authorization)
         {
             var result = _staffAuthorizationService.GetAllByAuthorizationId(authorization.Id);
-            if (result.Data.Count>0)
+            if (result.Data.Count > 0)
                 return new ErrorServiceResult(false, "Message_AuthorizationIsUsed");
 
             return new ServiceResult(true, "");

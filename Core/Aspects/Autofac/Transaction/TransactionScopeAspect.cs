@@ -17,18 +17,18 @@ namespace Core.Aspects.Autofac.Transaction
             {
                 try
                 {
-                    Message = "";
                     invocation.Proceed();
                     transactionScope.Complete();
                 }
                 catch (System.Exception e)
                 {
-                    //Result = false;
-                    //Message = e.Message;
+                    Invocation = invocation;
+                    Result = false;
+                    Message = e.Message;
                     transactionScope.Dispose();
+
                     throw e; 
                 }
-               
             }
         }
     }

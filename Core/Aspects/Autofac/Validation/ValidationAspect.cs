@@ -28,6 +28,10 @@ namespace Core.Aspects.Autofac.Validation
             var entities = invocation.Arguments.Where(t => t.GetType() == entityType); //methodun argumanlarını geziliyor.
             foreach (var entity in entities)
             {
+                if (Result==false)
+                {
+                    return;
+                }
                 ValidationTool.Validate(validator, entity);
             }
         }
