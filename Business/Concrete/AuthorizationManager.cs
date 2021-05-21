@@ -150,8 +150,8 @@ namespace Business.Concrete
         private ServiceResult CheckIfAuthorizationIsUsed(Authorization authorization)
         {
             var result = _staffAuthorizationService.GetAllByAuthorizationId(authorization.Id);
-            if (result.Data.Count > 0)
-                return new ErrorServiceResult(false, "Message_AuthorizationIsUsed");
+            if (result.Result)
+                return new ErrorServiceResult(false, "Message_AuthorizationIsUsedStaffAuthorization");
 
             return new ServiceResult(true, "");
         }

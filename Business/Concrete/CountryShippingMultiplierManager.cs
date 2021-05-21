@@ -38,6 +38,27 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<CountryShippingMultiplier>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<CountryShippingMultiplier>> GetAllBySeasonCurrencyId(int customerId, int seasonCurrencyId)
+        {
+            var dbResult = _countryShippingMultiplierDal.GetAll(x =>x.CustomerId==customerId && x.SeasonCurrencyId == seasonCurrencyId);
+
+            return new SuccessDataServiceResult<List<CountryShippingMultiplier>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<CountryShippingMultiplier>> GetAllByShippingMethodId(int customerId, int shippingMethodId)
+        {
+            var dbResult = _countryShippingMultiplierDal.GetAll(x => x.CustomerId == customerId && x.ShippingMethodId == shippingMethodId);
+
+            return new SuccessDataServiceResult<List<CountryShippingMultiplier>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<CountryShippingMultiplier>> GetAllByCountryId(int customerId, int countryId)
+        {
+            var dbResult = _countryShippingMultiplierDal.GetAll(x => x.CustomerId == customerId && x.CountryId == countryId);
+
+            return new SuccessDataServiceResult<List<CountryShippingMultiplier>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<CountryShippingMultiplier> GetById(int countryShippingMultipliersId)
         {
             var dbResult = _countryShippingMultiplierDal.Get(p => p.Id == countryShippingMultipliersId);

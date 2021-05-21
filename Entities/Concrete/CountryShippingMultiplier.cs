@@ -12,12 +12,14 @@ namespace Entities.Concrete
     {
         [Column("seasonId")]
         public int SeasonId { get; set; }
+
         [Column("countryId")]
         public int CountryId { get; set; }
         [Column("shippingMethodId")]
         public int ShippingMethodId { get; set; }
         [Column("seasonCurrencyId")]
         public int SeasonCurrencyId { get; set; }
+
         [Column("multiplier")]
         public int Multiplier { get; set; }
         [Column("testPrice")]

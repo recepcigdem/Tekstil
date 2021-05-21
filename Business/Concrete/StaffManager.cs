@@ -38,6 +38,13 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<Staff>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<Staff>> GetAllByDepartmentId(int customerId, int departmentId)
+        {
+            var dbResult = _staffDal.GetAll(x => x.CustomerId == customerId && x.DepartmentId==departmentId);
+
+            return new SuccessDataServiceResult<List<Staff>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<Staff> GetById(int staffId)
         {
             var dbResult = _staffDal.Get(p => p.Id == staffId);

@@ -33,7 +33,6 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Email> Email { get; set; }
         public DbSet<Hierarchy> Hierarchie { get; set; }
         public DbSet<Label> Label { get; set; }
-        public DbSet<MaterialContent> MaterialContent { get; set; }
         public DbSet<ModelSeasonRowNumber> ModelSeasonRowNumber { get; set; }
         public DbSet<PaymentMethodShare> PaymentMethodShare { get; set; }
         public DbSet<Phone> Phone { get; set; }

@@ -33,6 +33,48 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<Hierarchy>> GetAllByBrandId(int customerId, int brandId)
+        {
+            var dbResult = _hierarchyDal.GetAll(x => x.CustomerId == customerId && x.BrandId == brandId);
+
+            return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<Hierarchy>> GetAllByGenderId(int customerId, int genderId)
+        {
+            var dbResult = _hierarchyDal.GetAll(x => x.CustomerId == customerId && x.GenderId == genderId);
+
+            return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<Hierarchy>> GetAllByMainProductGroupId(int customerId, int mainProductGroupId)
+        {
+            var dbResult = _hierarchyDal.GetAll(x => x.CustomerId == customerId && x.MainProductGroupId == mainProductGroupId);
+
+            return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<Hierarchy>> GetAllByDetailId(int customerId, int detailId)
+        {
+            var dbResult = _hierarchyDal.GetAll(x => x.CustomerId == customerId && x.DetailId == detailId);
+
+            return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<Hierarchy>> GetAllByProductGroupId(int customerId, int productGroupId)
+        {
+            var dbResult = _hierarchyDal.GetAll(x => x.CustomerId == customerId && x.ProductGroupId == productGroupId);
+
+            return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<Hierarchy>> GetAllBySubProductGroupId(int customerId, int subProductGroupId)
+        {
+            var dbResult = _hierarchyDal.GetAll(x => x.CustomerId == customerId && x.SubProductGroupId == subProductGroupId);
+
+            return new SuccessDataServiceResult<List<Hierarchy>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<Hierarchy> GetById(int hierarchyId)
         {
             var dbResult = _hierarchyDal.Get(p => p.Id == hierarchyId);

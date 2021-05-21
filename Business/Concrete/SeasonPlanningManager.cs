@@ -38,6 +38,13 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<SeasonPlaning>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<SeasonPlaning>> GetAllByProductGroupId(int customerId, int productGroupId)
+        {
+            var dbResult = _seasonPlaningDal.GetAll(x => x.CustomerId == customerId && x.ProductGroupId == productGroupId);
+
+            return new SuccessDataServiceResult<List<SeasonPlaning>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<SeasonPlaning> GetById(int seasonPlanningId)
         {
             var dbResult = _seasonPlaningDal.Get(p => p.Id == seasonPlanningId);
@@ -59,7 +66,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Added");
         }
-       
+
         public IServiceResult Update(SeasonPlaning seasonPlaning)
         {
             ServiceResult result = BusinessRules.Run(CheckIfPlaningTypeExists(seasonPlaning));
@@ -154,14 +161,14 @@ namespace Business.Concrete
         }
 
         private ServiceResult CheckIfPlaningTypeExists(SeasonPlaning seasonPlaning)
-    {
-        var result = _seasonPlaningDal.GetAll(x => x.SeasonId == seasonPlaning.SeasonId && x.ProductGroupId == seasonPlaning.ProductGroupId);
+        {
+            var result = _seasonPlaningDal.GetAll(x => x.SeasonId == seasonPlaning.SeasonId && x.ProductGroupId == seasonPlaning.ProductGroupId);
 
-        if (result.Count > 1)
-            new ErrorServiceResult(false, "DescriptionAlreadyExists");
+            if (result.Count > 1)
+                new ErrorServiceResult(false, "DescriptionAlreadyExists");
 
-        return new ServiceResult(true, "");
+            return new ServiceResult(true, "");
+        }
+
     }
-
-}
 }

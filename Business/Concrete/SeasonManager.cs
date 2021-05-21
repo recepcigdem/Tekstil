@@ -23,8 +23,10 @@ namespace Business.Concrete
         private IPaymentMethodShareService _paymentMethodShareService;
         private ICountryShippingMultiplierService _countryShippingMultiplierService;
         private IModelSeasonRowNumberService _modelSeasonRowNumberService;
+        private ICsNoDeliveryDateService _csNoDeliveryDateService;
+        private ITariffNoDetailService _tariffNoDetailService;
 
-        public SeasonManager(ISeasonDal seasonDal, ISeasonCurrencyService seasonCurrencyService, ISeasonPlaningService seasonPlaningService, IPaymentMethodShareService paymentMethodShareService, ICountryShippingMultiplierService countryShippingMultiplierService, IModelSeasonRowNumberService modelSeasonRowNumberService)
+        public SeasonManager(ISeasonDal seasonDal, ISeasonCurrencyService seasonCurrencyService, ISeasonPlaningService seasonPlaningService, IPaymentMethodShareService paymentMethodShareService, ICountryShippingMultiplierService countryShippingMultiplierService, IModelSeasonRowNumberService modelSeasonRowNumberService, ICsNoDeliveryDateService csNoDeliveryDateService, ITariffNoDetailService tariffNoDetailService)
         {
             _seasonDal = seasonDal;
             _seasonCurrencyService = seasonCurrencyService;
@@ -32,8 +34,10 @@ namespace Business.Concrete
             _paymentMethodShareService = paymentMethodShareService;
             _countryShippingMultiplierService = countryShippingMultiplierService;
             _modelSeasonRowNumberService = modelSeasonRowNumberService;
+            _csNoDeliveryDateService = csNoDeliveryDateService;
+            _tariffNoDetailService = tariffNoDetailService;
         }
-      
+
         public IDataServiceResult<List<Season>> GetAll(int customerId)
         {
             var dbResult = _seasonDal.GetAll(x => x.CustomerId == customerId);
@@ -62,7 +66,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Added");
         }
-        
+
         public IServiceResult Update(Season season)
         {
             ServiceResult result = BusinessRules.Run(CheckIfCodeExists(season), CheckIfDescriptionExists(season));
@@ -87,6 +91,10 @@ namespace Business.Concrete
                 return new DataServiceResult<Season>(false, MethodInterceptionBaseAttribute.Message);
 
             #endregion
+
+            IServiceResult isUsedControl = BusinessRules.Run(CheckIfSeasonIsUsed(season));
+            if (isUsedControl.Result == false)
+                return new ErrorServiceResult(false, isUsedControl.Message);
 
             var seasonPlanning = _seasonPlaningService.DeleteBySeason(season);
             if (seasonPlanning.Result == false)
@@ -156,7 +164,7 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "");
         }
-       
+
         private ServiceResult CheckIfCodeExists(Season season)
         {
             var result = _seasonDal.GetAll(x => x.Code == season.Code);
@@ -167,5 +175,17 @@ namespace Business.Concrete
             return new ServiceResult(true, "");
         }
 
+        private ServiceResult CheckIfSeasonIsUsed(Season season)
+        {
+            var csNoDeliveryDate = _csNoDeliveryDateService.GetAllBySeasonId(season.CustomerId, season.Id);
+            if (csNoDeliveryDate.Result)
+                return new ErrorServiceResult(false, "Message_SeasonIsUsedInCsNoDeliveryDate");
+
+            var tariffNoDetail = _tariffNoDetailService.GetAllBySeasonId(season.CustomerId, season.Id);
+            if (tariffNoDetail.Result)
+                return new ErrorServiceResult(false, "Message_SeasonIsUsedInTariffNoDetail");
+
+            return new ServiceResult(true, "");
+        }
     }
 }

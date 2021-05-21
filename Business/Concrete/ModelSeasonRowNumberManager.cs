@@ -38,6 +38,13 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<ModelSeasonRowNumber>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<ModelSeasonRowNumber>> GetAllByProductGroupId(int customerId, int productGroupId)
+        {
+            var dbResult = _modelSeasonRowNumberDal.GetAll(x => x.CustomerId == customerId && x.ProductGroupId == productGroupId);
+
+            return new SuccessDataServiceResult<List<ModelSeasonRowNumber>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<ModelSeasonRowNumber> GetById(int modelSeasonRowNumbersId)
         {
             var dbResult = _modelSeasonRowNumberDal.Get(p => p.Id == modelSeasonRowNumbersId);
@@ -98,10 +105,10 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "Delated");
         }
-        
+
         [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
-        public IDataServiceResult<ModelSeasonRowNumber> Save(int seasonId , int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers)
+        public IDataServiceResult<ModelSeasonRowNumber> Save(int seasonId, int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers)
         {
 
             #region AspectControl
@@ -140,7 +147,7 @@ namespace Business.Concrete
                 {
                     Delete(dbModelSeasonRowNumber);
                 }
-                
+
             }
 
             foreach (var modelSeasonRowNumber in modelSeasonRowNumbers)
@@ -159,7 +166,7 @@ namespace Business.Concrete
                         return new DataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
                 }
             }
-           
+
             return new SuccessDataServiceResult<ModelSeasonRowNumber>(true, "Saved");
         }
 

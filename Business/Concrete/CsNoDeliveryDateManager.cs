@@ -35,9 +35,25 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<CsNoDeliveryDate>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<CsNoDeliveryDate>> GetAllBySeasonId(int customerId, int seasonId)
+        {
+            var dbResult = _csNoDeliveryDateDal.GetAll(x => x.CustomerId == customerId && x.SeasonId == seasonId);
+
+            return new SuccessDataServiceResult<List<CsNoDeliveryDate>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<CsNoDeliveryDate> GetById(int csNoDeliveryDateId)
         {
             var dbResult = _csNoDeliveryDateDal.Get(p => p.Id == csNoDeliveryDateId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<CsNoDeliveryDate>(false, "SystemError");
+
+            return new SuccessDataServiceResult<CsNoDeliveryDate>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<CsNoDeliveryDate> GetBySeasonId(int seasonId)
+        {
+            var dbResult = _csNoDeliveryDateDal.Get(p => p.SeasonId == seasonId);
             if (dbResult == null)
                 return new SuccessDataServiceResult<CsNoDeliveryDate>(false, "SystemError");
 
@@ -98,7 +114,7 @@ namespace Business.Concrete
         [SecuredOperation("SuperAdmin,CompanyAdmin,definition.saved")]
         [ValidationAspect(typeof(CsNoDeliveryDateValidator))]
         [TransactionScopeAspect]
-        public IDataServiceResult<CsNoDeliveryDate> Save(int staffId,CsNoDeliveryDate csNoDeliveryDate)
+        public IDataServiceResult<CsNoDeliveryDate> Save(int staffId, CsNoDeliveryDate csNoDeliveryDate)
         {
             #region AspectControl
 
@@ -124,19 +140,19 @@ namespace Business.Concrete
             csNoDeliveryDateHistory.CustomerId = csNoDeliveryDate.CustomerId;
             csNoDeliveryDateHistory.Datetime = DateTime.UtcNow;
 
-            var date = String.Format("{0:dd.MM.yyyy}",csNoDeliveryDate.Date);
+            var date = String.Format("{0:dd.MM.yyyy}", csNoDeliveryDate.Date);
             var staff = _staffService.GetById(staffId);
             if (staff.Result == true)
             {
                 csNoDeliveryDateHistory.Description = ("Tarih: " + csNoDeliveryDateHistory.Datetime.ToString("dd.MM.yyyy HH:mm:ss") + " Kişi: " + staff.Data.FirstName + " " + staff.Data.LastName + " CsNo: " + csNoDeliveryDate.Csno + " DeliveryDate: " + date);
             }
 
-            var history= _csNoDeliveryDateHistoryService.Add(csNoDeliveryDateHistory);
-            if (history.Result==false)
+            var history = _csNoDeliveryDateHistoryService.Add(csNoDeliveryDateHistory);
+            if (history.Result == false)
                 return new DataServiceResult<CsNoDeliveryDate>(false, "SystemError");
             #endregion
 
-            
+
 
             return new SuccessDataServiceResult<CsNoDeliveryDate>(true, "Saved");
         }
@@ -150,6 +166,6 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "");
         }
- 
+
     }
 }

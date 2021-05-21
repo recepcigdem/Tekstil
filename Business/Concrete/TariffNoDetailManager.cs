@@ -38,9 +38,39 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<TariffNoDetail>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<TariffNoDetail>> GetAllBySeasonId(int customerId, int seasonId)
+        {
+            var dbResult = _tariffNoDetailDal.GetAll(x => x.CustomerId == customerId && x.SeasonCurrencyId == seasonId);
+
+            return new SuccessDataServiceResult<List<TariffNoDetail>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<TariffNoDetail>> GetAllBySeasonCurrencyId(int customerId, int seasonCurrencyId)
+        {
+            var dbResult = _tariffNoDetailDal.GetAll(x => x.CustomerId == customerId && x.SeasonCurrencyId == seasonCurrencyId);
+
+            return new SuccessDataServiceResult<List<TariffNoDetail>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<TariffNoDetail>> GetAllByCountryId(int customerId, int countryId)
+        {
+            var dbResult = _tariffNoDetailDal.GetAll(x => x.CustomerId == customerId && x.CountryId == countryId);
+
+            return new SuccessDataServiceResult<List<TariffNoDetail>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<TariffNoDetail> GetById(int tariffNoDetailId)
         {
             var dbResult = _tariffNoDetailDal.Get(p => p.Id == tariffNoDetailId);
+            if (dbResult == null)
+                return new SuccessDataServiceResult<TariffNoDetail>(false, "SystemError");
+
+            return new SuccessDataServiceResult<TariffNoDetail>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<TariffNoDetail> GetBySeasonId(int seasonId)
+        {
+            var dbResult = _tariffNoDetailDal.Get(p => p.SeasonId == seasonId);
             if (dbResult == null)
                 return new SuccessDataServiceResult<TariffNoDetail>(false, "SystemError");
 
@@ -132,7 +162,7 @@ namespace Business.Concrete
         [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(TariffNoDetailValidator))]
         [TransactionScopeAspect]
-        public IDataServiceResult<TariffNoDetail> Save(int tariffNoId,int customerId, List<TariffNoDetail> tariffNoDetails)
+        public IDataServiceResult<TariffNoDetail> Save(int tariffNoId, int customerId, List<TariffNoDetail> tariffNoDetails)
         {
             #region AspectControl
 

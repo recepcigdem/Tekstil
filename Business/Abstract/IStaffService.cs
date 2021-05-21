@@ -13,6 +13,7 @@ namespace Business.Abstract
     public interface IStaffService
     {
         IDataServiceResult<List<Staff>> GetAll(int customerId);
+        IDataServiceResult<List<Staff>> GetAllByDepartmentId(int customerId,int departmentId);
         IDataServiceResult<Staff> GetById(int staffId);
         IServiceResult Add(Staff staff);
         IServiceResult Update(Staff staff);

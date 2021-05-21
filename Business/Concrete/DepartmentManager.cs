@@ -19,10 +19,12 @@ namespace Business.Concrete
     public class DepartmentManager : IDepartmentService
     {
         private IDepartmentDal _departmentDal;
+        private IStaffService _staffService;
 
-        public DepartmentManager(IDepartmentDal departmentDal)
+        public DepartmentManager(IDepartmentDal departmentDal, IStaffService staffService)
         {
             _departmentDal = departmentDal;
+            _staffService = staffService;
         }
 
         public IDataServiceResult<List<Department>> GetAll(int customerId)
@@ -47,7 +49,7 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<Department>(dbResult, true, "Listed");
         }
-        
+
         public IServiceResult Add(Department department)
         {
             IServiceResult result = BusinessRules.Run(CheckIfDepartmentExists(department));
@@ -87,6 +89,10 @@ namespace Business.Concrete
                 return new DataServiceResult<Department>(false, MethodInterceptionBaseAttribute.Message);
 
             #endregion
+
+            IServiceResult isUsedResult = BusinessRules.Run(CheckIfDepartmentIsUsed(department));
+            if (isUsedResult.Result == false)
+                return new ErrorServiceResult(false, isUsedResult.Message);
 
             var result = _departmentDal.Delete(department);
             if (result == false)
@@ -129,6 +135,15 @@ namespace Business.Concrete
             var result = _departmentDal.GetAll(x => x.DepartmentName == department.DepartmentName);
             if (result.Count > 1)
                 return new ErrorServiceResult(false, "DepartmentAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfDepartmentIsUsed(Department department)
+        {
+            var result = _staffService.GetAllByDepartmentId(department.CustomerId, department.Id);
+            if (result.Result)
+                return new ErrorServiceResult(false, "Message_DepartmentIsUsedStaff");
 
             return new ServiceResult(true, "");
         }

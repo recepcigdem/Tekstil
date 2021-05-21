@@ -38,6 +38,20 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<PaymentMethodShare>>(dbResult, true, "Listed");
         }
 
+        public IDataServiceResult<List<PaymentMethodShare>> GetAllBySeasonCurrencyId(int customerId, int seasonCurrencyId)
+        {
+            var dbResult = _paymentMethodShareDal.GetAll(x => x.CustomerId==customerId && x.SeasonCurrencyId == seasonCurrencyId);
+
+            return new SuccessDataServiceResult<List<PaymentMethodShare>>(dbResult, true, "Listed");
+        }
+
+        public IDataServiceResult<List<PaymentMethodShare>> GetAllByPaymentMethodId(int customerId, int paymentMethodId)
+        {
+            var dbResult = _paymentMethodShareDal.GetAll(x => x.CustomerId == customerId && x.PaymentMethodId == paymentMethodId);
+
+            return new SuccessDataServiceResult<List<PaymentMethodShare>>(dbResult, true, "Listed");
+        }
+
         public IDataServiceResult<PaymentMethodShare> GetById(int paymentMethodShareId)
         {
             var dbResult = _paymentMethodShareDal.Get(p => p.Id == paymentMethodShareId);

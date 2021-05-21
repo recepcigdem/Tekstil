@@ -12,10 +12,12 @@ namespace Entities.Concrete
     {
         [Column("definitionTitleId")]
         public int DefinitionTitleId { get; set; }
+
         [Column("categoryId")]
         public int CategoryId { get; set; }
         [Column("productGroupId")]
         public int ProductGroupId { get; set; }
+
         [Column("status")]
         public bool Status { get; set; }
         [Column("isDefault")]

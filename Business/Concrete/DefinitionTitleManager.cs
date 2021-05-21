@@ -10,6 +10,7 @@ using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
+using Core.Utilities.Business;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -20,10 +21,12 @@ namespace Business.Concrete
     public class DefinitionTitleManager : IDefinitionTitleService
     {
         private IDefinitionTitleDal _definitionTitleDal;
+        private IDefinitionService _definitionService;
 
-        public DefinitionTitleManager(IDefinitionTitleDal definitionTitleDal)
+        public DefinitionTitleManager(IDefinitionTitleDal definitionTitleDal, IDefinitionService definitionService)
         {
             _definitionTitleDal = definitionTitleDal;
+            _definitionService = definitionService;
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -37,9 +40,9 @@ namespace Business.Concrete
 
         [LogAspect(typeof(FileLogger))]
         [TransactionScopeAspect]
-        public IDataServiceResult<DefinitionTitle> GetByValue(int customerId,int value)
+        public IDataServiceResult<DefinitionTitle> GetByValue(int customerId, int value)
         {
-            var dbResult = _definitionTitleDal.Get(x => x.CustomerId == customerId&&x.Value==value);
+            var dbResult = _definitionTitleDal.Get(x => x.CustomerId == customerId && x.Value == value);
 
             return new SuccessDataServiceResult<DefinitionTitle>(dbResult, true, "Listed");
         }
@@ -96,11 +99,24 @@ namespace Business.Concrete
 
             #endregion
 
+            IServiceResult isUsedResult = BusinessRules.Run(CheckIfDefinitionTitleIsUsed(definitionTitle));
+            if (isUsedResult.Result == false)
+                return new ErrorServiceResult(false, isUsedResult.Message);
+
             var result = _definitionTitleDal.Delete(definitionTitle);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
 
             return new ServiceResult(true, "Delated");
+        }
+
+        private ServiceResult CheckIfDefinitionTitleIsUsed(DefinitionTitle definitionTitle)
+        {
+            var result = _definitionService.GetAllByCustomerIdAndDefinitionTitleId(definitionTitle.CustomerId, definitionTitle.Id);
+            if (result.Result)
+                return new ErrorServiceResult(false, "Message_DefinitionTitleIsUsedDefinition");
+
+            return new ServiceResult(true, "");
         }
     }
 }

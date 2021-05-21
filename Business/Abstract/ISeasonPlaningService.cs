@@ -12,6 +12,7 @@ namespace Business.Abstract
     {
         IDataServiceResult<List<SeasonPlaning>> GetAll(int customerId);
         IDataServiceResult<List<SeasonPlaning>> GetAllBySeasonId(int seasonId);
+        IDataServiceResult<List<SeasonPlaning>> GetAllByProductGroupId(int customerId, int productGroupId);
         IDataServiceResult<SeasonPlaning> GetById(int seasonPlanningId);
         IServiceResult Add(SeasonPlaning seasonPlaning);
         IServiceResult Update(SeasonPlaning seasonPlaning);

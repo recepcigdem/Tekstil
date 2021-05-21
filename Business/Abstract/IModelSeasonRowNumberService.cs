@@ -12,6 +12,7 @@ namespace Business.Abstract
     {
         IDataServiceResult<List<ModelSeasonRowNumber>> GetAll(int customerId);
         IDataServiceResult<List<ModelSeasonRowNumber>> GetAllBySeasonId(int seasonId);
+        IDataServiceResult<List<ModelSeasonRowNumber>> GetAllByProductGroupId(int customerId,int productGroupId);
         IDataServiceResult<ModelSeasonRowNumber> GetById(int modelSeasonRowNumbersId);
         IDataServiceResult<ModelSeasonRowNumber> GetByProductGroupIdAndRowNumber(int productGroupId, int rowNumber);
         IServiceResult Delete(ModelSeasonRowNumber modelSeasonRowNumbers);

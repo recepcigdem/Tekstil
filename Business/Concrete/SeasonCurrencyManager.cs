@@ -18,10 +18,16 @@ namespace Business.Concrete
     public class SeasonCurrencyManager : ISeasonCurrencyService
     {
         private ISeasonCurrencyDal _seasonCurrencyDal;
+        private ICountryShippingMultiplierService _countryShippingMultiplierService;
+        private IPaymentMethodShareService _paymentMethodShareService;
+        private ITariffNoDetailService _tariffNoDetailService;
 
-        public SeasonCurrencyManager(ISeasonCurrencyDal seasonCurrencyDal)
+        public SeasonCurrencyManager(ISeasonCurrencyDal seasonCurrencyDal, ICountryShippingMultiplierService countryShippingMultiplierService, IPaymentMethodShareService paymentMethodShareService, ITariffNoDetailService tariffNoDetailService)
         {
             _seasonCurrencyDal = seasonCurrencyDal;
+            _countryShippingMultiplierService = countryShippingMultiplierService;
+            _paymentMethodShareService = paymentMethodShareService;
+            _tariffNoDetailService = tariffNoDetailService;
         }
 
         public IDataServiceResult<List<SeasonCurrency>> GetAll(int customerId)
@@ -84,6 +90,10 @@ namespace Business.Concrete
 
             #endregion
 
+            IServiceResult isUsedResult = BusinessRules.Run(CheckIfSeasonCurrencyIsUsed(seasonCurrency));
+            if (isUsedResult.Result == false)
+                return new ErrorServiceResult(false, isUsedResult.Message);
+
             var result = _seasonCurrencyDal.Delete(seasonCurrency);
             if (result == false)
                 return new ErrorServiceResult(false, "SystemError");
@@ -108,6 +118,10 @@ namespace Business.Concrete
 
             foreach (var seasonCurrency in seasonCurrencies.Data)
             {
+                IServiceResult isUsedResult = BusinessRules.Run(CheckIfSeasonCurrencyIsUsed(seasonCurrency));
+                if (isUsedResult.Result == false)
+                    return new ErrorServiceResult(false, isUsedResult.Message);
+
                 var deleteSeasonCurrency = Delete(seasonCurrency);
                 if (deleteSeasonCurrency.Result == false)
                     return new ErrorServiceResult(false, "SeasonCurrencyNotDeleted");
@@ -160,6 +174,23 @@ namespace Business.Concrete
 
             if (result.Count > 1)
                 new ErrorServiceResult(false, "CurrencyTypeAlreadyExists");
+
+            return new ServiceResult(true, "");
+        }
+
+        private ServiceResult CheckIfSeasonCurrencyIsUsed(SeasonCurrency seasonCurrency)
+        {
+            var countryShippingMultiplier = _countryShippingMultiplierService.GetAllBySeasonCurrencyId(seasonCurrency.CustomerId, seasonCurrency.Id);
+            if (countryShippingMultiplier.Result)
+                return new ErrorServiceResult(false, "Message_SeasonCurrencyIsUsedCountryShippingMultiplier");
+
+            var paymentMethodShare = _paymentMethodShareService.GetAllBySeasonCurrencyId(seasonCurrency.CustomerId, seasonCurrency.Id);
+            if (paymentMethodShare.Result)
+                return new ErrorServiceResult(false, "Message_SeasonCurrencyIsUsedPaymentMethodShare");
+
+            var tariffNoDetail = _tariffNoDetailService.GetAllBySeasonCurrencyId(seasonCurrency.CustomerId, seasonCurrency.Id);
+            if (tariffNoDetail.Result)
+                return new ErrorServiceResult(false, "Message_SeasonCurrencyIsUsedTariffNoDetail");
 
             return new ServiceResult(true, "");
         }
