@@ -31,7 +31,7 @@ namespace Business.Concrete
         {
             var dbResult = _authorizationDal.GetAll();
 
-            return new SuccessDataServiceResult<List<Authorization>>(dbResult, true, "Message_Listed");
+            return new SuccessDataServiceResult<List<Authorization>>(dbResult, true, "Listed");
         }
 
         public IDataServiceResult<List<Authorization>> GetAllAuthorizationByStaffId(int staffId)
@@ -55,7 +55,7 @@ namespace Business.Concrete
             if (dbResult == null)
                 return new SuccessDataServiceResult<Authorization>(false, "Error_SystemError");
 
-            return new SuccessDataServiceResult<Authorization>(dbResult, true, "Message_Listed");
+            return new SuccessDataServiceResult<Authorization>(dbResult, true, "Listed");
         }
 
         public IServiceResult Add(Authorization authorization)
@@ -68,7 +68,7 @@ namespace Business.Concrete
             if (dbResult == null)
                 return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Message_Added");
+            return new ServiceResult(true, "Added");
 
         }
 
@@ -82,7 +82,7 @@ namespace Business.Concrete
             if (dbResult == null)
                 return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Message_Updated");
+            return new ServiceResult(true, "Updated");
 
         }
 
@@ -106,7 +106,7 @@ namespace Business.Concrete
             if (dbResult == false)
                 return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Message_Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -135,14 +135,14 @@ namespace Business.Concrete
                     return new DataServiceResult<Authorization>(false, result.Message);
             }
 
-            return new SuccessDataServiceResult<Authorization>(true, "Message_Saved");
+            return new SuccessDataServiceResult<Authorization>(true, "Saved");
         }
 
         private ServiceResult CheckIfAuthorizationExists(Authorization authorization)
         {
             var result = _authorizationDal.GetAll(x => x.AuthorizationName == authorization.AuthorizationName);
             if (result.Count > 1)
-                return new ErrorServiceResult(false, "Message_AuthorizationAlreadyExists");
+                return new ErrorServiceResult(false, "AuthorizationAlreadyExists");
 
             return new ServiceResult(true, "");
         }
@@ -151,7 +151,7 @@ namespace Business.Concrete
         {
             var result = _staffAuthorizationService.GetAllByAuthorizationId(authorization.Id);
             if (result.Result)
-                return new ErrorServiceResult(false, "Message_AuthorizationIsUsedStaffAuthorization");
+                return new ErrorServiceResult(false, "AuthorizationIsUsedStaffAuthorization");
 
             return new ServiceResult(true, "");
         }

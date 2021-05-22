@@ -35,7 +35,7 @@ namespace Business.Concrete
         {
             var dbResult = _channelDal.Get(p => p.Id == channelId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Channel>(false, "SystemError");
+                return new SuccessDataServiceResult<Channel>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Channel>(dbResult, true, "Listed");
         }
@@ -48,7 +48,7 @@ namespace Business.Concrete
 
             var dbResult = _channelDal.Add(channel);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -61,7 +61,7 @@ namespace Business.Concrete
 
             var dbResult = _channelDal.Update(channel);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -84,9 +84,9 @@ namespace Business.Concrete
 
             var deleteResult = _channelDal.Delete(channel);
             if (deleteResult == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -126,10 +126,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfChannelIsUsed(Channel channel)
         {
-            var result = GetById(channel.Id);
-            if (result.Result == true)
-                if (result.Data.IsUsed == true)
-                    new ErrorServiceResult(false, "ChannelIsUsed");
+            //var result = GetById(channel.Id);
+            //if (result.Result == true)
+            //    if (result.Data.IsUsed == true)
+            //        new ErrorServiceResult(false, "ChannelIsUsed");
 
             return new ServiceResult(true, "");
         }

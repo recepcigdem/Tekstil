@@ -63,7 +63,7 @@ namespace Business.Concrete
         {
             var dbResult = _countryShippingMultiplierDal.Get(p => p.Id == countryShippingMultipliersId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<CountryShippingMultiplier>(false, "SystemError");
+                return new SuccessDataServiceResult<CountryShippingMultiplier>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<CountryShippingMultiplier>(dbResult, true, "Listed");
         }
@@ -76,7 +76,7 @@ namespace Business.Concrete
 
             var dbResult = _countryShippingMultiplierDal.Add(countryShippingMultiplier);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -89,7 +89,7 @@ namespace Business.Concrete
 
             var dbResult = _countryShippingMultiplierDal.Update(countryShippingMultiplier);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -107,9 +107,9 @@ namespace Business.Concrete
 
             var result = _countryShippingMultiplierDal.Delete(countryShippingMultiplier);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
         
         [LogAspect(typeof(FileLogger))]
@@ -125,7 +125,7 @@ namespace Business.Concrete
 
             var countryShippingMultipliers = GetAllBySeasonId(season.Id);
             if (countryShippingMultipliers.Result == false)
-                return new ErrorServiceResult(false, "CountryShippingMultiplierNotDeleted");
+                return new ErrorServiceResult(false, "CountryShippingMultiplierNotFound");
 
             foreach (var countryShippingMultiplier in countryShippingMultipliers.Data)
             {
@@ -134,7 +134,7 @@ namespace Business.Concrete
                     return new ErrorServiceResult(false, "CountryShippingMultiplierNotDeleted");
             }
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -179,7 +179,7 @@ namespace Business.Concrete
             var result = _countryShippingMultiplierDal.GetAll(x => x.SeasonId == countryShippingMultiplier.SeasonId && x.CountryId == countryShippingMultiplier.CountryId && x.ShippingMethodId == countryShippingMultiplier.ShippingMethodId);
 
             if (result.Count > 1)
-                new ErrorServiceResult(false, "DescriptionAlreadyExists");
+                new ErrorServiceResult(false, "CountryShippingMultiplierDescriptionAlreadyExists");
 
             return new ServiceResult(true, "");
         }

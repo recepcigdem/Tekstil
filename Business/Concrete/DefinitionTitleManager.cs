@@ -53,7 +53,7 @@ namespace Business.Concrete
         {
             var dbResult = _definitionTitleDal.Get(p => p.Id == definitionTitleId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<DefinitionTitle>(false, "SystemError");
+                return new SuccessDataServiceResult<DefinitionTitle>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<DefinitionTitle>(dbResult, true, "Listed");
         }
@@ -75,13 +75,13 @@ namespace Business.Concrete
             {
                 var result = _definitionTitleDal.Update(definitionTitle);
                 if (result == null)
-                    return new DataServiceResult<DefinitionTitle>(false, "SystemError");
+                    return new DataServiceResult<DefinitionTitle>(false, "Error_SystemError");
             }
             else
             {
                 var result = _definitionTitleDal.Add(definitionTitle);
                 if (result == null)
-                    return new DataServiceResult<DefinitionTitle>(false, "SystemError");
+                    return new DataServiceResult<DefinitionTitle>(false, "Error_SystemError");
             }
 
             return new SuccessDataServiceResult<DefinitionTitle>(true, "Saved");
@@ -105,7 +105,7 @@ namespace Business.Concrete
 
             var result = _definitionTitleDal.Delete(definitionTitle);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Delated");
         }

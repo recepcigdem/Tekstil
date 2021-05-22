@@ -57,7 +57,7 @@ namespace Business.Concrete
         {
             var dbResult = _definitionDal.Get(p => p.Id == definitionId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Definition>(false, "SystemError");
+                return new SuccessDataServiceResult<Definition>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Definition>(dbResult, true, "Listed");
         }
@@ -66,7 +66,7 @@ namespace Business.Concrete
         {
             var dbResult = _definitionDal.Get(p => p.DefinitionTitleId == definitionTitleId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Definition>(false, "SystemError");
+                return new SuccessDataServiceResult<Definition>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Definition>(dbResult, true, "Listed");
         }
@@ -87,13 +87,13 @@ namespace Business.Concrete
             {
                 var result = _definitionDal.Update(definition);
                 if (result == null)
-                    return new DataServiceResult<Definition>(false, "SystemError");
+                    return new DataServiceResult<Definition>(false, "Error_SystemError");
             }
             else
             {
                 var result = _definitionDal.Add(definition);
                 if (result == null)
-                    return new DataServiceResult<Definition>(false, "SystemError");
+                    return new DataServiceResult<Definition>(false, "Error_SystemError");
             }
 
             return new SuccessDataServiceResult<Definition>(true, "Saved");
@@ -118,9 +118,9 @@ namespace Business.Concrete
 
             var result = _definitionDal.Delete(definition);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         private ServiceResult CheckIfDefinitionIsUsed(Definition definition)

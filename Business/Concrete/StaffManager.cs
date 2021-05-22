@@ -49,7 +49,7 @@ namespace Business.Concrete
         {
             var dbResult = _staffDal.Get(p => p.Id == staffId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Staff>(false, "SystemError");
+                return new SuccessDataServiceResult<Staff>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Staff>(dbResult, true, "Listed");
         }
@@ -62,7 +62,7 @@ namespace Business.Concrete
 
             var dbResult = _staffDal.Add(staff);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
 
@@ -76,7 +76,7 @@ namespace Business.Concrete
 
             var dbResult = _staffDal.Update(staff);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -95,9 +95,9 @@ namespace Business.Concrete
 
             var result = _staffDal.Delete(staff);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -127,11 +127,11 @@ namespace Business.Concrete
 
             var staffDelete = _staffDal.Delete(staff);
             if (staffDelete == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
 
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]

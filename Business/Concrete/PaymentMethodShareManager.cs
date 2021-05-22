@@ -56,7 +56,7 @@ namespace Business.Concrete
         {
             var dbResult = _paymentMethodShareDal.Get(p => p.Id == paymentMethodShareId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<PaymentMethodShare>(false, "SystemError");
+                return new SuccessDataServiceResult<PaymentMethodShare>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<PaymentMethodShare>(dbResult, true, "Listed");
         }
@@ -69,7 +69,7 @@ namespace Business.Concrete
 
             var dbResult = _paymentMethodShareDal.Add(paymentMethodShare);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -82,7 +82,7 @@ namespace Business.Concrete
 
             var dbResult = _paymentMethodShareDal.Update(paymentMethodShare);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -100,9 +100,9 @@ namespace Business.Concrete
 
             var result = _paymentMethodShareDal.Delete(paymentMethodShare);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]

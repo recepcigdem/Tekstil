@@ -35,7 +35,7 @@ namespace Business.Concrete
         {
             var dbResult = _emailDal.Get(p => p.Id == emailId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Email>(false, "SystemError");
+                return new SuccessDataServiceResult<Email>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Email>(dbResult, true, "Listed");
         }
@@ -44,7 +44,7 @@ namespace Business.Concrete
         {
             var dbResult = _emailDal.Get(p => p.EmailAddress == email);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Email>(false, "SystemError");
+                return new SuccessDataServiceResult<Email>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Email>(dbResult, true, "Listed");
         }
@@ -57,7 +57,7 @@ namespace Business.Concrete
 
             var dbResult = _emailDal.Add(email);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
 
@@ -72,7 +72,7 @@ namespace Business.Concrete
 
             var dbResult = _emailDal.Update(email);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
 
@@ -91,7 +91,7 @@ namespace Business.Concrete
 
             var result = _emailDal.Delete(email);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Delated");
         }

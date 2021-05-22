@@ -51,7 +51,7 @@ namespace Business.Concrete
         {
             var dbResult = _staffAuthorizationDal.Get(p => p.Id == staffAuthorizationId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<StaffAuthorization>(false, "SystemError");
+                return new SuccessDataServiceResult<StaffAuthorization>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<StaffAuthorization>(dbResult, true, "Listed");
         }
@@ -60,7 +60,7 @@ namespace Business.Concrete
         {
             var dbResult = _staffAuthorizationDal.Get(p => p.StaffId == staffId);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult( true, "Listed", dbResult.Id);
         }
@@ -73,7 +73,7 @@ namespace Business.Concrete
 
             var dbResult = _staffAuthorizationDal.Add(staffAuthorization);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
 
@@ -87,7 +87,7 @@ namespace Business.Concrete
 
             var dbResult = _staffAuthorizationDal.Update(staffAuthorization);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
 
@@ -106,9 +106,9 @@ namespace Business.Concrete
 
             var result = _staffAuthorizationDal.Delete(staffAuthorization);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]

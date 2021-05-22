@@ -164,7 +164,7 @@ namespace Business.Concrete
 
             var hashPassword = Core.Helper.PasswordHashSaltHelper.CreateHash256(staffSalt);
             if (hashPassword == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "ok", hashPassword);
         }

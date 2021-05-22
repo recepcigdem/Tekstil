@@ -195,6 +195,15 @@
   <data name="Exact" xml:space="preserve">
     <value>Exact</value>
   </data>
+  <data name="ForgotPassword_ButtonText" xml:space="preserve">
+    <value>Click</value>
+  </data>
+  <data name="ForgotPassword_MailHeader" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="ForgotPassword_MailInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
   <data name="Hour" xml:space="preserve">
     <value>Hour</value>
   </data>

@@ -35,7 +35,7 @@ namespace Business.Concrete
         {
             var dbResult = _testDal.Get(p => p.Id == testId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Test>(false, "SystemError");
+                return new SuccessDataServiceResult<Test>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Test>(dbResult, true, "Listed");
         }
@@ -48,7 +48,7 @@ namespace Business.Concrete
 
             var dbResult = _testDal.Add(test);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -61,7 +61,7 @@ namespace Business.Concrete
 
             var dbResult = _testDal.Update(test);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -84,9 +84,9 @@ namespace Business.Concrete
 
             var deleteResult = _testDal.Delete(test);
             if (deleteResult == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -136,10 +136,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfTestIsUsed(Test test)
         {
-            var result = GetById(test.Id);
-            if (result.Result == true)
-                if (result.Data.IsUsed == true)
-                    new ErrorServiceResult(false, "TestIsUsed");
+            //var result = GetById(test.Id);
+            //if (result.Result == true)
+            //    if (result.Data.IsUsed == true)
+            //        new ErrorServiceResult(false, "TestIsUsed");
 
             return new ServiceResult(true, "");
         }

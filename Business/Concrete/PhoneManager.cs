@@ -37,7 +37,7 @@ namespace Business.Concrete
         {
             var dbResult = _phoneDal.Get(p => p.Id == phoneId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Phone>(false, "SystemError");
+                return new SuccessDataServiceResult<Phone>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Phone>(dbResult, true, "Listed");
         }
@@ -50,7 +50,7 @@ namespace Business.Concrete
 
             var dbResult = _phoneDal.Add(phone);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
 
@@ -64,7 +64,7 @@ namespace Business.Concrete
 
             var dbResult = _phoneDal.Update(phone);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
 
@@ -83,9 +83,9 @@ namespace Business.Concrete
 
             var result = _phoneDal.Delete(phone);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]

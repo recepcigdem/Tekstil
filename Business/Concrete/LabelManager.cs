@@ -35,7 +35,7 @@ namespace Business.Concrete
         {
             var dbResult = _labelDal.Get(p => p.Id == labelId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Label>(false, "SystemError");
+                return new SuccessDataServiceResult<Label>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Label>(dbResult, true, "Listed");
         }
@@ -48,7 +48,7 @@ namespace Business.Concrete
 
             var dbResult = _labelDal.Add(label);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -61,7 +61,7 @@ namespace Business.Concrete
 
             var dbResult = _labelDal.Update(label);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -84,9 +84,9 @@ namespace Business.Concrete
 
             var deleteResult = _labelDal.Delete(label);
             if (deleteResult == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -137,10 +137,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfLabelIsUsed(Label label)
         {
-            var result = GetById(label.Id);
-            if (result.Result == true)
-                if (result.Data.IsUsed == true)
-                    new ErrorServiceResult(false, "LabelIsUsed");
+            //var result = GetById(label.Id);
+            //if (result.Result == true)
+            //    if (result.Data.IsUsed == true)
+            //        new ErrorServiceResult(false, "LabelIsUsed");
 
             return new ServiceResult(true, "");
         }

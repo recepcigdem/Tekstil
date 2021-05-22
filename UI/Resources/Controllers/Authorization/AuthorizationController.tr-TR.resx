@@ -117,13 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AuthorizationAlreadyExists" xml:space="preserve">
+    <value>Yetki zaten mevcut!</value>
+  </data>
+  <data name="AuthorizationDenied" xml:space="preserve">
+    <value>Yetkiniz yok!</value>
+  </data>
+  <data name="AuthorizationIsUsed" xml:space="preserve">
+    <value>Yetki kullanılmaktadır!</value>
+  </data>
+  <data name="AuthorizationIsUsedStaffAuthorization" xml:space="preserve">
+    <value>Yetki personelde kullanılmaktadır!</value>
+  </data>
   <data name="AuthorizationNameNotEmpty" xml:space="preserve">
     <value>Yetki adı boş geçilemez!</value>
   </data>
-  <data name="Message_AuthorizationAlreadyExists" xml:space="preserve">
-    <value>Yetki zaten mevcut!</value>
-  </data>
-  <data name="Message_AuthorizationIsUsed" xml:space="preserve">
-    <value>Yetki kullanılmaktadır!</value>
+  <data name="Error_SystemError" xml:space="preserve">
+    <value>Sistem hatası!</value>
   </data>
 </root>

@@ -86,7 +86,9 @@ namespace UI.Controllers.Authorization
                 var res = _authorizationService.Delete(entity);
                 if (res.Result == false)
                     res.Message = _localizer.GetString(res.Message);
-               
+                else
+                    res.Message = _localizerShared.GetString(res.Message);
+
                 return Json(res);
             }
             return null;

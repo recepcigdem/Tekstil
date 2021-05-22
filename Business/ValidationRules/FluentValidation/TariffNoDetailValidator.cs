@@ -15,7 +15,7 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(x => x.CustomerId).NotEmpty().WithMessage("CustomerNotEmpty");
             RuleFor(x => x.TariffNoId).NotEmpty().WithMessage("TariffNoNotEmpty");
             RuleFor(x => x.SeasonId).NotEmpty().WithMessage("SeasonNotEmpty");
-            RuleFor(x => x.IsUsed).NotEmpty().WithMessage("IsUsedsNotEmpty");
+            RuleFor(x => x.IsUsed).NotEmpty().WithMessage("IsUsedNotEmpty");
         }
     }
 }

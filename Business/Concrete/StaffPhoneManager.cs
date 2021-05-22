@@ -40,7 +40,7 @@ namespace Business.Concrete
         {
             var dbResult = _staffPhoneDal.Get(p => p.Id == staffPhoneId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<StaffPhone>(false, "SystemError");
+                return new SuccessDataServiceResult<StaffPhone>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<StaffPhone>(dbResult, true, "Listed");
         }
@@ -49,7 +49,7 @@ namespace Business.Concrete
         {
             var dbResult = _staffPhoneDal.Get(p => p.PhoneId == phoneId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<StaffPhone>(false, "SystemError");
+                return new SuccessDataServiceResult<StaffPhone>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<StaffPhone>(dbResult, true, "Listed");
         }
@@ -69,7 +69,7 @@ namespace Business.Concrete
 
             var dbResult = _staffPhoneDal.Add(staffPhone);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
 
@@ -83,7 +83,7 @@ namespace Business.Concrete
 
             var dbResult = _staffPhoneDal.Update(staffPhone);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
 
@@ -102,9 +102,9 @@ namespace Business.Concrete
 
             var result = _staffPhoneDal.Delete(staffPhone);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -137,7 +137,7 @@ namespace Business.Concrete
                     return new ErrorServiceResult(false, "StaffPhoneNotDeleted");
             }
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]

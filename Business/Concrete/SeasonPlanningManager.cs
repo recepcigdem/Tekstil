@@ -49,7 +49,7 @@ namespace Business.Concrete
         {
             var dbResult = _seasonPlaningDal.Get(p => p.Id == seasonPlanningId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<SeasonPlaning>(false, "SystemError");
+                return new SuccessDataServiceResult<SeasonPlaning>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<SeasonPlaning>(dbResult, true, "Listed");
         }
@@ -62,7 +62,7 @@ namespace Business.Concrete
 
             var dbResult = _seasonPlaningDal.Add(seasonPlaning);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -75,7 +75,7 @@ namespace Business.Concrete
 
             var dbResult = _seasonPlaningDal.Update(seasonPlaning);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -93,9 +93,9 @@ namespace Business.Concrete
 
             var result = _seasonPlaningDal.Delete(seasonPlaning);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -120,7 +120,7 @@ namespace Business.Concrete
                     return new ErrorServiceResult(false, "SeasonPlanningNotDeleted");
             }
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -165,7 +165,7 @@ namespace Business.Concrete
             var result = _seasonPlaningDal.GetAll(x => x.SeasonId == seasonPlaning.SeasonId && x.ProductGroupId == seasonPlaning.ProductGroupId);
 
             if (result.Count > 1)
-                new ErrorServiceResult(false, "DescriptionAlreadyExists");
+                new ErrorServiceResult(false, "SeasonPlaningDescriptionAlreadyExists");
 
             return new ServiceResult(true, "");
         }

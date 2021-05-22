@@ -49,7 +49,7 @@ namespace Business.Concrete
         {
             var dbResult = _modelSeasonRowNumberDal.Get(p => p.Id == modelSeasonRowNumbersId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
+                return new SuccessDataServiceResult<ModelSeasonRowNumber>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<ModelSeasonRowNumber>(dbResult, true, "Listed");
         }
@@ -58,7 +58,7 @@ namespace Business.Concrete
         {
             var dbResult = _modelSeasonRowNumberDal.Get(p => p.ProductGroupId == productGroupId && p.RowNumber == rowNumber);
             if (dbResult == null)
-                return new SuccessDataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
+                return new SuccessDataServiceResult<ModelSeasonRowNumber>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<ModelSeasonRowNumber>(dbResult, true, "Listed");
         }
@@ -76,9 +76,9 @@ namespace Business.Concrete
 
             var result = _modelSeasonRowNumberDal.Delete(modelSeasonRowNumbers);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -103,7 +103,7 @@ namespace Business.Concrete
                     return new ErrorServiceResult(false, "ModelSeasonRowNumberNotDeleted");
             }
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -157,13 +157,13 @@ namespace Business.Concrete
                 {
                     var dbResult = _modelSeasonRowNumberDal.Update(modelSeasonRowNumber);
                     if (dbResult == null)
-                        return new DataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
+                        return new DataServiceResult<ModelSeasonRowNumber>(false, "Error_SystemError");
                 }
                 else
                 {
                     var dbResult = _modelSeasonRowNumberDal.Add(modelSeasonRowNumber);
                     if (dbResult == null)
-                        return new DataServiceResult<ModelSeasonRowNumber>(false, "SystemError");
+                        return new DataServiceResult<ModelSeasonRowNumber>(false, "Error_SystemError");
                 }
             }
 

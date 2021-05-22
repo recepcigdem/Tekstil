@@ -79,7 +79,7 @@ namespace Business.Concrete
         {
             var dbResult = _hierarchyDal.Get(p => p.Id == hierarchyId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Hierarchy>(false, "SystemError");
+                return new SuccessDataServiceResult<Hierarchy>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Hierarchy>(dbResult, true, "Listed");
         }
@@ -92,7 +92,7 @@ namespace Business.Concrete
 
             var dbResult = _hierarchyDal.Add(hierarchy);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -105,7 +105,7 @@ namespace Business.Concrete
 
             var dbResult = _hierarchyDal.Update(hierarchy);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -128,9 +128,9 @@ namespace Business.Concrete
 
             var deleteResult = _hierarchyDal.Delete(hierarchy);
             if (deleteResult == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -201,10 +201,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfHierarchyIsUsed(Hierarchy hierarchy)
         {
-            var result = GetById(hierarchy.Id);
-            if (result.Result == true)
-                if (result.Data.IsUsed == true)
-                    new ErrorServiceResult(false, "HierarchyIsUsed");
+            //var result = GetById(hierarchy.Id);
+            //if (result.Result == true)
+            //    if (result.Data.IsUsed == true)
+            //        new ErrorServiceResult(false, "HierarchyIsUsed");
 
             return new ServiceResult(true, "");
         }

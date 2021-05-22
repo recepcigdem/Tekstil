@@ -46,7 +46,7 @@ namespace Business.Concrete
         {
             var dbResult = _csNoDeliveryDateDal.Get(p => p.Id == csNoDeliveryDateId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<CsNoDeliveryDate>(false, "SystemError");
+                return new SuccessDataServiceResult<CsNoDeliveryDate>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<CsNoDeliveryDate>(dbResult, true, "Listed");
         }
@@ -55,7 +55,7 @@ namespace Business.Concrete
         {
             var dbResult = _csNoDeliveryDateDal.Get(p => p.SeasonId == seasonId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<CsNoDeliveryDate>(false, "SystemError");
+                return new SuccessDataServiceResult<CsNoDeliveryDate>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<CsNoDeliveryDate>(dbResult, true, "Listed");
         }
@@ -68,7 +68,7 @@ namespace Business.Concrete
 
             var dbResult = _csNoDeliveryDateDal.Add(csNoDeliveryDate);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -81,7 +81,7 @@ namespace Business.Concrete
 
             var dbResult = _csNoDeliveryDateDal.Update(csNoDeliveryDate);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -101,13 +101,13 @@ namespace Business.Concrete
 
             var result = _csNoDeliveryDateDal.Delete(csNoDeliveryDate);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             var historyResult = _csNoDeliveryDateHistoryService.DeleteByCsNoDeliveryDateId(csNoDeliveryDate.Id);
             if (historyResult.Result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, historyResult.Message);
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -144,12 +144,12 @@ namespace Business.Concrete
             var staff = _staffService.GetById(staffId);
             if (staff.Result == true)
             {
-                csNoDeliveryDateHistory.Description = ("Tarih: " + csNoDeliveryDateHistory.Datetime.ToString("dd.MM.yyyy HH:mm:ss") + " Kişi: " + staff.Data.FirstName + " " + staff.Data.LastName + " CsNo: " + csNoDeliveryDate.Csno + " DeliveryDate: " + date);
+                csNoDeliveryDateHistory.Description = ("Date: " + csNoDeliveryDateHistory.Datetime.ToString("dd.MM.yyyy HH:mm:ss") + " Person: " + staff.Data.FirstName + " " + staff.Data.LastName + " CsNo: " + csNoDeliveryDate.Csno + " DeliveryDate: " + date);
             }
 
             var history = _csNoDeliveryDateHistoryService.Add(csNoDeliveryDateHistory);
             if (history.Result == false)
-                return new DataServiceResult<CsNoDeliveryDate>(false, "SystemError");
+                return new DataServiceResult<CsNoDeliveryDate>(false, history.Message);
             #endregion
 
 

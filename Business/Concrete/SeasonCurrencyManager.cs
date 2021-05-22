@@ -48,7 +48,7 @@ namespace Business.Concrete
         {
             var dbResult = _seasonCurrencyDal.Get(p => p.Id == seasonCurrencyId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<SeasonCurrency>(false, "SystemError");
+                return new SuccessDataServiceResult<SeasonCurrency>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<SeasonCurrency>(dbResult, true, "Listed");
         }
@@ -61,7 +61,7 @@ namespace Business.Concrete
 
             var dbResult = _seasonCurrencyDal.Add(seasonCurrency);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -74,7 +74,7 @@ namespace Business.Concrete
 
             var dbResult = _seasonCurrencyDal.Update(seasonCurrency);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -96,9 +96,9 @@ namespace Business.Concrete
 
             var result = _seasonCurrencyDal.Delete(seasonCurrency);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -127,7 +127,7 @@ namespace Business.Concrete
                     return new ErrorServiceResult(false, "SeasonCurrencyNotDeleted");
             }
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -173,7 +173,7 @@ namespace Business.Concrete
             var result = _seasonCurrencyDal.GetAll(x => x.SeasonId == seasonCurrency.SeasonId && x.CurrencyType == seasonCurrency.CurrencyType);
 
             if (result.Count > 1)
-                new ErrorServiceResult(false, "CurrencyTypeAlreadyExists");
+                new ErrorServiceResult(false, "SeasonCurrencyCurrencyTypeAlreadyExists");
 
             return new ServiceResult(true, "");
         }

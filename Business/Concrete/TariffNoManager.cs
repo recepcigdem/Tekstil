@@ -36,7 +36,7 @@ namespace Business.Concrete
         {
             var dbResult = _tariffNoDal.Get(p => p.Id == tariffNoId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<TariffNo>(false, "SystemError");
+                return new SuccessDataServiceResult<TariffNo>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<TariffNo>(dbResult, true, "Listed");
         }
@@ -49,7 +49,7 @@ namespace Business.Concrete
 
             var dbResult = _tariffNoDal.Add(tariffNo);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -62,7 +62,7 @@ namespace Business.Concrete
 
             var dbResult = _tariffNoDal.Update(tariffNo);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -85,13 +85,13 @@ namespace Business.Concrete
 
             var deleteTariffNoDetail = _tariffNoDetailService.DeleteByTariffNo(tariffNo);
             if (deleteTariffNoDetail.Result == false)
-                return new ErrorServiceResult(false, "TariffNoDetailIsUsed");
+                return new ErrorServiceResult(false, deleteTariffNoDetail.Message);
 
             var deleteResult = _tariffNoDal.Delete(tariffNo);
             if (deleteResult == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -143,10 +143,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfTariffNoIsUsed(TariffNo tariffNo)
         {
-            var result = GetById(tariffNo.Id);
-            if (result.Result == true)
-                if (result.Data.IsUsed == true)
-                    new ErrorServiceResult(false, "TariffNoIsUsed");
+            //var result = GetById(tariffNo.Id);
+            //if (result.Result == true)
+            //    if (result.Data.IsUsed == true)
+            //        new ErrorServiceResult(false, "TariffNoIsUsed");
 
             return new ServiceResult(true, "");
         }

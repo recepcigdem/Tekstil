@@ -45,7 +45,7 @@ namespace Business.Concrete
         {
             var dbResult = _departmentDal.Get(p => p.Id == departmentId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<Department>(false, "SystemError");
+                return new SuccessDataServiceResult<Department>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<Department>(dbResult, true, "Listed");
         }
@@ -58,7 +58,7 @@ namespace Business.Concrete
 
             var dbResult = _departmentDal.Add(department);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
 
@@ -72,7 +72,7 @@ namespace Business.Concrete
 
             var dbResult = _departmentDal.Update(department);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
 
@@ -96,7 +96,7 @@ namespace Business.Concrete
 
             var result = _departmentDal.Delete(department);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Delated");
         }

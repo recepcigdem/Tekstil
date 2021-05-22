@@ -63,7 +63,7 @@ namespace Business.Concrete
         {
             var dbResult = _tariffNoDetailDal.Get(p => p.Id == tariffNoDetailId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<TariffNoDetail>(false, "SystemError");
+                return new SuccessDataServiceResult<TariffNoDetail>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<TariffNoDetail>(dbResult, true, "Listed");
         }
@@ -72,7 +72,7 @@ namespace Business.Concrete
         {
             var dbResult = _tariffNoDetailDal.Get(p => p.SeasonId == seasonId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<TariffNoDetail>(false, "SystemError");
+                return new SuccessDataServiceResult<TariffNoDetail>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<TariffNoDetail>(dbResult, true, "Listed");
         }
@@ -85,7 +85,7 @@ namespace Business.Concrete
 
             var dbResult = _tariffNoDetailDal.Add(tariffNoDetail);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -98,7 +98,7 @@ namespace Business.Concrete
 
             var dbResult = _tariffNoDetailDal.Update(tariffNoDetail);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Updated");
         }
@@ -120,7 +120,7 @@ namespace Business.Concrete
 
             var deleteResult = _tariffNoDetailDal.Delete(tariffNoDetail);
             if (deleteResult == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Delated");
         }
@@ -152,11 +152,11 @@ namespace Business.Concrete
 
                     var deleteResult = _tariffNoDetailDal.Delete(tariffNoDetail);
                     if (deleteResult == false)
-                        return new ErrorServiceResult(false, "SystemError");
+                        return new ErrorServiceResult(false, "Error_SystemError");
                 }
             }
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         [LogAspect(typeof(FileLogger))]
@@ -201,21 +201,22 @@ namespace Business.Concrete
             var result = _tariffNoDetailDal.GetAll(x => x.CustomerId == tariffNoDetail.CustomerId && x.SeasonId == tariffNoDetail.SeasonId && x.CountryId == tariffNoDetail.CountryId);
 
             if (result.Count > 1)
-                new ErrorServiceResult(false, "DescriptionAlreadyExists");
+                return new ErrorServiceResult(false, "DescriptionAlreadyExists");
 
             return new ServiceResult(true, "");
         }
 
         private ServiceResult CheckIfTariffNoDetailIsUsed(TariffNoDetail tariffNoDetail)
         {
-            var result = GetById(tariffNoDetail.Id);
-            if (result.Result == true)
-                if (result.Data.IsUsed == true)
-                    new ErrorServiceResult(false, "TariffNoDetailIsUsed");
+            //var result = GetById(tariffNoDetail.Id);
+            //if (result.Result == true)
+            //    if (result.Data.IsUsed == true)
+            //        return new ErrorServiceResult(false, "TariffNoDetailIsUsed");
 
             return new ServiceResult(true, "");
         }
 
 
+    }
     }
 }

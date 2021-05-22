@@ -42,7 +42,7 @@ namespace Business.Concrete
         {
             var dbResult = _csNoDeliveryDateHistoryDal.Get(p => p.Id == csNoDeliveryDateHistoryId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(false, "SystemError");
+                return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(dbResult, true, "Listed");
         }
@@ -51,7 +51,7 @@ namespace Business.Concrete
         {
             var dbResult = _csNoDeliveryDateHistoryDal.Get(p => p.CsNoDeliveryDateId == csNoDeliveryDateId);
             if (dbResult == null)
-                return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(false, "SystemError");
+                return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(false, "Error_SystemError");
 
             return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(dbResult, true, "Listed");
         }
@@ -69,7 +69,7 @@ namespace Business.Concrete
 
             var dbResult = _csNoDeliveryDateHistoryDal.Add(csNoDeliveryDateHistory);
             if (dbResult == null)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Added");
         }
@@ -88,7 +88,7 @@ namespace Business.Concrete
 
             var result = _csNoDeliveryDateHistoryDal.Delete(csNoDeliveryDateHistory);
             if (result == false)
-                return new ErrorServiceResult(false, "SystemError");
+                return new ErrorServiceResult(false, "Error_SystemError");
 
             return new ServiceResult(true, "Delated");
         }
@@ -111,11 +111,11 @@ namespace Business.Concrete
                 {
                     var result = _csNoDeliveryDateHistoryDal.Delete(item);
                     if (result == false)
-                        return new ErrorServiceResult(false, "SystemError");
+                        return new ErrorServiceResult(false, "Error_SystemError");
                 }
             }
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
     }
 }
