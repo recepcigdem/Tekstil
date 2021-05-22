@@ -48,13 +48,13 @@
                                                 <div class="form-group">
                                                     <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
                                                         @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive" })
-                                                        @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                                                        @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]*
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    @Localizer["Code"]
+                                                    @Localizer["Code"]*
                                                     @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
                                                 </div>
                                             </div>
@@ -62,13 +62,13 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    @Localizer["ChannelName"]
+                                                    @Localizer["ChannelName"]*
                                                     @Html.TextBoxFor(x => x.ChannelName, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    @Localizer["CurrencyType"]
+                                                    @Localizer["CurrencyType"]*
                                                     @Html.TextBoxFor(x => x.CurrencyType, new { @class = "form-control" })
                                                 </div>
                                             </div>

@@ -102,3 +102,99 @@
 <script type="text/javascript">
     $('.form-group').css('pointer-events', 'none');
 </script>
+
+<script>
+
+     $(document).ready(function () {
+
+        var comboDefinitionTitleUrl = "@Url.Action("ComboList", "DefinitionTitle")" + "?DefinitionTitleId=" + DefinitionTitleId;
+
+        $.ajax({
+            url: comboDefinitionTitleUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#definitionTitle").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectDefinitionTitle"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#definitionTitle').val($('#DefinitionTitleId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#definitionTitle').on('select2:select', function (evt) {
+            $('#DefinitionTitleId').val(this.value);
+        });
+
+
+        var comboCategoryUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 4;
+
+        $.ajax({
+            url: comboCategoryUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#category").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectCategory"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#category').val($('#CategoryId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#category').on('select2:select', function (evt) {
+            $('#CategoryId').val(this.value);
+        });
+
+        var comboProductGroupUrl = "@Url.Action("ComboList", "Definition")" + "?value=" + 10;
+
+        $.ajax({
+            url: comboProductGroupUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#productGroup").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectProductGroup"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#productGroup').val($('#ProductGroupId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#productGroup').on('select2:select', function (evt) {
+            $('#ProductGroupId').val(this.value);
+        });
+
+    });
+
+</script>

@@ -105,7 +105,11 @@ namespace UI.Controllers.Staff
             if (entity.Id > 0)
             {
                 var res = _staffService.DeleteAll(entity);
-                res.Message = _localizer.GetString(res.Message);
+                if (res.Result == false)
+                    res.Message = _localizer.GetString(res.Message);
+                else
+                    res.Message = _localizerShared.GetString(res.Message);
+
                 return Json(res);
             }
             return null;
@@ -163,9 +167,11 @@ namespace UI.Controllers.Staff
 
                 var result = _staffService.SaveAll(entity, staffEmailDtos, staffPhoneDtos, staffAuthorizations, userPassword);
                 if (result.Result == false)
-                {
                     result.Message = _localizer.GetString(result.Message);
-                    return Json(result);
+                else
+                {
+                    result.Message = _localizerShared.GetString(result.Message);
+                    result.Data = entity;
                 }
 
                 if (staff.EntityId < 1)

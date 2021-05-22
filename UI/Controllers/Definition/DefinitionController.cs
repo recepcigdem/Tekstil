@@ -84,6 +84,11 @@ namespace UI.Controllers.Definition
             if (Id > 0)
             {
                 var res = _definitionService.Delete(entity);
+                if (res.Result == false)
+                    res.Message = _localizer.GetString(res.Message);
+                else
+                    res.Message = _localizerShared.GetString(res.Message);
+
                 return Json(res);
             }
             return null;
@@ -110,12 +115,13 @@ namespace UI.Controllers.Definition
 
                 var result = _definitionService.Save(entity);
                 if (result.Result == false)
-                {
                     result.Message = _localizer.GetString(result.Message);
-                    return Json(result);
+                else
+                {
+                    result.Message = _localizerShared.GetString(result.Message);
+                    result.Data = entity;
                 }
 
-                result.Data = entity;
                 return Json(result);
             }
 

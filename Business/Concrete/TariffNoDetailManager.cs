@@ -215,8 +215,5 @@ namespace Business.Concrete
 
             return new ServiceResult(true, "");
         }
-
-
-    }
     }
 }

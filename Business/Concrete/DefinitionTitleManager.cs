@@ -107,7 +107,7 @@ namespace Business.Concrete
             if (result == false)
                 return new ErrorServiceResult(false, "Error_SystemError");
 
-            return new ServiceResult(true, "Delated");
+            return new ServiceResult(true, "Deleted");
         }
 
         private ServiceResult CheckIfDefinitionTitleIsUsed(DefinitionTitle definitionTitle)

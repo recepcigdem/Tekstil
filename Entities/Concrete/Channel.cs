@@ -23,7 +23,7 @@ namespace Entities.Concrete
 
         public Channel()
         {
-            IsActive = false;
+            IsActive = true;
             Code = string.Empty;
             ChannelName = string.Empty;
             CurrencyType = string.Empty;

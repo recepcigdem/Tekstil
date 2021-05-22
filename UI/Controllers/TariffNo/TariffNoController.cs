@@ -91,6 +91,11 @@ namespace UI.Controllers.TariffNo
             if (Id > 0)
             {
                 var res = _tariffNoService.Delete(entity);
+                if (res.Result == false)
+                    res.Message = _localizer.GetString(res.Message);
+                else
+                    res.Message = _localizerShared.GetString(res.Message);
+
                 return Json(res);
             }
             return null;
@@ -119,13 +124,13 @@ namespace UI.Controllers.TariffNo
 
                 var result = _tariffNoService.Save(entity, tariffNoDetails);
                 if (result.Result == false)
-                {
                     result.Message = _localizer.GetString(result.Message);
-                    return Json(result);
+                else
+                {
+                    result.Message = _localizerShared.GetString(result.Message);
+                    result.Data = entity;
                 }
 
-
-                result.Data = entity;
                 return Json(result);
             }
 
