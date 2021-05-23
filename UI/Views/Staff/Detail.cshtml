@@ -363,9 +363,9 @@
                 'error':   "@Localizer["FileUpload_Remove"]"
             }
         });
-
+       
         var comboCustomerUrl = "@Url.Action("ComboList", "Customer")" + "?CustomerId=" + CustomerId;
-
+       
         $.ajax({
             url: comboCustomerUrl,
             type: 'POST',
@@ -663,8 +663,7 @@
             + "</tr>");
         countPhone++;
                 }
-
-
+    
     function deleteMail(button) {
         button.closest("tr").remove();
     }
@@ -759,7 +758,7 @@
 
     function CreatePasswordSendMail(email) {
 
-        console.log("ok");
+        
             var url = "@Url.Action("CreatePasswordSendMail", "Staff")"+ "?email=" + email;
             $.post(url,
                 $("form").serialize(), function (data) {

@@ -103,6 +103,7 @@
                                                                         <th>@Localizer["Country"]*</th>
                                                                         <th>@Localizer["SeasonCurrency"]</th>
                                                                         <th></th>
+                                                                        <th></th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody class="col-md-12">
@@ -113,6 +114,9 @@
                                                                             <td id="topSeason'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                             <td id="topCountry'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].CountryId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
                                                                             <td id="topSeasonCurrency'@i'">@Html.HiddenFor(x => x.ListTariffNoDetails[i].SeasonCurrencyId, new { @disabled = "disabled", @class = "form-control", @style = "background-color:#fff" })</td>
+                                                                            <td>
+                                                                                <button type="button" class="btn btn-block btn-success" id="buttonUpdate" onclick="UpdateModel(@i)">@Localizer["UpdateModel"]</button>
+                                                                            </td>
                                                                             <td>
                                                                                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteListLine(@i)">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListTariffNoDetails[i].Id)
                                                                             </td>
@@ -217,7 +221,7 @@
         dataListSeason = [];
         count = 0;
 
-        
+
         $("#tableTariffNoDetail tbody").each(function () {
             var row = $(this);
 
@@ -241,7 +245,7 @@
 
             data.unitKg = row.find("#trTariffNoDetail3").find("td").find("input").eq(3).val();
             if (data.unitKg != "") {
-              
+
                 ComboUnitKgList(data.unitKg, count);
             }
 
@@ -260,7 +264,7 @@
 
     function ComboSeasonList(seasonId, count) {
         dataListSeason = [];
-      
+
         document.getElementById("season'" + count + "'").innerHTML = "<select id=\"comboSeason" + count + "\" class=\"form-control season comboSeason\" onchange =\"SeasonCountryChangeCalc(" + count + ");\">" + "</select>";
         var selectitem = document.getElementById("comboSeason" + count);
 
@@ -424,13 +428,13 @@
                 });
             }
         });
-       
+
     }
 
     function ComboTopCurrencyList(seasonId, currencyId, count) {
         dataListCurrency = [];
 
-      
+
 
         document.getElementById("topSeasonCurrency'" + count + "'").innerHTML = "<select id=\"comboTopCurrency" + count + "\" class=\"form-control topCurrency comboTopCurrency\"  disabled=\"disabled\">" + "</select>";
         var selectItem = document.getElementById("comboTopCurrency" + count);
@@ -556,6 +560,10 @@
         }
     }
 
+    function UpdateModel(rowNo) {
+
+    }
+
     var count = $('.view').length;
     function AddTariffNoDetail() {
 
@@ -568,6 +576,9 @@
             + "<td id=\"topCountry'" + count + "'\">"
             + "</td>"
             + "<td id=\"topSeasonCurrency'" + count + "'\">"
+            + "</td>"
+            + "<td>"
+            + "<button type=\"button\" class=\"btn btn-block btn-success\" id=\"buttonUpdate\" onclick=\"UpdateModel(" + count + ")\">@Localizer["UpdateModel"]</button>"
             + "</td>"
             + "<td>"
             + "<button type=\"button\" class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteListLine(" + count + ")\">@Localizer["Delete"]</button>"

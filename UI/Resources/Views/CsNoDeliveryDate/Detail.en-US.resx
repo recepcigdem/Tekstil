@@ -156,4 +156,7 @@
   <data name="SelectSeason" xml:space="preserve">
     <value>Select Season</value>
   </data>
+  <data name="UpdateModel" xml:space="preserve">
+    <value>Update Model</value>
+  </data>
 </root>

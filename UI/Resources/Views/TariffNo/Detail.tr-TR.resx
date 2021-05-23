@@ -198,4 +198,7 @@
   <data name="UnitKg" xml:space="preserve">
     <value>Birim</value>
   </data>
+  <data name="UpdateModel" xml:space="preserve">
+    <value>Modelleri Güncelle</value>
+  </data>
 </root>

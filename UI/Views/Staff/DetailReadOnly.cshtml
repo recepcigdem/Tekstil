@@ -1,5 +1,197 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Staff.Staff
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+<link href="~/css/customerDetail.css" rel="stylesheet" />
+<link href="~/js/panel-structure.js" rel="stylesheet" />
+<link href="~/css/AccordionTables.css" rel="stylesheet" />
+
+@using (Html.BeginForm("DetailReadOnly", "Staff", FormMethod.Post, new { id = "formDetail" }))
+    {
+        @Html.HiddenFor(x => x.EntityId)
+        @Html.HiddenFor(x => x.CustomerId)
+        @Html.HiddenFor(x => x.DepartmentId)
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Localizer["Photo"]
+                    <input type="file" class="dropify" id="photo" data-default-file="@Model.Photo" data-height="300" data-show-remove="true" data-max-file-size="1M" disabled="disabled" />
+                </div>
+            </div>
+            <div class="col-md-8" style="margin-top:20px;">
+                <div class="row">
+                    @{ if (Model.IsSuperAdminControl == true)
+                        {
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                                        @Html.CheckBoxFor(x => x.IsSuperAdmin, new { @id = "CheckBoxIsSuperAdmin", @class = "chb", @disabled = "disabled" })
+                                        @Html.LabelFor(x => x.IsSuperAdmin, "") @Localizer["IsSuperAdmin"]
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Localizer["CustomerName"]*
+                                    <select id="comboCustomer" class="form-control" disabled="disabled">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                        if (Model.IsCompanyAdminControl == true || Model.IsSuperAdminControl == true)
+                        {
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                                        @Html.CheckBoxFor(x => x.IsCompanyAdmin, new { @id = "checkBoxIsCompanyAdmin", @class = "chb", @disabled = "disabled" })
+                                        @Html.LabelFor(x => x.IsCompanyAdmin, "") @Localizer["IsCompanyAdmin"]
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom:5px">
+                                        @Html.CheckBoxFor(x => x.IsStandartUser, new { @id = "checkBoxIsStandartUser", @class = "chb", @disabled = "disabled" })
+                                        @Html.LabelFor(x => x.IsStandartUser, "") @Localizer["IsNormalUser"]
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Localizer["DepartmentName"]*
+                                <select id="comboDepartment" class="form-control" disabled="disabled">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Localizer["Title"]*
+                                @Html.TextBoxFor(x => x.Title, new { @class = "form-control", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Localizer["FirstName"]*
+                                @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", @disabled = "disabled" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Localizer["LastName"]*
+                                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-2" style="float:right">
+                    <button class="btn btn-success" onclick="location.href = '@Url.Action("Detail", "Staff",new {id=Model.EntityId })'" data-dismiss="modal" type="button">@Localizer["Edit"]</button>
+
+                </div>
+            </div>
+        </div>
+    }
+
+<link href="~/plugin/dropify/dropify.min.css" rel="stylesheet" />
+<script src="~/plugin/dropify/dropify.min.js"></script>
+
+<script type="text/javascript">
+    $('.form-group').css('pointer-events', 'none');
+</script>
+
+<script type="text/javascript">
+    var LevelList = [];
+    var dataList = [];
+    var dataListMail = [];
+    var dataListPhone = [];
+    var count = 0;
+
+    var SelectedItems = [];
+    var fullData = [];
+    var selectedIds = [];
+    var newList = [];
+
+    $(document).ready(function () {
+        dataList = [];
+        $('.dropify').dropify({
+            messages: {
+                'default': "@Localizer["FileUpload_DragDropFile"]",
+                'replace': "@Localizer["FileUpload_DragDropFile"]",
+                'remove':  "@Localizer["FileUpload_Remove"]",
+                'error':   "@Localizer["FileUpload_Remove"]"
+            }
+        });
+
+        var comboCustomerUrl = "@Url.Action("ComboList", "Customer")" + "?CustomerId=" + CustomerId;
+
+        $.ajax({
+            url: comboCustomerUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboCustomer").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectCustomer"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboCustomer').val($('#CustomerId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#comboCustomer').on('select2:select', function (evt) {
+            $('#CustomerId').val(this.value);
+        });
+
+        var comboDepartmentUrl = "@Url.Action("ComboList", "Department")" + "?DepartmentId=" + DepartmentId;
+
+        $.ajax({
+            url: comboDepartmentUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboDepartment").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectDepartment"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboDepartment').val($('#DepartmentId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#comboDepartment').on('select2:select', function (evt) {
+            $('#DepartmentId').val(this.value);
+        });
+    });
+
+    </script>

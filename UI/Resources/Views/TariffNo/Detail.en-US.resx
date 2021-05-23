@@ -198,4 +198,7 @@
   <data name="UnitKg" xml:space="preserve">
     <value>Unit Kg</value>
   </data>
+  <data name="UpdateModel" xml:space="preserve">
+    <value>Update Model</value>
+  </data>
 </root>
