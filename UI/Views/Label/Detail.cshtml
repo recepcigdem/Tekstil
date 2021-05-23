@@ -56,13 +56,13 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    @Localizer["Code"]
+                                                    @Localizer["Code"]*
                                                     @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    @Localizer["Description"]
+                                                    @Localizer["Description"]*
                                                     @Html.TextBoxFor(x => x.Description, new { @class = "form-control" })
                                                 </div>
                                             </div>
@@ -70,7 +70,7 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    @Localizer["Image"]
+                                                    @Localizer["Image"]*
                                                     <input type="file" class="dropify" id="image" data-default-file="@Model.Image" data-height="300" data-show-remove="true" data-max-file-size="1M" />
                                                 </div>
                                             </div>

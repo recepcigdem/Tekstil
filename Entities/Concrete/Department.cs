@@ -17,7 +17,7 @@ namespace Entities.Concrete
 
         public Department()
         {
-            IsActive = false;
+            IsActive = true;
             DepartmentName = string.Empty;
         }
     }

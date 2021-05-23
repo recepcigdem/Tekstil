@@ -74,7 +74,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Channel>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Channel>(false, message);
+            }
 
             #endregion
 
@@ -98,7 +103,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Channel>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Channel>(false, message);
+            }
 
             #endregion
 
@@ -126,10 +136,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfChannelIsUsed(Channel channel)
         {
-            //var result = GetById(channel.Id);
-            //if (result.Result == true)
-            //    if (result.Data.IsUsed == true)
-            //        new ErrorServiceResult(false, "ChannelIsUsed");
+            var result = GetById(channel.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "ChannelIsUsed");
 
             return new ServiceResult(true, "");
         }

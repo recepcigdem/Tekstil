@@ -72,10 +72,13 @@ namespace Business.Concrete
         public IServiceResult Delete(Test test)
         {
             #region AspectControl
-
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Test>(false, MethodInterceptionBaseAttribute.Message);
-
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new ErrorServiceResult(false, message);
+            }
             #endregion
 
             ServiceResult result = BusinessRules.Run(CheckIfTestIsUsed(test));
@@ -98,7 +101,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Test>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Test>(false, message);
+            }
 
             #endregion
 
@@ -136,10 +144,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfTestIsUsed(Test test)
         {
-            //var result = GetById(test.Id);
-            //if (result.Result == true)
-            //    if (result.Data.IsUsed == true)
-            //        new ErrorServiceResult(false, "TestIsUsed");
+            var result = GetById(test.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "TestIsUsed");
 
             return new ServiceResult(true, "");
         }

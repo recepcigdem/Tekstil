@@ -21,7 +21,7 @@ namespace Entities.Concrete
 
         public Phone()
         {
-            IsActive = false;
+            IsActive = true;
             CountryCode = string.Empty;
             AreaCode = string.Empty;
             PhoneNumber= string.Empty;

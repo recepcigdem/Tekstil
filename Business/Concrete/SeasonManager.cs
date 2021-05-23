@@ -88,7 +88,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Season>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Season>(false, message);
+            }
 
             #endregion
 
@@ -133,7 +138,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Season>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Season>(false, message);
+            }
 
             #endregion
 

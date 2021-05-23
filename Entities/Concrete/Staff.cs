@@ -52,7 +52,7 @@ namespace Entities.Concrete
         public Staff()
         {
             DepartmentId = 0;
-            IsActive = false;
+            IsActive = true;
             Title = string.Empty;
             FirstName = string.Empty;
             LastName = string.Empty;

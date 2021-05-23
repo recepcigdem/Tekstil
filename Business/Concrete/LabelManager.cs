@@ -74,7 +74,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Label>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Label>(false, message);
+            }
 
             #endregion
 
@@ -98,10 +103,14 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Label>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Label>(false, message);
+            }
 
             #endregion
-
 
             if (label.Id > 0)
             {
@@ -137,10 +146,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfLabelIsUsed(Label label)
         {
-            //var result = GetById(label.Id);
-            //if (result.Result == true)
-            //    if (result.Data.IsUsed == true)
-            //        new ErrorServiceResult(false, "LabelIsUsed");
+            var result = GetById(label.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "LabelIsUsed");
 
             return new ServiceResult(true, "");
         }

@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.Abstract;
+﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
-using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
-using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using Core.Utilities.Business;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
+using System.Collections.Generic;
 
 namespace Business.Concrete
 {
@@ -22,21 +17,24 @@ namespace Business.Concrete
     {
         private IDefinitionDal _definitionDal;
         private ICountryShippingMultiplierService _countryShippingMultiplierService;
-        private IHierarchyService _hierarchyService;
+        //private IHierarchyService _hierarchyService;
         private IModelSeasonRowNumberService _modelSeasonRowNumberService;
         private IPaymentMethodShareService _paymentMethodShareService;
         private ISeasonPlaningService _seasonPlaningService;
         private ITariffNoDetailService _tariffNoDetailService;
-
-        public DefinitionManager(IDefinitionDal definitionDal, ICountryShippingMultiplierService countryShippingMultiplierService, IHierarchyService hierarchyService, IModelSeasonRowNumberService modelSeasonRowNumberService, IPaymentMethodShareService paymentMethodShareService, ISeasonPlaningService seasonPlaningService, ITariffNoDetailService tariffNoDetailService)
+        private IDefinitionService _definitionService;
+        
+        public DefinitionManager(IDefinitionDal definitionDal, ICountryShippingMultiplierService countryShippingMultiplierService, IModelSeasonRowNumberService modelSeasonRowNumberService, IPaymentMethodShareService paymentMethodShareService, ISeasonPlaningService seasonPlaningService, ITariffNoDetailService tariffNoDetailService/*, IDefinitionService definitionService, IHierarchyService hierarchyService*/)
         {
             _definitionDal = definitionDal;
+            _definitionService = this;
             _countryShippingMultiplierService = countryShippingMultiplierService;
-            _hierarchyService = hierarchyService;
             _modelSeasonRowNumberService = modelSeasonRowNumberService;
             _paymentMethodShareService = paymentMethodShareService;
             _seasonPlaningService = seasonPlaningService;
             _tariffNoDetailService = tariffNoDetailService;
+           
+            //_hierarchyService = hierarchyService;
         }
 
         public IDataServiceResult<List<Definition>> GetAll(int customerId)
@@ -79,7 +77,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Definition>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Definition>(false, message);
+            }
 
             #endregion
 
@@ -107,7 +110,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Definition>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Definition>(false, message);
+            }
 
             #endregion
 
@@ -125,6 +133,9 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfDefinitionIsUsed(Definition definition)
         {
+           
+            IHierarchyService hierarchy = new HierarchyManager(new EfHierarchyDal(),_definitionService);
+
             var category = _definitionDal.GetAll(x => x.CategoryId == definition.Id);
             if (category.Count > 0)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedDefinitionCategory");
@@ -134,51 +145,51 @@ namespace Business.Concrete
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedDefinitionProductGroup");
 
             var countryShippingMultiplierShippingMethod = _countryShippingMultiplierService.GetAllByShippingMethodId(definition.CustomerId, definition.Id);
-            if (countryShippingMultiplierShippingMethod.Result)
+            if (!countryShippingMultiplierShippingMethod.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedCountryShippingMultiplierShippingMethod");
 
             var countryShippingMultiplierCountry = _countryShippingMultiplierService.GetAllByCountryId(definition.CustomerId, definition.Id);
-            if (countryShippingMultiplierCountry.Result)
+            if (!countryShippingMultiplierCountry.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedCountryShippingMultiplierCountry");
 
-            var hierarchyBrand = _hierarchyService.GetAllByBrandId(definition.CustomerId, definition.Id);
-            if (hierarchyBrand.Result)
+            var hierarchyBrand = hierarchy.GetAllByBrandId(definition.CustomerId, definition.Id);
+            if (!hierarchyBrand.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedHierarchyBrand");
 
-            var hierarchyGender = _hierarchyService.GetAllByGenderId(definition.CustomerId, definition.Id);
-            if (hierarchyGender.Result)
+            var hierarchyGender = hierarchy.GetAllByGenderId(definition.CustomerId, definition.Id);
+            if (!hierarchyGender.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedHierarchyGender");
 
-            var hierarchyMainProductGroup = _hierarchyService.GetAllByMainProductGroupId(definition.CustomerId, definition.Id);
-            if (hierarchyMainProductGroup.Result)
+            var hierarchyMainProductGroup = hierarchy.GetAllByMainProductGroupId(definition.CustomerId, definition.Id);
+            if (!hierarchyMainProductGroup.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedHierarchyMainProductGroup");
 
-            var hierarchyDetail = _hierarchyService.GetAllByDetailId(definition.CustomerId, definition.Id);
-            if (hierarchyDetail.Result)
+            var hierarchyDetail = hierarchy.GetAllByDetailId(definition.CustomerId, definition.Id);
+            if (!hierarchyDetail.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedHierarchyDetail");
 
-            var hierarchyProductGroup = _hierarchyService.GetAllByProductGroupId(definition.CustomerId, definition.Id);
-            if (hierarchyProductGroup.Result)
+            var hierarchyProductGroup = hierarchy.GetAllByProductGroupId(definition.CustomerId, definition.Id);
+            if (!hierarchyProductGroup.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedHierarchyProductGroup");
 
-            var hierarchySubProductGroup = _hierarchyService.GetAllBySubProductGroupId(definition.CustomerId, definition.Id);
-            if (hierarchySubProductGroup.Result)
+            var hierarchySubProductGroup = hierarchy.GetAllBySubProductGroupId(definition.CustomerId, definition.Id);
+            if (!hierarchySubProductGroup.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedHierarchySubProductGroup");
 
             var modelSeasonRowNumberProductGroup = _modelSeasonRowNumberService.GetAllByProductGroupId(definition.CustomerId, definition.Id);
-            if (modelSeasonRowNumberProductGroup.Result)
+            if (!modelSeasonRowNumberProductGroup.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedModelSeasonRowNumberProductGroup");
 
             var paymentMethodSharePaymentMethod = _paymentMethodShareService.GetAllByPaymentMethodId(definition.CustomerId, definition.Id);
-            if (paymentMethodSharePaymentMethod.Result)
+            if (!paymentMethodSharePaymentMethod.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedPaymentMethodSharePaymentMethod");
 
             var seasonPlanningProductGroup = _seasonPlaningService.GetAllByProductGroupId(definition.CustomerId, definition.Id);
-            if (seasonPlanningProductGroup.Result)
+            if (!seasonPlanningProductGroup.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedSeasonPlanningProductGroup");
 
             var tariffNoDetailCountry = _tariffNoDetailService.GetAllByCountryId(definition.CustomerId, definition.Id);
-            if (tariffNoDetailCountry.Result)
+            if (!tariffNoDetailCountry.Result)
                 return new ErrorServiceResult(false, "Message_DefinitionIsUsedTariffNoDetailCountry");
 
             return new ServiceResult(true, "");

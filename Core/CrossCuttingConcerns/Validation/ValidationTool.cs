@@ -20,7 +20,7 @@ namespace Core.CrossCuttingConcerns.Validation
             if (!result.IsValid)
             {
                 MethodInterceptionBaseAttribute.Result = false;
-                MethodInterceptionBaseAttribute.Message = result.ToString();
+                MethodInterceptionBaseAttribute.Message = result.Errors[0].ErrorMessage;
                 //throw new ValidationException(result.Errors);
             }
         }

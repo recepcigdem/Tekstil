@@ -75,7 +75,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<TariffNo>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new ErrorServiceResult(false, message);
+            }
 
             #endregion
 
@@ -103,7 +108,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<TariffNo>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<TariffNo>(false, message);
+            }
 
             #endregion
 
@@ -143,10 +153,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfTariffNoIsUsed(TariffNo tariffNo)
         {
-            //var result = GetById(tariffNo.Id);
-            //if (result.Result == true)
-            //    if (result.Data.IsUsed == true)
-            //        new ErrorServiceResult(false, "TariffNoIsUsed");
+            var result = GetById(tariffNo.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "TariffNoIsUsed");
 
             return new ServiceResult(true, "");
         }

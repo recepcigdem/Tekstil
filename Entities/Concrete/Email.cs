@@ -19,7 +19,7 @@ namespace Entities.Concrete
 
         public Email()
         {
-            IsActive = false;
+            IsActive = true;
             EmailAddress = string.Empty;
         }
     }

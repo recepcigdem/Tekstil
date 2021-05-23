@@ -55,6 +55,7 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<CsNoDeliveryDateHistory>(dbResult, true, "Listed");
         }
+        
         [LogAspect(typeof(FileLogger))]
         [ValidationAspect(typeof(CsNoDeliveryDateHistoryValidator))]
         [TransactionScopeAspect]
@@ -63,7 +64,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<CsNoDeliveryDateHistory>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<CsNoDeliveryDateHistory>(false, message);
+            }
 
             #endregion
 
@@ -82,7 +88,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<CsNoDeliveryDateHistory>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<CsNoDeliveryDateHistory>(false, message);
+            }
 
             #endregion
 
@@ -100,7 +111,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<CsNoDeliveryDateHistory>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<CsNoDeliveryDateHistory>(false, message);
+            }
 
             #endregion
 

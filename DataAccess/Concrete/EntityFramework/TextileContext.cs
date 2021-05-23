@@ -31,7 +31,7 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Definition> Definition { get; set; }
         public DbSet<DefinitionTitle> DefinitionTitles { get; set; }
         public DbSet<Email> Email { get; set; }
-        public DbSet<Hierarchy> Hierarchie { get; set; }
+        public DbSet<Hierarchy> Hierarchy { get; set; }
         public DbSet<Label> Label { get; set; }
         public DbSet<ModelSeasonRowNumber> ModelSeasonRowNumber { get; set; }
         public DbSet<PaymentMethodShare> PaymentMethodShare { get; set; }

@@ -70,7 +70,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<ModelSeasonRowNumber>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<ModelSeasonRowNumber>(false, message);
+            }
 
             #endregion
 
@@ -88,7 +93,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<ModelSeasonRowNumber>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<ModelSeasonRowNumber>(false, message);
+            }
 
             #endregion
 
@@ -110,11 +120,15 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IDataServiceResult<ModelSeasonRowNumber> Save(int seasonId, int customerId, List<ModelSeasonRowNumber> modelSeasonRowNumbers)
         {
-
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<ModelSeasonRowNumber>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<ModelSeasonRowNumber>(false, message);
+            }
 
             #endregion
 

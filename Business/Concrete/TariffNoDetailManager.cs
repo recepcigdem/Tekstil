@@ -110,7 +110,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<TariffNoDetail>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new ErrorServiceResult(false, message);
+            }
 
             #endregion
 
@@ -132,7 +137,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<TariffNoDetail>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new ErrorServiceResult(false, message);
+            }
 
             #endregion
 
@@ -167,7 +177,12 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<TariffNoDetail>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<TariffNoDetail>(false, message);
+            }
 
             #endregion
 
@@ -208,10 +223,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfTariffNoDetailIsUsed(TariffNoDetail tariffNoDetail)
         {
-            //var result = GetById(tariffNoDetail.Id);
-            //if (result.Result == true)
-            //    if (result.Data.IsUsed == true)
-            //        return new ErrorServiceResult(false, "TariffNoDetailIsUsed");
+            var result = GetById(tariffNoDetail.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    return new ErrorServiceResult(false, "TariffNoDetailIsUsed");
 
             return new ServiceResult(true, "");
         }

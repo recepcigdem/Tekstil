@@ -118,10 +118,15 @@ namespace Business.Concrete
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Hierarchy>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Hierarchy>(false, message);
+            }
 
             #endregion
-
+            
             ServiceResult result = BusinessRules.Run(CheckIfHierarchyIsUsed(hierarchy));
             if (result.Result == false)
                 return new ErrorServiceResult(false, result.Message);
@@ -139,11 +144,15 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IDataServiceResult<Hierarchy> Save(Hierarchy hierarchy)
         {
-
             #region AspectControl
 
             if (MethodInterceptionBaseAttribute.Result == false)
-                return new DataServiceResult<Hierarchy>(false, MethodInterceptionBaseAttribute.Message);
+            {
+                var message = MethodInterceptionBaseAttribute.Message;
+                MethodInterceptionBaseAttribute.Message = "";
+                MethodInterceptionBaseAttribute.Result = true;
+                return new DataServiceResult<Hierarchy>(false, message);
+            }
 
             #endregion
 
@@ -201,10 +210,10 @@ namespace Business.Concrete
 
         private ServiceResult CheckIfHierarchyIsUsed(Hierarchy hierarchy)
         {
-            //var result = GetById(hierarchy.Id);
-            //if (result.Result == true)
-            //    if (result.Data.IsUsed == true)
-            //        new ErrorServiceResult(false, "HierarchyIsUsed");
+            var result = GetById(hierarchy.Id);
+            if (result.Result == true)
+                if (result.Data.IsUsed == true)
+                    new ErrorServiceResult(false, "HierarchyIsUsed");
 
             return new ServiceResult(true, "");
         }

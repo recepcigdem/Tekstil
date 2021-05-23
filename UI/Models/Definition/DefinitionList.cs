@@ -31,6 +31,7 @@ namespace UI.Models.Definition
                     DefinitionListLine line = new DefinitionListLine(item);
                     var definitionTitle = _definitionTitleService.GetById(item.DefinitionTitleId).Data;
                     line.DefinitionTitle = definitionTitle == null ? "" : definitionTitle.Title;
+                    line.Code = line.Code == null ? "" : line.Code;
                     data.Add(line);
                 }
             }

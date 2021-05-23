@@ -17,7 +17,7 @@ namespace Entities.Concrete
 
         public Customer()
         {
-            IsActive = false;
+            IsActive = true;
             CustomerName = string.Empty;
         }
     }

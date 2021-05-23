@@ -38,7 +38,7 @@ namespace Entities.Concrete
             DefinitionTitleId = 0;
             CategoryId = 0;
             ProductGroupId = 0;
-            Status = false;
+            Status = true;
             IsDefault = false;
             Code = string.Empty;
             ShortDescription = string.Empty;

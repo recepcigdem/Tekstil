@@ -21,7 +21,7 @@ namespace Entities.Concrete
 
         public TariffNo()
         {
-            IsActive = false;
+            IsActive = true;
             IsUsed = false;
 
             Description = string.Empty;

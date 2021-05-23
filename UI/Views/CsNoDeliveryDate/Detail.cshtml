@@ -47,7 +47,7 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    @Localizer["Season"]
+                                                    @Localizer["Season"]*
                                                     <select id="comboSeason" class="form-control">
                                                         <option></option>
                                                     </select>
@@ -55,14 +55,14 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    @Localizer["Csno"]
+                                                    @Localizer["Csno"]*
                                                     @*@Html.TextBoxFor(x => x.Csno, new { @class = "form-control" })*@
                                                     <input type="number" class="form-control" id="csno" name="csno" value="@Model.Csno">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    @Localizer["Date"]
+                                                    @Localizer["Date"]*
                                                     @*@Html.TextBoxFor(x => x.Date, new { @class = "form-control"})*@
                                                     <input type="date" class="form-control" id="date" name="date">
                                                 </div>

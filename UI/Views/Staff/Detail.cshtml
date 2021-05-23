@@ -92,7 +92,7 @@
 
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            @Localizer["CustomerName"]
+                                                            @Localizer["CustomerName"]*
                                                             <select id="comboCustomer" class="form-control">
                                                                 <option></option>
                                                             </select>
@@ -121,7 +121,7 @@
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        @Localizer["DepartmentName"]
+                                                        @Localizer["DepartmentName"]*
                                                         <select id="comboDepartment" class="form-control">
                                                             <option></option>
                                                         </select>
@@ -129,27 +129,27 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        @Localizer["Title"]
+                                                        @Localizer["Title"]*
                                                         @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        @Localizer["FirstName"]
+                                                        @Localizer["FirstName"]*
                                                         @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        @Localizer["LastName"]
+                                                        @Localizer["LastName"]*
                                                         @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        @Localizer["Password"]
+                                                        @Localizer["Password"]*
                                                         @*@Html.TextBoxFor(x => x.Password, new { @class = "form-control", @type = "password" })*@
                                                         <input type="password" class="form-control" id="userPassword" name="userPassword">
                                                     </div>
@@ -157,7 +157,7 @@
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        @Localizer["ConfirmPassword"]
+                                                        @Localizer["ConfirmPassword"]*
                                                         @*@Html.TextBoxFor(new { @class = "form-control", @id="confirmPassword", @type = "password" })*@
                                                         <input type="password" class="form-control" id="userConfirmPassword" name="userConfirmPassword">
                                                     </div>
@@ -203,7 +203,7 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <th width="8%">@Localizer["IsMain"]</th>
-                                                                        <th width="72%">@Localizer["EmailAddress"]</th>
+                                                                        <th width="72%">@Localizer["EmailAddress"]*</th>
                                                                         <th width="10%"></th>
                                                                         <th width="10%"></th>
                                                                     </tr>
@@ -251,9 +251,9 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <th width="10%">@Localizer["IsMain"]</th>
-                                                                        <th width="15%">@Localizer["CountryCode"]</th>
-                                                                        <th width="15%">@Localizer["AreaCode"]</th>
-                                                                        <th width="50%">@Localizer["PhoneNumber"]</th>
+                                                                        <th width="15%">@Localizer["CountryCode"]*</th>
+                                                                        <th width="15%">@Localizer["AreaCode"]*</th>
+                                                                        <th width="50%">@Localizer["PhoneNumber"]*</th>
                                                                         <th width="10%"></th>
                                                                     </tr>
                                                                 </thead>

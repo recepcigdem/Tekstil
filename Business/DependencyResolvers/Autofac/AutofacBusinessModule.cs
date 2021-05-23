@@ -13,9 +13,10 @@ namespace Business.DependencyResolvers.Autofac
     {
         protected override void Load(ContainerBuilder builder)
         {
+
             builder.RegisterType<AuthorizationManager>().As<IAuthorizationService>().SingleInstance();
             builder.RegisterType<EfAuthorizationDal>().As<IAuthorizationDal>().SingleInstance();
-            
+
             builder.RegisterType<ChannelManager>().As<IChannelService>().SingleInstance();
             builder.RegisterType<EfChannelDal>().As<IChannelDal>().SingleInstance();
 
@@ -35,6 +36,7 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EfDepartmentDal>().As<IDepartmentDal>().SingleInstance();
 
             builder.RegisterType<DefinitionManager>().As<IDefinitionService>().SingleInstance();
+            //builder.RegisterType<DefinitionManager>().As<IDefinitionService>().InstancePerLifetimeScope().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<EfDefinitionDal>().As<IDefinitionDal>().SingleInstance();
 
             builder.RegisterType<DefinitionTitleManager>().As<IDefinitionTitleService>().SingleInstance();
@@ -43,7 +45,10 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EmailManager>().As<IEmailService>().SingleInstance();
             builder.RegisterType<EfEmailDal>().As<IEmailDal>().SingleInstance();
 
+            //builder.RegisterModule(new AutofacBusinessModule());
+
             builder.RegisterType<HierarchyManager>().As<IHierarchyService>().SingleInstance();
+            //builder.RegisterType<HierarchyManager>().As<IHierarchyService>().InstancePerLifetimeScope().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
             builder.RegisterType<EfHierarchyDal>().As<IHierarchyDal>().SingleInstance();
 
             builder.RegisterType<LabelManager>().As<ILabelService>().SingleInstance();

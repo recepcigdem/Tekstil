@@ -19,7 +19,7 @@ namespace Entities.Concrete
 
         public Season()
         {
-            IsActive = false;
+            IsActive = true;
             Code = string.Empty;
             Description = string.Empty;
         }

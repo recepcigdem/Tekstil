@@ -79,13 +79,13 @@
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
-                                                                @Localizer["Code"]
+                                                                @Localizer["Code"]*
                                                                 @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                @Localizer["Description"]
+                                                                @Localizer["Description"]*
                                                                 @Html.TextBoxFor(x => x.Description, new { @class = "form-control" })
                                                             </div>
                                                         </div>
@@ -155,7 +155,7 @@
                                                                                                         <table id="tableSeasonPlanning">
                                                                                                             <thead>
                                                                                                                 <tr>
-                                                                                                                    <th width="25%">@Localizer["ProductGroup"]</th>
+                                                                                                                    <th width="25%">@Localizer["ProductGroup"]*</th>
                                                                                                                     <th width="25%">@Localizer["PlanUnitQuantity"]</th>
                                                                                                                     <th width="25%">@Localizer["PlanTotalQuantity"]</th>
                                                                                                                     <th width="25%">@Localizer["RealTotalQuantity"]</th>
@@ -247,8 +247,8 @@
                                                                                     <thead>
                                                                                         <tr>
                                                                                             <th width="10%">@Localizer["IsDefault"]</th>
-                                                                                            <th width="30%">@Localizer["CurrencyType"]</th>
-                                                                                            <th width="40%">@Localizer["ExchangeRate"]</th>
+                                                                                            <th width="30%">@Localizer["CurrencyType"]*</th>
+                                                                                            <th width="40%">@Localizer["ExchangeRate"]*</th>
                                                                                             <th width="10%"></th>
                                                                                             <th width="10%"></th>
                                                                                         </tr>
@@ -300,9 +300,9 @@
                                                                                 <table id="paymentMethodGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
                                                                                     <thead>
                                                                                         <tr>
-                                                                                            <th width="20%">@Localizer["PaymentMethod"]</th>
+                                                                                            <th width="20%">@Localizer["PaymentMethod"]*</th>
                                                                                             <th width="10%">@Localizer["CenterShare"]</th>
-                                                                                            <th width="10%">@Localizer["SeasonCurrency"]</th>
+                                                                                            <th width="10%">@Localizer["SeasonCurrency"]*</th>
                                                                                             <th width="10%">@Localizer["ExchangeRates"]</th>
                                                                                             <th width="10%">@Localizer["CenterShareTl"]</th>
                                                                                             <th width="10%">@Localizer["CenterShareEuro"]</th>
@@ -355,12 +355,12 @@
                                                                                 <table id="countryShippingMultiplierGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
                                                                                     <thead>
                                                                                         <tr>
-                                                                                            <th width="10%">@Localizer["Country"]</th>
-                                                                                            <th width="10%">@Localizer["ShippingMethod"]</th>
-                                                                                            <th width="8%">@Localizer["Multiplier"]</th>
-                                                                                            <th width="8%">@Localizer["TestPrice"]</th>
-                                                                                            <th width="8%">@Localizer["Currency"]</th>
-                                                                                            <th width="8%">@Localizer["ExchangeRates"]</th>
+                                                                                            <th width="10%">@Localizer["Country"]*</th>
+                                                                                            <th width="10%">@Localizer["ShippingMethod"]*</th>
+                                                                                            <th width="8%">@Localizer["Multiplier"]*</th>
+                                                                                            <th width="8%">@Localizer["TestPrice"]*</th>
+                                                                                            <th width="8%">@Localizer["Currency"]*</th>
+                                                                                            <th width="8%">@Localizer["ExchangeRates"]*</th>
                                                                                             <th width="8%">@Localizer["TestPriceTl"]</th>
                                                                                             <th width="8%">@Localizer["Test%"]</th>
                                                                                             <th width="8%">@Localizer["Cargo%"]</th>
@@ -526,7 +526,6 @@
         </div>
     </div>
 }
-
 
 <script>
     var dataListProductGroup = [];
@@ -1058,7 +1057,7 @@
             + "<table id=\"tableSeasonPlanning\">"
             + "<thead>"
             + "<tr>"
-            + "<th width=\"25%\">@Localizer["ProductGroup"]</th>"
+            + "<th width=\"25%\">@Localizer["ProductGroup"]*</th>"
             + "<th width=\"25%\">@Localizer["PlanUnitQuantity"]</th>"
             + "<th width=\"25%\">@Localizer["PlanTotalQuantity"]</th>"
             + "<th width=\"25%\">@Localizer["RealTotalQuantity"]</th>"

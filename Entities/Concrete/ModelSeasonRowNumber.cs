@@ -26,7 +26,7 @@ namespace Entities.Concrete
             SeasonId = 0;
             ProductGroupId = 0;
             RowNumber = 0;
-            IsActive = false;
+            IsActive = true;
             IsUsed = false;
         }
     }
