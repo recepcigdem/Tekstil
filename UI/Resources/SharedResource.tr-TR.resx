@@ -231,6 +231,9 @@
   <data name="Mobile" xml:space="preserve">
     <value>Mobil</value>
   </data>
+  <data name="ProductGroupRowNumberUsed" xml:space="preserve">
+    <value>Ürün grubu satır numarası kullanılmaktadır!</value>
+  </data>
   <data name="SaveMessage" xml:space="preserve">
     <value>İşlem başarılı!</value>
   </data>

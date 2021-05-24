@@ -132,9 +132,9 @@ namespace Business.Concrete
 
             foreach (var paymentMethodShare in paymentMethodShares.Data)
             {
-                var deletePaymentMethodShare = Delete(paymentMethodShare);
-                if (deletePaymentMethodShare.Result == false)
-                    return new ErrorServiceResult(false, "PaymentMethodShareNotDeleted");
+                var result = _paymentMethodShareDal.Delete(paymentMethodShare);
+                if (result == false)
+                    return new ErrorServiceResult(false, "Error_SystemError");
             }
 
             return new ServiceResult(true, "Delated");

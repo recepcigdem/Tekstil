@@ -96,7 +96,7 @@ namespace Business.Concrete
             }
 
             #endregion
-
+            
             IServiceResult isUsedControl = BusinessRules.Run(CheckIfSeasonIsUsed(season));
             if (isUsedControl.Result == false)
                 return new ErrorServiceResult(false, isUsedControl.Message);
@@ -104,10 +104,6 @@ namespace Business.Concrete
             var seasonPlanning = _seasonPlaningService.DeleteBySeason(season);
             if (seasonPlanning.Result == false)
                 return new ErrorServiceResult(false, "SeasonPlanningNotFound");
-
-            var seasonCurrency = _seasonCurrencyService.DeleteBySeason(season);
-            if (seasonCurrency.Result == false)
-                return new ErrorServiceResult(false, "SeasonCurrencyNotFound");
 
             var paymentMethodShare = _paymentMethodShareService.DeleteBySeason(season);
             if (paymentMethodShare.Result == false)
@@ -120,6 +116,10 @@ namespace Business.Concrete
             var countryShippingMultiplier = _countryShippingMultiplierService.DeleteBySeason(season);
             if (countryShippingMultiplier.Result == false)
                 return new ErrorServiceResult(false, "CountryShippingMultiplierNotFound");
+
+            var seasonCurrency = _seasonCurrencyService.DeleteBySeason(season);
+            if (seasonCurrency.Result == false)
+                return new ErrorServiceResult(false, "SeasonCurrencyNotFound");
 
             var result = _seasonDal.Delete(season);
             if (result == false)
@@ -188,11 +188,11 @@ namespace Business.Concrete
         private ServiceResult CheckIfSeasonIsUsed(Season season)
         {
             var csNoDeliveryDate = _csNoDeliveryDateService.GetAllBySeasonId(season.CustomerId, season.Id);
-            if (csNoDeliveryDate.Result)
+            if (csNoDeliveryDate.Data.Count>0)
                 return new ErrorServiceResult(false, "Message_SeasonIsUsedInCsNoDeliveryDate");
 
             var tariffNoDetail = _tariffNoDetailService.GetAllBySeasonId(season.CustomerId, season.Id);
-            if (tariffNoDetail.Result)
+            if (tariffNoDetail.Data.Count > 0)
                 return new ErrorServiceResult(false, "Message_SeasonIsUsedInTariffNoDetail");
 
             return new ServiceResult(true, "");

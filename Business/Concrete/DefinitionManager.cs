@@ -51,7 +51,7 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<List<Definition>>(dbResult, true, "Listed");
         }
 
-        public IDataServiceResult<Definition> GetById(int definitionId)
+        public IDataServiceResult<Definition> GetById(int? definitionId)
         {
             var dbResult = _definitionDal.Get(p => p.Id == definitionId);
             if (dbResult == null)

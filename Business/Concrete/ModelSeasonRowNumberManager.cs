@@ -108,9 +108,9 @@ namespace Business.Concrete
 
             foreach (var modelSeasonRowNumber in modelSeasonRowNumbers.Data)
             {
-                var deleteModelSeasonRowNumber = Delete(modelSeasonRowNumber);
-                if (deleteModelSeasonRowNumber.Result == false)
-                    return new ErrorServiceResult(false, "ModelSeasonRowNumberNotDeleted");
+                var result = _modelSeasonRowNumberDal.Delete(modelSeasonRowNumber);
+                if (result == false)
+                    return new ErrorServiceResult(false, "Error_SystemError");
             }
 
             return new ServiceResult(true, "Deleted");

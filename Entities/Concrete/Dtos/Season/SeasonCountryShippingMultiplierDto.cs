@@ -14,10 +14,10 @@ namespace Entities.Concrete.Dtos.Season
         public int SeasonCurrencyId { get; set; }
         public int Multiplier { get; set; }
         public decimal TestPrice { get; set; }
-        public int TestPercentage { get; set; }
-        public int CargoPercentage { get; set; }
-        public int InsurancePercentage { get; set; }
-        public int FreightPercentage { get; set; }
+        public int? TestPercentage { get; set; }
+        public int? CargoPercentage { get; set; }
+        public int? InsurancePercentage { get; set; }
+        public int? FreightPercentage { get; set; }
 
         public string Country { get; set; }
         public string ShippingMethod { get; set; }

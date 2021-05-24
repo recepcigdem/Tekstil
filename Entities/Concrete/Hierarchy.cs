@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,29 +18,29 @@ namespace Entities.Concrete
         [Column("isGarmentAccessory")]
         public bool IsGarmentAccessory { get; set; }
         [Column("code")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
         [Column("totalDescription")]
         public string TotalDescription { get; set; }
         [Column("brandId")]
-        public int BrandId { get; set; }
+        public int? BrandId { get; set; }
         [Column("genderId")]
-        public int GenderId { get; set; }
+        public int? GenderId { get; set; }
         [Column("mainProductGroupId")]
-        public int MainProductGroupId { get; set; }
+        public int? MainProductGroupId { get; set; }
         [Column("detailId")]
-        public int DetailId { get; set; }
+        public int? DetailId { get; set; }
         [Column("productGroupId")]
-        public int ProductGroupId { get; set; }
+        public int? ProductGroupId { get; set; }
         [Column("subProductGroupId")]
-        public int SubProductGroupId { get; set; }
+        public int? SubProductGroupId { get; set; }
         [Column("description1")]
-        public string Description1 { get; set; }
+        public string? Description1 { get; set; }
         [Column("description2")]
-        public string Description2 { get; set; }
+        public string? Description2 { get; set; }
         [Column("description3")]
-        public string Description3 { get; set; }
+        public string? Description3 { get; set; }
         [Column("description4")]
-        public string Description4 { get; set; }
+        public string? Description4 { get; set; }
 
         public Hierarchy()
         {

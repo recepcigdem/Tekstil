@@ -101,6 +101,8 @@ namespace UI.Controllers.Season
             entity.Id = Id;
             if (entity.Id > 0)
             {
+                entity.CustomerId = SessionHelper.GetStaff(Request).CustomerId;
+
                 var res = _seasonService.DeleteAll(entity); 
                 if (res.Result == false)
                     res.Message = _localizer.GetString(res.Message);

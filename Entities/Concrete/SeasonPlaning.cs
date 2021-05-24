@@ -15,47 +15,47 @@ namespace Entities.Concrete
         [Column("productGroupId")]
         public int ProductGroupId { get; set; }
         [Column("planUnitQuantity")]
-        public int PlanUnitQuantity { get; set; }
+        public int? PlanUnitQuantity { get; set; }
         [Column("planModelMain")]
-        public int PlanModelMain { get; set; }
+        public int? PlanModelMain { get; set; }
         [Column("planModelMini")]
-        public int PlanModelMini { get; set; }
+        public int? PlanModelMini { get; set; }
         [Column("planModelMidi")]
-        public int PlanModelMidi { get; set; }
+        public int? PlanModelMidi { get; set; }
         [Column("planOptionMain")]
-        public int PlanOptionMain { get; set; }
+        public int? PlanOptionMain { get; set; }
         [Column("planOptionMini")]
-        public int PlanOptionMini { get; set; }
+        public int? PlanOptionMini { get; set; }
         [Column("planOptionMidi")]
-        public int PlanOptionMidi { get; set; }
+        public int? PlanOptionMidi { get; set; }
         [Column("planQuantityMain")]
-        public int PlanQuantityMain { get; set; }
+        public int? PlanQuantityMain { get; set; }
         [Column("planQuantityMini")]
-        public int PlanQuantityMini { get; set; }
+        public int? PlanQuantityMini { get; set; }
         [Column("planQuantityMidi")]
-        public int PlanQuantityMidi { get; set; }
+        public int? PlanQuantityMidi { get; set; }
         [Column("planTotalQuantity")]
-        public int PlanTotalQuantity { get; set; }
+        public int? PlanTotalQuantity { get; set; }
         [Column("realModelMain")]
-        public int RealModelMain { get; set; }
+        public int? RealModelMain { get; set; }
         [Column("realModelMini")]
-        public int RealModelMini { get; set; }
+        public int? RealModelMini { get; set; }
         [Column("realModelMidi")]
-        public int RealModelMidi { get; set; }
+        public int? RealModelMidi { get; set; }
         [Column("realOptionMain")]
-        public int RealOptionMain { get; set; }
+        public int? RealOptionMain { get; set; }
         [Column("realOptionMini")]
-        public int RealOptionMini { get; set; }
+        public int? RealOptionMini { get; set; }
         [Column("realOptionMidi")]
-        public int RealOptionMidi { get; set; }
+        public int? RealOptionMidi { get; set; }
         [Column("realQuantityMain")]
-        public int RealQuantityMain { get; set; }
+        public int? RealQuantityMain { get; set; }
         [Column("realQuantityMini")]
-        public int RealQuantityMini { get; set; }
+        public int? RealQuantityMini { get; set; }
         [Column("realQuantityMidi")]
-        public int RealQuantityMidi { get; set; }
+        public int? RealQuantityMidi { get; set; }
         [Column("realTotalQuantity")]
-        public int RealTotalQuantity { get; set; }
+        public int? RealTotalQuantity { get; set; }
 
         public SeasonPlaning()
         {

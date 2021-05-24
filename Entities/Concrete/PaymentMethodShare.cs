@@ -17,11 +17,11 @@ namespace Entities.Concrete
         [Column("seasonCurrencyId")]
         public int SeasonCurrencyId { get; set; }
         [Column("centerShare")]
-        public decimal CenterShare { get; set; }
+        public decimal? CenterShare { get; set; }
         [Column("centerShareEuro")]
-        public decimal CenterShareEuro { get; set; }
+        public decimal? CenterShareEuro { get; set; }
         [Column("accessoryCenterShareEuro")]
-        public decimal AccessoryCenterShareEuro { get; set; }
+        public decimal? AccessoryCenterShareEuro { get; set; }
 
         public PaymentMethodShare()
         {

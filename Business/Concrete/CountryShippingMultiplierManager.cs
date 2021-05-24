@@ -139,9 +139,9 @@ namespace Business.Concrete
 
             foreach (var countryShippingMultiplier in countryShippingMultipliers.Data)
             {
-                var deleteCountryShippingMultiplier = Delete(countryShippingMultiplier);
-                if (deleteCountryShippingMultiplier.Result == false)
-                    return new ErrorServiceResult(false, "CountryShippingMultiplierNotDeleted");
+                var result = _countryShippingMultiplierDal.Delete(countryShippingMultiplier);
+                if (result == false)
+                    return new ErrorServiceResult(false, "Error_SystemError");
             }
 
             return new ServiceResult(true, "Deleted");

@@ -26,7 +26,7 @@ namespace UI.Models.Staff
         public string PasswordSalt { get; set; }
         public DateTime RegisterDate { get; set; }
         public bool IsLeaving { get; set; }
-        public DateTime LeavingDate { get; set; }
+        public DateTime? LeavingDate { get; set; }
         public bool IsSendEmail { get; set; }
         public string Photo { get; set; }
 
@@ -47,7 +47,7 @@ namespace UI.Models.Staff
         private IStaffAuthorizationService _staffAuthorizationService;
         private IEmailService _emailService;
         private IPhoneService _phoneService;
-       
+
 
         #endregion
 
@@ -82,7 +82,7 @@ namespace UI.Models.Staff
 
         public Staff() : base()
         {
-            
+
 
             CustomerId = 0;
             DepartmentId = 0;
@@ -313,6 +313,7 @@ namespace UI.Models.Staff
             staff.IsSendEmail = IsSendEmail;
             staff.IsSuperAdmin = IsSuperAdmin;
             staff.IsCompanyAdmin = IsCompanyAdmin;
+            staff.Photo = Photo;
 
             if (!string.IsNullOrWhiteSpace(this.StaffPhotoBase64))
             {
@@ -325,26 +326,32 @@ namespace UI.Models.Staff
                     {
                         string fileName = RootPath + "\\assets\\photos\\" + img.FileName;
                         File.WriteAllBytes(fileName, img.ImageContent);
-                        Photo = "\\assets\\photos\\" + img.FileName;
+                        staff.Photo = "\\assets\\photos\\" + img.FileName;
                     }
                 }
                 else
                 {
+                    string[] imageInfo2 = StaffPhotoBase64.Split(',');
+                    if (imageInfo2.Length > 1)
+                    {
+                        this.StaffPhotoBase64 = imageInfo2[imageInfo2.Length - 1];
+                    }
+
                     this.StaffPhotoBase64 = textBase64 + this.StaffPhotoBase64;
                     var img = Helpers.ImageHelper.GetImageFromBase64(this.StaffPhotoBase64);
-                    if (img != null)
+                    if (img != null && imageInfo2.Length > 1)
                     {
                         string fileName = RootPath + "\\assets\\photos\\" + img.FileName;
                         File.WriteAllBytes(fileName, img.ImageContent);
-                        Photo = "\\assets\\photos\\" + img.FileName;
+                        staff.Photo = "\\assets\\photos\\" + img.FileName;
                     }
                 }
 
             }
             else
-                Photo = string.Empty;
+                staff.Photo = string.Empty;
 
-            staff.Photo = Photo;
+            //staff.Photo = Photo;
 
             #region Email
 
@@ -408,7 +415,7 @@ namespace UI.Models.Staff
 
                 staffAuthorizations.StaffId = this.EntityId;
                 staffAuthorizations.AuthorizationId = item.AuthorizationId;
-                
+
                 ListStaffAuthorizations.Add(staffAuthorizations);
 
             }

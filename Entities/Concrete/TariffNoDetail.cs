@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -18,32 +19,32 @@ namespace Entities.Concrete
         [Column("countryId")]
         public int CountryId { get; set; }
         [Column("seasonCurrencyId")]
-        public int SeasonCurrencyId { get; set; }
+        public int? SeasonCurrencyId { get; set; }
 
         [Column("isUsed")]
         public bool IsUsed { get; set; }
         [Column("tax")]
-        public int Tax { get; set; }
+        public int? Tax { get; set; }
         [Column("stamp")]
-        public int Stamp { get; set; }
+        public int? Stamp { get; set; }
         [Column("azoTest")]
-        public int AzoTest { get; set; }
+        public int? AzoTest { get; set; }
         [Column("differentExpense")]
-        public int DifferentExpense { get; set; }
+        public int? DifferentExpense { get; set; }
         [Column("commission")]
-        public int Commission { get; set; }
+        public int? Commission { get; set; }
         [Column("kkdf")]
-        public int Kkdf { get; set; }
+        public int? Kkdf { get; set; }
         [Column("additionalTax")]
-        public int AdditionalTax { get; set; }
+        public int? AdditionalTax { get; set; }
         [Column("additionalTax1")]
-        public int AdditionalTax1 { get; set; }
+        public int? AdditionalTax1 { get; set; }
         [Column("superintendence")]
-        public int Superintendence { get; set; }
+        public int? Superintendence { get; set; }
         [Column("unitKg")]
-        public string UnitKg { get; set; }
+        public string? UnitKg { get; set; }
         [Column("kgTranslation")]
-        public decimal KgTranslation { get; set; }
+        public decimal? KgTranslation { get; set; }
        
         public TariffNoDetail()
         {

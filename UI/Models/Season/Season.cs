@@ -28,8 +28,8 @@ namespace UI.Models.Season
 
         public string SubSeasonPlanningString
         {
-            get { return JsonConvert.SerializeObject(SeasonPlannings); }
-            set { SeasonPlannings = JsonConvert.DeserializeObject<List<SeasonPlaning>>(value); }
+            get => JsonConvert.SerializeObject(SeasonPlannings);
+            set => SeasonPlannings = JsonConvert.DeserializeObject<List<SeasonPlaning>>(value);
         }
 
         public List<SeasonPlaning> ListSeasonPlannings { get; set; }
@@ -42,8 +42,8 @@ namespace UI.Models.Season
 
         public string SubSeasonCurrencyString
         {
-            get { return JsonConvert.SerializeObject(SeasonCurrencies); }
-            set { SeasonCurrencies = JsonConvert.DeserializeObject<List<SeasonCurrency>>(value); }
+            get => JsonConvert.SerializeObject(SeasonCurrencies);
+            set => SeasonCurrencies = JsonConvert.DeserializeObject<List<SeasonCurrency>>(value);
         }
 
         public List<SeasonCurrency> ListSeasonCurrencies { get; set; }
@@ -56,9 +56,8 @@ namespace UI.Models.Season
 
         public string SubPaymentMethodShareString
         {
-            get { return JsonConvert.SerializeObject(PaymentMethodShares); }
-            set { PaymentMethodShares = JsonConvert.DeserializeObject<List<SeasonPaymentMethodShareDto>>(value); }
-          
+            get => JsonConvert.SerializeObject(PaymentMethodShares);
+            set => PaymentMethodShares = JsonConvert.DeserializeObject<List<SeasonPaymentMethodShareDto>>(value);
         }
 
         public List<SeasonPaymentMethodShareDto> ListPaymentMethodShares { get; set; }
@@ -73,8 +72,8 @@ namespace UI.Models.Season
 
         public string SubModelSeasonRowNumberString
         {
-            get { return JsonConvert.SerializeObject(ModelSeasonRowNumbers); }
-            set { ModelSeasonRowNumbers = JsonConvert.DeserializeObject<List<ModelSeasonRowNumber>>(value); }
+            get => JsonConvert.SerializeObject(ModelSeasonRowNumbers);
+            set => ModelSeasonRowNumbers = JsonConvert.DeserializeObject<List<ModelSeasonRowNumber>>(value);
         }
 
         public List<ModelSeasonRowNumber> ListModelSeasonRowNumbers { get; set; }
@@ -87,8 +86,10 @@ namespace UI.Models.Season
 
         public string SubCountryShippingMultiplierString
         {
-            get { return JsonConvert.SerializeObject(CountryShippingMultipliers); }
-            set { CountryShippingMultipliers = JsonConvert.DeserializeObject<List<SeasonCountryShippingMultiplierDto>>(value); }
+            get => JsonConvert.SerializeObject(CountryShippingMultipliers);
+            set =>
+                CountryShippingMultipliers =
+                    JsonConvert.DeserializeObject<List<SeasonCountryShippingMultiplierDto>>(value);
         }
 
         public List<SeasonCountryShippingMultiplierDto> ListCountryShippingMultipliers { get; set; }

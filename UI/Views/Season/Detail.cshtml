@@ -25,6 +25,7 @@
     @Html.HiddenFor(x => x.SubPaymentMethodShareString)
     @Html.HiddenFor(x => x.SubCountryShippingMultiplierString)
     @Html.HiddenFor(x => x.SubModelSeasonRowNumberString)
+    @Html.HiddenFor(x => x.ModelSeasonRowNumbers)
 
     <div class="page-header page-header-bordered">
         <ol class="breadcrumb">
@@ -276,7 +277,7 @@
                                                                                                         <input type="text" class="form-control numericField" name="exchangeRate" id="exchangeRate" value="@Model.ListSeasonCurrencies[i].ExchangeRate" />
                                                                                                     </div>
                                                                                                 </td>
-                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteSeasonCurrency(this)">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListSeasonCurrencies[i].Id, new { @id= "seasonCurrencyId'" + i + "'" })</td>
+                                                                                                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteSeasonCurrency(this)">@Localizer["Delete"]</button>@Html.HiddenFor(x => x.ListSeasonCurrencies[i].Id, new { @id = "seasonCurrencyId'" + i + "'" })</td>
                                                                                             </tr>
 
                                                                                         }
@@ -481,7 +482,7 @@
                                                                             <td>
                                                                                 <div class="input-group">
                                                                                     <div class="checkbox-custom checkbox-inline checkbox-success" style="padding-top:5px">
-                                                                                        <input type="checkbox" class="isActiveCheck" name="@Model.ListModelSeasonRowNumbers[i].IsActive" onclick="IsActiveControl(@Model.ListModelSeasonRowNumbers[i].Id,@i);" checked="checked">
+                                                                                        <input type="checkbox" class="isActiveCheck" name="@Model.ListModelSeasonRowNumbers[i].IsActive" onclick="IsActiveControl(@Model.ListModelSeasonRowNumbers[i].Id, @i+1);" checked="checked">
                                                                                         <label></label>
                                                                                     </div>
                                                                                 </div>
@@ -903,32 +904,29 @@
         });
     }
 
-    function IsActiveControl(modelSeasonRowNumberId,row) {
+    function IsActiveControl(modelSeasonRowNumberId, row) {
 
-        table = document.getElementById("modelSeasonRowNumbersGrid");
-        rows = table.getElementsByTagName("TR");
-        var isUsed = rows[row].getElementsByTagName("TD")[0].children[0].children[0].children[1];
-        console.log(isUsed);
-        isUsed = '::before';
+        var table = document.getElementById("modelSeasonRowNumbersGrid");
+        var rows = table.getElementsByTagName("TR");
 
-        var comboModelSeasonRowNumberUrl = "@Url.Action("ActiveControl", "Season")" + "?modelSeasonRowNumberId=" + modelSeasonRowNumberId;
 
-        $.ajax({
-            url: comboModelSeasonRowNumberUrl,
-            type: 'POST',
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                if (data.result) {
-                    ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ErrorTitle")', "ProductGroupRowNumberUsed");
+            var comboModelSeasonRowNumberUrl = "@Url.Action("ActiveControl", "Season")" + "?modelSeasonRowNumberId=" + modelSeasonRowNumberId;
 
+            $.ajax({
+                url: comboModelSeasonRowNumberUrl,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    if (result) {
+                        ShowError('@SharedLocaLizer.GetLocalizedHtmlString("ProductGroupRowNumberUsed")');
+                        rows[row].getElementsByTagName("TD")[0].children[0].children[0].children[0].checked=true;
+                    }
                 }
-                else {
+            });
 
-                }
-            }
-        });
+       
     }
 
     function SeasonPlanningTotalCalc(count) {
@@ -1161,47 +1159,47 @@
             + "<tr id=\"trRealLine\">"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealModelMain' class='form-control numericField'>"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealModelMain' class='form-control numericField'>"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealModelMini' class='form-control numericField'>"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealModelMini' class='form-control numericField'>"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealModelMidi' class='form-control numericField'>"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealModelMidi' class='form-control numericField'>"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealOptionMain' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealOptionMain' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealOptionMini' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealOptionMini' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealOptionMidi' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealOptionMidi' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealQuantityMain' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealQuantityMain' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealQuantityMini' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealQuantityMini' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
             + "</div>"
             + "</td>"
             + "<td>"
             + "<div class='input-group'>"
-            + "<input type='text' name='ListSeasonPlannings[" + count + "].RealQuantityMidi' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
+            + "<input type='number' name='ListSeasonPlannings[" + count + "].RealQuantityMidi' class='form-control numericField' onkeyup =\"SeasonPlanningTotalCalc(" + count + ");\">"
             + "</div>"
             + "</td>"
             + "</tr>"
@@ -1796,10 +1794,25 @@
             data.countryId = row.find("td").find("select").eq(0).val();
             data.shippingMethodId = row.find("td").find("select").eq(1).val();
             data.multiplier = row.find("td").find("input").eq(0).val();
+            if (data.multiplier > 0) {
+                data.multiplier = row.find("td").find("input").eq(0).val();
+            } else {
+                data.multiplier = 0;
+            }
             data.testPrice = row.find("td").find("input").eq(1).val();
+            if (data.testPrice > 0) {
+                data.testPrice = row.find("td").find("input").eq(1).val();
+            } else {
+                data.testPrice = 0;
+            }
             data.seasonCurrencyId = row.find("td").find("select").eq(2).val();
             data.exchangeRate = row.find("td").find("input").eq(2).val();
             data.testPriceTl = row.find("td").find("input").eq(3).val();
+            if (data.testPriceTl > 0) {
+                data.testPriceTl = row.find("td").find("input").eq(3).val();
+            } else {
+                data.testPriceTl = 0;
+            }
             data.testPercentage = row.find("td").find("input").eq(4).val();
             data.cargoPercentage = row.find("td").find("input").eq(5).val();
             data.insurancePercentage = row.find("td").find("input").eq(6).val();

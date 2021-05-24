@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,15 +11,15 @@ namespace UI.Models.Definition
     public class Definition : BaseModel
     {
         public int DefinitionTitleId { get; set; }
-        public int CategoryId { get; set; }
-        public int ProductGroupId { get; set; }
+        public int? CategoryId { get; set; }
+        public int? ProductGroupId { get; set; }
         public bool Status { get; set; }
         public bool IsDefault { get; set; }
-        public string Code { get; set; }
-        public string ShortDescription { get; set; }
+        public string? Code { get; set; }
+        public string? ShortDescription { get; set; }
         public string DescriptionTr { get; set; }
-        public string DescriptionEn { get; set; }
-        public int Kdv { get; set; }
+        public string? DescriptionEn { get; set; }
+        public int? Kdv { get; set; }
 
         public Definition()
         {

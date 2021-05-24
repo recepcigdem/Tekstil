@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -30,11 +31,11 @@ namespace Entities.Concrete
         [Column("isLeaving")]
         public bool IsLeaving { get; set; }
         [Column("leavingDate")]
-        public DateTime LeavingDate { get; set; }
+        public DateTime? LeavingDate { get; set; }
         [Column("isSendEmail")]
         public bool IsSendEmail { get; set; }
         [Column("photo")]
-        public string Photo { get; set; }
+        public string? Photo { get; set; }
         [Column("isSuperAdmin")]
         public bool IsSuperAdmin { get; set; }
         [Column("isCompanyAdmin")]

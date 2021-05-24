@@ -14,6 +14,7 @@
 @using (Html.BeginForm("Detail", "Label", FormMethod.Post, new { id = "formDetail" }))
 {
     @Html.HiddenFor(x => x.EntityId)
+    @Html.HiddenFor(x => x.Image)
     @Html.HiddenFor(x => x.ImageBase64)
     @Html.HiddenFor(x => x.RootPath)
 

@@ -125,9 +125,9 @@ namespace Business.Concrete
 
             foreach (var seasonPlaning in seasonPlanning.Data)
             {
-                var deleteSeasonPlaning = Delete(seasonPlaning);
-                if (deleteSeasonPlaning.Result == false)
-                    return new ErrorServiceResult(false, "SeasonPlanningNotDeleted");
+                var result = _seasonPlaningDal.Delete(seasonPlaning);
+                if (result == false)
+                    return new ErrorServiceResult(false, "Error_SystemError");
             }
 
             return new ServiceResult(true, "Deleted");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,24 +15,24 @@ namespace Entities.Concrete
         public int DefinitionTitleId { get; set; }
 
         [Column("categoryId")]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
         [Column("productGroupId")]
-        public int ProductGroupId { get; set; }
+        public int? ProductGroupId { get; set; }
 
         [Column("status")]
         public bool Status { get; set; }
         [Column("isDefault")]
         public bool IsDefault { get; set; }
         [Column("code")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
         [Column("shortDescription")]
-        public string ShortDescription { get; set; }
+        public string? ShortDescription { get; set; }
         [Column("descriptionTr")]
         public string DescriptionTr { get; set; }
         [Column("descriptionEn")]
-        public string DescriptionEn { get; set; }
+        public string? DescriptionEn { get; set; }
         [Column("kdv")]
-        public int Kdv { get; set; }
+        public int? Kdv { get; set; }
 
         public Definition()
         {

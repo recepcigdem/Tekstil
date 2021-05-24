@@ -63,7 +63,8 @@ namespace UI.Models.Label
             label.IsUsed = IsUsed;
             label.Code = Code;
             label.Description = Description;
-
+            label.Image = Image;
+            
             if (!string.IsNullOrWhiteSpace(this.ImageBase64))
             {
                 var textBase64 = "data:image/jpeg;base64,";
@@ -75,26 +76,32 @@ namespace UI.Models.Label
                     {
                         string fileName = RootPath + "\\assets\\photos\\" + img.FileName;
                         File.WriteAllBytes(fileName, img.ImageContent);
-                        Image = "\\assets\\photos\\" + img.FileName;
+                        label.Image = "\\assets\\photos\\" + img.FileName;
                     }
                 }
                 else
                 {
+                    string[] imageInfo2 = ImageBase64.Split(',');
+                    if (imageInfo2.Length > 1)
+                    {
+                        this.ImageBase64 = imageInfo2[imageInfo2.Length - 1];
+                    }
+
                     this.ImageBase64 = textBase64 + this.ImageBase64;
                     var img = Helpers.ImageHelper.GetImageFromBase64(this.ImageBase64);
-                    if (img != null)
+                    if (img != null && imageInfo2.Length > 1)
                     {
                         string fileName = RootPath + "\\assets\\photos\\" + img.FileName;
                         File.WriteAllBytes(fileName, img.ImageContent);
-                        Image = "\\assets\\photos\\" + img.FileName;
+                        label.Image = "\\assets\\photos\\" + img.FileName;
                     }
                 }
 
             }
             else
-                Image = string.Empty;
+                label.Image = string.Empty;
 
-            label.Image = Image;
+            
 
             return label;
         }

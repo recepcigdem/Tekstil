@@ -128,13 +128,10 @@ namespace Business.Concrete
 
             foreach (var seasonCurrency in seasonCurrencies.Data)
             {
-                IServiceResult isUsedResult = BusinessRules.Run(CheckIfSeasonCurrencyIsUsed(seasonCurrency));
-                if (isUsedResult.Result == false)
-                    return new ErrorServiceResult(false, isUsedResult.Message);
-
-                var deleteSeasonCurrency = Delete(seasonCurrency);
-                if (deleteSeasonCurrency.Result == false)
-                    return new ErrorServiceResult(false, "SeasonCurrencyNotDeleted");
+                var result = _seasonCurrencyDal.Delete(seasonCurrency);
+                if (result == false)
+                    return new ErrorServiceResult(false, "Error_SystemError");
+                
             }
 
             return new ServiceResult(true, "Deleted");

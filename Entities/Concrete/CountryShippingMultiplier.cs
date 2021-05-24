@@ -25,13 +25,13 @@ namespace Entities.Concrete
         [Column("testPrice")]
         public decimal TestPrice { get; set; }
         [Column("testPercentage")]
-        public int TestPercentage { get; set; }
+        public int? TestPercentage { get; set; }
         [Column("cargoPercentage")]
-        public int CargoPercentage { get; set; }
+        public int? CargoPercentage { get; set; }
         [Column("insurancePercentage")]
-        public int InsurancePercentage { get; set; }
+        public int? InsurancePercentage { get; set; }
         [Column("freightPercentage")]
-        public int FreightPercentage { get; set; }
+        public int? FreightPercentage { get; set; }
 
         public CountryShippingMultiplier()
         {

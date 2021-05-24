@@ -231,6 +231,9 @@
   <data name="Mobile" xml:space="preserve">
     <value>Mobile</value>
   </data>
+  <data name="ProductGroupRowNumberUsed" xml:space="preserve">
+    <value>Product group row number is used!</value>
+  </data>
   <data name="SaveMessage" xml:space="preserve">
     <value>Process successful!</value>
   </data>
