@@ -6,16 +6,17 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Reflection;
+using UI.Controllers.Customer;
 using UI.Models;
 using UI.Models.Customer;
 
-namespace UI.Controllers.Customer
+namespace UI.Controllers.Current
 {
-    public class CustomerController : BaseController
+    public class CurrentController : BaseController
     {
         private ICustomerService _customerService;
 
-        public CustomerController(IStringLocalizerFactory factory, IStringLocalizer<CustomerController> localizer, ILogger<CustomerController> logger, IWebHostEnvironment env, ICustomerService customerService) : base(factory, env)
+        public CurrentController(IStringLocalizerFactory factory, IStringLocalizer<CurrentController> localizer, ILogger<CurrentController> logger, IWebHostEnvironment env, ICustomerService customerService) : base(factory, env)
         {
             _customerService = customerService;
             _localizer = localizer;
@@ -33,7 +34,7 @@ namespace UI.Controllers.Customer
         [HttpPost]
         public JsonResult CustomerList()
         {
-            CustomerList list = new CustomerList(Request, _customerService);
+            CustomerList list = new CustomerList(Request,_customerService);
             return Json(list);
         }
 
@@ -120,12 +121,12 @@ namespace UI.Controllers.Customer
 
             return null;
         }
-       
+
         public JsonResult ComboList()
         {
             var customerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
 
-            var customerList = _customerService.GetAll(false, customerId).Data;
+            var customerList = _customerService.GetAll(true, customerId).Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
             foreach (Entities.Concrete.Customer entity in customerList)
             {

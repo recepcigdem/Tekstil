@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UI.Models.Customer
+namespace UI.Models.Current
 {
-    public class CustomerListLine
+    public class CurrentListLine
     {
         public int Id { get; set; }
         public int? CustomerId { get; set; }
@@ -14,7 +14,7 @@ namespace UI.Models.Customer
         public string Code { get; set; }
         public string CustomerName { get; set; }
 
-        public CustomerListLine() : base()
+        public CurrentListLine() : base()
         {
             Id = 0;
             CustomerId = 0;
@@ -23,7 +23,7 @@ namespace UI.Models.Customer
             Code = string.Empty;
             CustomerName = string.Empty;
         }
-        public CustomerListLine(Entities.Concrete.Customer customer)
+        public CurrentListLine(Entities.Concrete.Customer customer)
         {
             Id = customer.Id;
             CustomerId = customer.CustomerId;

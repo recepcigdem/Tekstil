@@ -1,7 +1,7 @@
 ﻿
 @using Microsoft.AspNetCore.Mvc.Localization
 
-@model UI.Models.Customer.Customer
+@model UI.Models.CurrentType.CurrentType
 @inject IViewLocalizer Localizer
 @inject UI.Utils.LocalizationService SharedLocaLizer
 
@@ -11,22 +11,22 @@
 }
 
 
-@using (Html.BeginForm("Detail", "Customer", FormMethod.Post, new { id = "formDetail" }))
+@using (Html.BeginForm("Detail", "CurrentType", FormMethod.Post, new { id = "formDetail" }))
 {
     @Html.HiddenFor(x => x.EntityId)
 
     <div class="page-header page-header-bordered">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/@Model.Culture/Home/Index">@Localizer["Home"]</a></li>
-            <li class="breadcrumb-item"><a href="/@Model.Culture/Customer/Index">@Localizer["List"]</a></li>
+            <li class="breadcrumb-item"><a href="/@Model.Culture/CurrentType/Index">@Localizer["List"]</a></li>
 
             @if (Model.EntityId == 0)
             {
-                <li class="breadcrumb-item active">@Localizer["NewCustomer"]</li>
+                <li class="breadcrumb-item active">@Localizer["NewCurrentType"]</li>
             }
             else
             {
-                <li class="breadcrumb-item active">@Model.CustomerName </li>
+                <li class="breadcrumb-item active">@Model.Description </li>
             }
         </ol>
     </div>
@@ -52,16 +52,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-9">
                                                 <div class="form-group">
-                                                    @Localizer["Code"]*
-                                                    @Html.TextBoxFor(x => x.Code, new { @class = "form-control" })
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    @Localizer["CustomerName"]*
-                                                    @Html.TextBoxFor(x => x.CustomerName, new { @class = "form-control" })
+                                                    @Localizer["Description"]*
+                                                    @Html.TextBoxFor(x => x.Description, new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -101,7 +95,7 @@
     var newID = 0;
 
         function Save(){
-            var url = "@Url.Action("Save", "Customer")";
+            var url = "@Url.Action("Save", "CurrentType")";
             $.post(url,
                 $("form").serialize(),
                 function(data) {
@@ -138,7 +132,7 @@
                     showConfirmButton: true,
                     padding: '4em'
                 }).then(function() {
-                    window.location.href = "@Url.Action("Index", "Customer")";
+                    window.location.href = "@Url.Action("Index", "CurrentType")";
                 });
             }
 

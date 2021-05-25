@@ -25,9 +25,9 @@ namespace Business.Concrete
             _customerDal = customerDal;
         }
 
-        public IDataServiceResult<List<Customer>> GetAll()
+        public IDataServiceResult<List<Customer>> GetAll(bool isCurrent, int customerId)
         {
-            var dbResult = _customerDal.GetAll();
+            var dbResult = _customerDal.GetAll(x => x.IsCurrent == isCurrent && x.CustomerId == customerId);
 
             return new SuccessDataServiceResult<List<Customer>>(dbResult, true, "Listed");
         }

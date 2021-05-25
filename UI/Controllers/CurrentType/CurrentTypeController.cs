@@ -6,18 +6,19 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Reflection;
+using UI.Helpers;
 using UI.Models;
-using UI.Models.Customer;
+using UI.Models.CurrentType;
 
-namespace UI.Controllers.Customer
+namespace UI.Controllers.CurrentType
 {
-    public class CustomerController : BaseController
+    public class CurrentTypeController : BaseController
     {
-        private ICustomerService _customerService;
+        private ICurrentTypeService _currentTypeService;
 
-        public CustomerController(IStringLocalizerFactory factory, IStringLocalizer<CustomerController> localizer, ILogger<CustomerController> logger, IWebHostEnvironment env, ICustomerService customerService) : base(factory, env)
+        public CurrentTypeController(IStringLocalizerFactory factory, IStringLocalizer<CurrentTypeController> localizer, ILogger<CurrentTypeController> logger, IWebHostEnvironment env, ICurrentTypeService currentTypeService) : base(factory, env)
         {
-            _customerService = customerService;
+            _currentTypeService = currentTypeService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
@@ -31,19 +32,19 @@ namespace UI.Controllers.Customer
             return View(model);
         }
         [HttpPost]
-        public JsonResult CustomerList()
+        public JsonResult CurrentTypeList()
         {
-            CustomerList list = new CustomerList(Request, _customerService);
+            CurrentTypeList list = new CurrentTypeList(Request, _currentTypeService);
             return Json(list);
         }
 
         public ActionResult Detail(int id)
         {
-            Entities.Concrete.Customer serviceDetail = new Entities.Concrete.Customer();
+            Entities.Concrete.CurrentType serviceDetail = new Entities.Concrete.CurrentType();
             if (id > 0)
-                serviceDetail = _customerService.GetById(id).Data;
+                serviceDetail = _currentTypeService.GetById(id).Data;
 
-            var model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
+            var model = new Models.CurrentType.CurrentType(Request, serviceDetail, _localizerShared);
             return View(model);
         }
 
@@ -51,10 +52,10 @@ namespace UI.Controllers.Customer
         {
             if (id > 0)
             {
-                var serviceDetail = _customerService.GetById(id).Data;
+                var serviceDetail = _currentTypeService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
-                    Models.Customer.Customer model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
+                    Models.CurrentType.CurrentType model = new Models.CurrentType.CurrentType(Request, serviceDetail, _localizerShared);
                     return PartialView(model);
                 }
                 return null;
@@ -64,7 +65,7 @@ namespace UI.Controllers.Customer
 
         public JsonResult Delete(int Id)
         {
-            #region  Customer Session Control
+            #region  CurrentType Session Control
 
             var sessionHelper = Helpers.HttpHelper.StaffSessionControl(Request);
             if (!sessionHelper.IsSuccess)
@@ -73,12 +74,12 @@ namespace UI.Controllers.Customer
             }
             #endregion
 
-            Entities.Concrete.Customer entity = new Entities.Concrete.Customer();
+            Entities.Concrete.CurrentType entity = new Entities.Concrete.CurrentType();
             entity.Id = Id;
 
             if (Id > 0)
             {
-                var res = _customerService.Delete(entity);
+                var res = _currentTypeService.Delete(entity);
                 if (res.Result == false)
                     res.Message = _localizer.GetString(res.Message);
                 else
@@ -89,7 +90,7 @@ namespace UI.Controllers.Customer
             return null;
         }
         [HttpPost]
-        public JsonResult Save(Models.Customer.Customer customer)
+        public JsonResult Save(Models.CurrentType.CurrentType currentType)
         {
             #region  Staff Session Control
 
@@ -100,13 +101,15 @@ namespace UI.Controllers.Customer
             }
             #endregion
 
-            if (customer != null)
+            if (currentType != null)
             {
-                Entities.Concrete.Customer entity = customer.GetBusinessModel();
+                Entities.Concrete.CurrentType entity = currentType.GetBusinessModel();
                 if (entity == null)
                     return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _customerService.Save(entity);
+                entity.CustomerId = SessionHelper.GetStaff(Request).CustomerId;
+
+                var result = _currentTypeService.Save(entity);
                 if (result.Result == false)
                     result.Message = _localizer.GetString(result.Message);
                 else
@@ -125,11 +128,11 @@ namespace UI.Controllers.Customer
         {
             var customerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
 
-            var customerList = _customerService.GetAll(false, customerId).Data;
+            var currentTypeList = _currentTypeService.GetAll(customerId).Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
-            foreach (Entities.Concrete.Customer entity in customerList)
+            foreach (Entities.Concrete.CurrentType entity in currentTypeList)
             {
-                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.CustomerName);
+                Models.Common.ComboData model = new Models.Common.ComboData(entity.Id, entity.Description);
                 data.Add(model);
             }
             return Json(data);

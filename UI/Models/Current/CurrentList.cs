@@ -5,31 +5,29 @@ using System.Threading.Tasks;
 using Business.Abstract;
 using Microsoft.AspNetCore.Http;
 
-namespace UI.Models.Customer
+namespace UI.Models.Current
 {
-    public class CustomerList
+    public class CurrentList
     {
-        public List<CustomerListLine> data { get; set; }
+        public List<CurrentListLine> data { get; set; }
 
         private ICustomerService _customerService;
 
-        public CustomerList(HttpRequest request, ICustomerService customerService)
+        public CurrentList(HttpRequest request, ICustomerService customerService)
         {
+            var customerId = Helpers.SessionHelper.GetStaff(request).CustomerId;
             _customerService = customerService;
 
-            var customerId = Helpers.SessionHelper.GetStaff(request).CustomerId;
-
-            var listGrid = _customerService.GetAll(false, customerId).Data;
+            var listGrid = _customerService.GetAll(true, customerId).Data;
             if (listGrid != null)
             {
-                data = new List<CustomerListLine>();
+                data = new List<CurrentListLine>();
                 foreach (var item in listGrid)
                 {
-                    CustomerListLine line = new CustomerListLine(item);
+                    CurrentListLine line = new CurrentListLine(item);
                     data.Add(line);
                 }
             }
         }
     }
 }
-

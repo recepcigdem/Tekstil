@@ -117,19 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Code" xml:space="preserve">
-    <value>Code</value>
+  <data name="Copy" xml:space="preserve">
+    <value>Kopya</value>
   </data>
-  <data name="CustomerName" xml:space="preserve">
-    <value>Customer Name</value>
+  <data name="CurrentTypeList" xml:space="preserve">
+    <value>Cari Tipi Listesi</value>
   </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+  <data name="Description" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="Detail" xml:space="preserve">
+    <value>Cari Tipi Detay</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Ana Sayfa</value>
   </data>
   <data name="IsActive" xml:space="preserve">
-    <value>Is Active</value>
+    <value>Aktif</value>
+  </data>
+  <data name="NewRecord" xml:space="preserve">
+    <value>Yeni Kayıt</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>Customer Detail</value>
+    <value>Cari Tipileri</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Yazdır</value>
+  </data>
+  <data name="ViewTitle" xml:space="preserve">
+    <value>Cari Tipi</value>
   </data>
 </root>

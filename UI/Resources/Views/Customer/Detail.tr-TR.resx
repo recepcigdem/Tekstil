@@ -120,6 +120,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>İptal</value>
   </data>
+  <data name="Code" xml:space="preserve">
+    <value>Kod</value>
+  </data>
   <data name="CustomerName" xml:space="preserve">
     <value>Müşteri Adı</value>
   </data>

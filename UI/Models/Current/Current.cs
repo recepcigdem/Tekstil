@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-namespace UI.Models.Customer
+namespace UI.Models.Current
 {
-    public class Customer : BaseModel
+    public class Current : BaseModel
     {
         public int? CustomerId { get; set; }
         public int? CustomerTypeId { get; set; }
@@ -16,7 +16,7 @@ namespace UI.Models.Customer
         public string Code { get; set; }
         public string CustomerName { get; set; }
 
-        public Customer()
+        public Current()
         {
             CustomerId = 0;
             CustomerTypeId = 0;
@@ -25,7 +25,7 @@ namespace UI.Models.Customer
             Code = string.Empty;
             CustomerName = string.Empty;
         }
-        public Customer(HttpRequest request, Entities.Concrete.Customer customer, IStringLocalizer _localizerShared) : base(request)
+        public Current(HttpRequest request, Entities.Concrete.Customer customer, IStringLocalizer _localizerShared) : base(request)
         {
             EntityId = customer.Id;
             CustomerId = customer.CustomerId;
@@ -44,9 +44,9 @@ namespace UI.Models.Customer
                 customer.Id = EntityId;
             }
 
-            customer.CustomerId = 1;
-            customer.CustomerTypeId = 0;
-            customer.IsCurrent = false;
+            customer.CustomerId = CustomerId;
+            customer.CustomerTypeId = CustomerTypeId;
+            customer.IsCurrent = true;
             customer.IsActive = IsActive;
             customer.Code = Code;
             customer.CustomerName = CustomerName;

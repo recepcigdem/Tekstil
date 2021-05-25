@@ -27,6 +27,7 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<CsNoDeliveryDate> CsNoDeliveryDate { get; set; }
         public DbSet<CsNoDeliveryDateHistory> CsNoDeliveryDateHistory { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<CurrentType> CurrentType { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Definition> Definition { get; set; }
         public DbSet<DefinitionTitle> DefinitionTitles { get; set; }

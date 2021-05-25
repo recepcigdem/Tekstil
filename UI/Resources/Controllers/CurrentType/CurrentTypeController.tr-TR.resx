@@ -117,19 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Code" xml:space="preserve">
-    <value>Code</value>
+  <data name="AuthorizationDenied" xml:space="preserve">
+    <value>Yetkiniz yok!</value>
   </data>
-  <data name="CustomerName" xml:space="preserve">
-    <value>Customer Name</value>
+  <data name="CurrentTypeAlreadyExists" xml:space="preserve">
+    <value>Cari tipi zaten mevcut!</value>
   </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+  <data name="DescriptionNotEmpty" xml:space="preserve">
+    <value>Açıklama boş geçilemez!</value>
   </data>
-  <data name="IsActive" xml:space="preserve">
-    <value>Is Active</value>
-  </data>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Customer Detail</value>
+  <data name="Error_SystemError" xml:space="preserve">
+    <value>Sistem hatası!</value>
   </data>
 </root>
