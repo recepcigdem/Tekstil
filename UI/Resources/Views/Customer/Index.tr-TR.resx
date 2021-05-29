@@ -129,6 +129,9 @@
   <data name="CustomerName" xml:space="preserve">
     <value>Müşteri Adı</value>
   </data>
+  <data name="CustomerType" xml:space="preserve">
+    <value>Müşteri Tipi</value>
+  </data>
   <data name="Detail" xml:space="preserve">
     <value>Müşteri Detayı</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="Print" xml:space="preserve">
     <value>Yazdır</value>
+  </data>
+  <data name="SelectCustomerType" xml:space="preserve">
+    <value>Müşteri Tipi Seç</value>
   </data>
   <data name="ViewTitle" xml:space="preserve">
     <value>Müşteri</value>

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UI.Controllers.Customer;
 using UI.Models;
+using UI.Models.Current;
 using UI.Models.Customer;
 
 namespace UI.Controllers.Current
@@ -32,9 +33,9 @@ namespace UI.Controllers.Current
             return View(model);
         }
         [HttpPost]
-        public JsonResult CustomerList()
+        public JsonResult CurrentList()
         {
-            CustomerList list = new CustomerList(Request,_customerService);
+            CurrentList list = new CurrentList(Request,_customerService);
             return Json(list);
         }
 

@@ -129,6 +129,9 @@
   <data name="CustomerName" xml:space="preserve">
     <value>Customer Name</value>
   </data>
+  <data name="CustomerType" xml:space="preserve">
+    <value>Customer Type</value>
+  </data>
   <data name="Detail" xml:space="preserve">
     <value>Customer Detail</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="Print" xml:space="preserve">
     <value>Print</value>
+  </data>
+  <data name="SelectCustomerType" xml:space="preserve">
+    <value>Select Customer Type</value>
   </data>
   <data name="ViewTitle" xml:space="preserve">
     <value>Customer</value>
