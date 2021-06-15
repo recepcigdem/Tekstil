@@ -12,8 +12,10 @@ namespace DataAccess.Concrete.EntityFramework
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=.;Database=Textile;Trusted_Connection=true");
+            //optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-VTQPFHE\SQLSERVER;Initial Catalog=Textile;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-VTQPFHE\SQLSERVER;Database=Textile;Trusted_Connection=true");
             //optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Textile;User ID=sa;Password=1234Recep;TrustServerCertificate=False");
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +29,8 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<CsNoDeliveryDate> CsNoDeliveryDate { get; set; }
         public DbSet<CsNoDeliveryDateHistory> CsNoDeliveryDateHistory { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<CurrentPhone> CurrentPhones { get; set; }
+        public DbSet<CurrentEmail> CurrentEmails { get; set; }
         public DbSet<CurrentType> CurrentType { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Definition> Definition { get; set; }

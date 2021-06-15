@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
 
-namespace Entities.Concrete.Dtos.Staff
+namespace Entities.Concrete.Dtos.Current
 {
-    public class StaffPhoneDto : BaseEntity
+    public class CurrentPhoneDto : BaseEntity
     {
-        public int StaffId { get; set; }
+        public int CurrentId { get; set; }
         public int PhoneId { get; set; }
         public bool IsMain { get; set; }
 
@@ -18,9 +18,9 @@ namespace Entities.Concrete.Dtos.Staff
         public string AreaCode { get; set; }
         public string PhoneNumber { get; set; }
 
-        public StaffPhoneDto()
+        public CurrentPhoneDto()
         {
-            StaffId = 0;
+            CurrentId = 0;
             PhoneId = 0;
             IsMain = false;
 

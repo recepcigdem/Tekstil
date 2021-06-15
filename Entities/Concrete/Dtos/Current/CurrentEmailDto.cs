@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete.Dtos.Staff
+namespace Entities.Concrete.Dtos.Current
 {
-    public class StaffEmailDto :BaseEntity
+    public class CurrentEmailDto :BaseEntity
     {
-        public int StaffId { get; set; }
+        public int CurrentId { get; set; }
         public int EmailId { get; set; }
         public bool IsMain { get; set; }
         public bool IsActive { get; set; }
         public string EmailAddress { get; set; }
 
-        public StaffEmailDto()
+        public CurrentEmailDto()
         {
-            StaffId = 0;
+            CurrentId = 0;
             EmailId = 0;
             IsMain = false;
 

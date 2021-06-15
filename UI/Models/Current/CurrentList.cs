@@ -11,14 +11,14 @@ namespace UI.Models.Current
     {
         public List<CurrentListLine> data { get; set; }
 
-        private ICustomerService _customerService;
+        private ICurrentService _currentService;
 
-        public CurrentList(HttpRequest request, ICustomerService customerService)
+        public CurrentList(HttpRequest request, ICurrentService currentService)
         {
             var customerId = Helpers.SessionHelper.GetStaff(request).CustomerId;
-            _customerService = customerService;
+            _currentService = currentService;
 
-            var listGrid = _customerService.GetAll(true, customerId).Data;
+            var listGrid = _currentService.GetAll(true, customerId).Data;
             if (listGrid != null)
             {
                 data = new List<CurrentListLine>();

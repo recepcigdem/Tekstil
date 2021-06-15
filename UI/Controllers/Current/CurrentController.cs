@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Core.Utilities.Results;
+using Entities.Concrete.Dtos.Current;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -15,11 +16,11 @@ namespace UI.Controllers.Current
 {
     public class CurrentController : BaseController
     {
-        private ICustomerService _customerService;
+        private ICurrentService _currentService;
 
-        public CurrentController(IStringLocalizerFactory factory, IStringLocalizer<CurrentController> localizer, ILogger<CurrentController> logger, IWebHostEnvironment env, ICustomerService customerService) : base(factory, env)
+        public CurrentController(IStringLocalizerFactory factory, IStringLocalizer<CurrentController> localizer, ILogger<CurrentController> logger, IWebHostEnvironment env, ICurrentService currentService) : base(factory, env)
         {
-            _customerService = customerService;
+            _currentService = currentService;
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
@@ -35,7 +36,7 @@ namespace UI.Controllers.Current
         [HttpPost]
         public JsonResult CurrentList()
         {
-            CurrentList list = new CurrentList(Request,_customerService);
+            CurrentList list = new CurrentList(Request, _currentService);
             return Json(list);
         }
 
@@ -43,7 +44,7 @@ namespace UI.Controllers.Current
         {
             Entities.Concrete.Customer serviceDetail = new Entities.Concrete.Customer();
             if (id > 0)
-                serviceDetail = _customerService.GetById(id).Data;
+                serviceDetail = _currentService.GetById(id).Data;
 
             var model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
             return View(model);
@@ -53,7 +54,7 @@ namespace UI.Controllers.Current
         {
             if (id > 0)
             {
-                var serviceDetail = _customerService.GetById(id).Data;
+                var serviceDetail = _currentService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
                     Models.Customer.Customer model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
@@ -80,7 +81,7 @@ namespace UI.Controllers.Current
 
             if (Id > 0)
             {
-                var res = _customerService.Delete(entity);
+                var res = _currentService.DeleteAll(entity);
                 if (res.Result == false)
                     res.Message = _localizer.GetString(res.Message);
                 else
@@ -91,7 +92,7 @@ namespace UI.Controllers.Current
             return null;
         }
         [HttpPost]
-        public JsonResult Save(Models.Customer.Customer customer)
+        public JsonResult Save(Models.Current.Current customer)
         {
             #region  Staff Session Control
 
@@ -108,7 +109,10 @@ namespace UI.Controllers.Current
                 if (entity == null)
                     return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_SystemError")));
 
-                var result = _customerService.Save(entity);
+                List<CurrentPhoneDto> currentPhoneDtos = customer.ListCurrentPhone;
+                List<CurrentEmailDto> currentEmailDtos = customer.ListCurrentEmail;
+
+                var result = _currentService.SaveAll(entity, currentEmailDtos, currentPhoneDtos);
                 if (result.Result == false)
                     result.Message = _localizer.GetString(result.Message);
                 else
@@ -127,7 +131,7 @@ namespace UI.Controllers.Current
         {
             var customerId = Helpers.SessionHelper.GetStaff(Request).CustomerId;
 
-            var customerList = _customerService.GetAll(true, customerId).Data;
+            var customerList = _currentService.GetAll(true, customerId).Data;
             List<Models.Common.ComboData> data = new List<Models.Common.ComboData>();
             foreach (Entities.Concrete.Customer entity in customerList)
             {

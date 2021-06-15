@@ -45,8 +45,12 @@ namespace UI.Models.Customer
             }
 
             customer.CustomerId = 1;
-            customer.CustomerTypeId = 0;
+            customer.CustomerTypeId = CustomerTypeId;
+            if (CustomerTypeId>0)
+                customer.IsCurrent = true;
+            else
             customer.IsCurrent = false;
+
             customer.IsActive = IsActive;
             customer.Code = Code;
             customer.CustomerName = CustomerName;
