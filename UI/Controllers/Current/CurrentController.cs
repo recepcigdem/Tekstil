@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Reflection;
 using UI.Controllers.Customer;
+using UI.Helpers;
 using UI.Models;
 using UI.Models.Current;
 using UI.Models.Customer;
@@ -17,15 +18,25 @@ namespace UI.Controllers.Current
     public class CurrentController : BaseController
     {
         private ICurrentService _currentService;
+        private ICurrentEmailService _currentEmailService;
+        private ICurrentPhoneService _currentPhoneService;
+        private IEmailService _emailService;
+        private IPhoneService _phoneService;
 
-        public CurrentController(IStringLocalizerFactory factory, IStringLocalizer<CurrentController> localizer, ILogger<CurrentController> logger, IWebHostEnvironment env, ICurrentService currentService) : base(factory, env)
+        public CurrentController(IStringLocalizerFactory factory, IStringLocalizer<CurrentController> localizer, ILogger<CurrentController> logger, IWebHostEnvironment env, ICurrentService currentService, ICurrentEmailService currentEmailService, ICurrentPhoneService currentPhoneService, IEmailService emailService, IPhoneService phoneService) : base(factory, env)
         {
             _currentService = currentService;
+            _currentEmailService = currentEmailService;
+            _currentPhoneService = currentPhoneService;
+            _emailService = emailService;
+            _phoneService = phoneService;
+
             _localizer = localizer;
             _logger = logger;
             var type = typeof(Resources.SharedResource);
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizerShared = factory.Create("SharedResource", assemblyName.Name);
+           
         }
 
         public IActionResult Index()
@@ -46,7 +57,7 @@ namespace UI.Controllers.Current
             if (id > 0)
                 serviceDetail = _currentService.GetById(id).Data;
 
-            var model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
+            var model = new Models.Current.Current(Request, serviceDetail, _localizerShared,_currentEmailService,_currentPhoneService,_emailService, _phoneService);
             return View(model);
         }
 
@@ -57,7 +68,7 @@ namespace UI.Controllers.Current
                 var serviceDetail = _currentService.GetById(id).Data;
                 if (serviceDetail != null)
                 {
-                    Models.Customer.Customer model = new Models.Customer.Customer(Request, serviceDetail, _localizerShared);
+                    var model = new Models.Current.Current(Request, serviceDetail, _localizerShared, _currentEmailService, _currentPhoneService, _emailService, _phoneService);
                     return PartialView(model);
                 }
                 return null;
@@ -108,6 +119,8 @@ namespace UI.Controllers.Current
                 Entities.Concrete.Customer entity = customer.GetBusinessModel();
                 if (entity == null)
                     return Json(new ErrorServiceResult(false, _localizerShared.GetString("Error_SystemError")));
+
+                entity.CustomerId = SessionHelper.GetStaff(Request).CustomerId;
 
                 List<CurrentPhoneDto> currentPhoneDtos = customer.ListCurrentPhone;
                 List<CurrentEmailDto> currentEmailDtos = customer.ListCurrentEmail;

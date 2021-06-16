@@ -184,7 +184,9 @@ namespace Business.Concrete
                     PhoneNumber = currentPhoneDto.PhoneNumber
                 };
 
-                _phoneService.Add(phone);
+                var phoneResult= _phoneService.Save(phone);
+                if (phoneResult.Result == false)
+                    return new DataServiceResult<CurrentPhone>(false, phoneResult.Message);
 
                 CurrentPhone currentPhone = new CurrentPhone
                 {

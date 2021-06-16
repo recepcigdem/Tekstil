@@ -183,7 +183,9 @@ namespace Business.Concrete
                     EmailAddress = currentEmailDto.EmailAddress
                 };
 
-                _emailService.Add(email);
+                var emailResult = _emailService.Save(email);
+                if (emailResult.Result == false)
+                    return new DataServiceResult<CurrentEmail>(false, emailResult.Message);
 
                 CurrentEmail currentEmail = new CurrentEmail
                 {
@@ -193,7 +195,7 @@ namespace Business.Concrete
                     IsMain = currentEmailDto.IsMain
                 };
 
-                Add(currentEmail);
+              Add(currentEmail);
             }
 
 

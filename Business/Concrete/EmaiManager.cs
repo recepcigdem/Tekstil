@@ -49,6 +49,9 @@ namespace Business.Concrete
             return new SuccessDataServiceResult<Email>(dbResult, true, "Listed");
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(EmailValidator))]
+        [TransactionScopeAspect]
         public IServiceResult Add(Email email)
         {
             IServiceResult result = BusinessRules.Run(CheckIfEmailExists(email));
@@ -63,6 +66,9 @@ namespace Business.Concrete
 
         }
 
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(EmailValidator))]
+        [TransactionScopeAspect]
         public IServiceResult Update(Email email)
         {
             

@@ -32,6 +32,14 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<CustomerManager>().As<ICustomerService>().SingleInstance();
             builder.RegisterType<EfCustomerDal>().As<ICustomerDal>().SingleInstance();
 
+            builder.RegisterType<CurrentManager>().As<ICurrentService>().SingleInstance();
+
+            builder.RegisterType<CurrentEmailManager>().As<ICurrentEmailService>().SingleInstance();
+            builder.RegisterType<EfCurrentEmailDal>().As<ICurrentEmailDal>().SingleInstance();
+            
+            builder.RegisterType<CurrentPhoneManager>().As<ICurrentPhoneService>().SingleInstance();
+            builder.RegisterType<EfCurrentPhoneDal>().As<ICurrentPhoneDal>().SingleInstance();
+
             builder.RegisterType<CurrentTypeManager>().As<ICurrentTypeService>().SingleInstance();
             builder.RegisterType<EfCurrentTypeDal>().As<ICurrentTypeDal>().SingleInstance();
 

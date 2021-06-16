@@ -189,9 +189,13 @@ namespace Business.Concrete
                 Add(customer);
             }
 
-            _currentEmailService.Save(customer, currentEmailDtos);
-
-            _currentPhoneService.Save(customer, currentPhoneDtos);
+            var emailResult = _currentEmailService.Save(customer, currentEmailDtos);
+            if (emailResult.Result==false)
+               return new DataServiceResult<Customer>(customer, false, emailResult.Message);
+            
+            var phoneResult = _currentPhoneService.Save(customer, currentPhoneDtos);
+            if (phoneResult.Result == false)
+                return new DataServiceResult<Customer>(customer, false, phoneResult.Message);
 
             return new SuccessDataServiceResult<Customer>(customer, true, "Saved");
         }

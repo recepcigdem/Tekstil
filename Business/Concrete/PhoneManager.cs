@@ -41,7 +41,9 @@ namespace Business.Concrete
 
             return new SuccessDataServiceResult<Phone>(dbResult, true, "Listed");
         }
-
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(PhoneValidator))]
+        [TransactionScopeAspect]
         public IServiceResult Add(Phone phone)
         {
             IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(phone));
@@ -55,7 +57,9 @@ namespace Business.Concrete
             return new ServiceResult(true, "Added");
 
         }
-
+        [LogAspect(typeof(FileLogger))]
+        [ValidationAspect(typeof(PhoneValidator))]
+        [TransactionScopeAspect]
         public IServiceResult Update(Phone phone)
         {
             IServiceResult result = BusinessRules.Run(CheckIfPhoneExists(phone));

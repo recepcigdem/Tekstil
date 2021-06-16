@@ -1,5 +1,213 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Current.Current
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+
+@using (Html.BeginForm("DetailReadOnly", "Current", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+    @Html.HiddenFor(x => x.CustomerTypeId)
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top:20px;">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
+                            @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive", @disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        @Localizer["CustomerType"]*
+                        <select id="comboCustomerType" class="form-control" disabled="disabled">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Localizer["Code"]*
+                        @Html.TextBoxFor(x => x.Code, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        @Localizer["CustomerName"]*
+                        @Html.TextBoxFor(x => x.CustomerName, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Example Tabs Line Top -->
+                <div class="example-wrap col-md-12">
+                    <div class="nav-tabs-horizontal" data-plugin="tabs">
+                        <ul class="nav nav-tabs nav-tabs-line tabs-line-top" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" data-toggle="tab" href="#exampleTabsLineTopOne"
+                                   aria-controls="exampleTabsLineTopOne" role="tab">@Localizer["Email"]</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-toggle="tab" href="#exampleTabsLineTopTwo"
+                                   aria-controls="exampleTabsLineTopTwo" role="tab">@Localizer["Phone"]</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-20">
+                            <div class="tab-pane active" id="exampleTabsLineTopOne" role="tabpanel">
+                                @Html.HiddenFor(x => x.SubEmailString)
+                                <div class="col-md-12">
+                                    <div class="panel panel-primary panel-line">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <h4 class="col mb-0 align-self-end">@Localizer["Email"]</h4>
+                                            </div>
+                                        </div>
+                                        <table id="mailGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
+                                            <thead>
+                                                <tr>
+                                                    <th width="8%">@Localizer["IsMain"]</th>
+                                                    <th width="72%">@Localizer["EmailAddress"]*</th>
+                                                    <th width="10%"></th>
+                                                    <th width="10%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < Model.ListCurrentEmail.Count; i++)
+                                                {
+                                                    <tr class="dataSatir">
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom: 5px">
+                                                                    @Html.CheckBoxFor(x => x.ListCurrentEmail[i].IsMain, new { @class = "isMainCheck", @disabled = "disabled" })
+                                                                    @Html.LabelFor(x => x.ListCurrentEmail[i].IsMain, "")
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" name="mailAddress" id="mailAddress" disabled="disabled" value="@Model.ListCurrentEmail[i].EmailAddress">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="exampleTabsLineTopTwo" role="tabpanel">
+                                @Html.HiddenFor(x => x.SubPhoneString)
+                                <div class="col-md-12">
+                                    <div class="panel panel-primary panel-line">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <h4 class="col mb-0 align-self-end">@Localizer["Phone"]</h4>
+                                            </div>
+                                        </div>
+                                        <table id="phoneGrid" class="table table-striped table-bordered table-hover table-responsive" style="display: table !important">
+                                            <thead>
+                                                <tr>
+                                                    <th width="10%">@Localizer["IsMain"]</th>
+                                                    <th width="15%">@Localizer["CountryCode"]*</th>
+                                                    <th width="15%">@Localizer["AreaCode"]*</th>
+                                                    <th width="50%">@Localizer["PhoneNumber"]*</th>
+                                                    <th width="10%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < Model.ListCurrentPhone.Count; i++)
+                                                {
+                                                    <tr class="dataSatir">
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-bottom: 5px">
+                                                                    @Html.CheckBoxFor(x => x.ListCurrentPhone[i].IsMain, new { @class = "isMainCheck", @disabled = "disabled" })
+                                                                    @Html.LabelFor(x => x.ListCurrentPhone[i].IsMain, "")
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control numericField" name="countryCode" disabled="disabled" value="@Model.ListCurrentPhone[i].CountryCode">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control numericField" name="areaCode" disabled="disabled" value="@Model.ListCurrentPhone[i].AreaCode">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" name="phoneNumber" disabled="disabled" value="@Model.ListCurrentPhone[i].PhoneNumber">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Example Tabs Line Top -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-2" style="float:right">
+                <button class="btn btn-success" onclick="location.href = '@Url.Action("Detail", "Current",new {id=Model.EntityId })'" data-dismiss="modal" type="button">@Localizer["Edit"]</button>
+
+            </div>
+        </div>
+    </div>
 }
+<script type="text/javascript">
+    $('.form-group').css('pointer-events', 'none');
+
+    $(document).ready(function () {
+
+        var comboCustomerTypeUrl = "@Url.Action("ComboList", "CurrentType")" + "?CustomerTypeId=" + CustomerTypeId;
+
+        $.ajax({
+            url: comboCustomerTypeUrl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#comboCustomerType").select2({
+                    dataType: 'json',
+                    data: data,
+                    minimumInputLength: 0,
+                    placeholder: '@Localizer["SelectCustomerType"]',
+                    sorter: function (data) {
+                        return data.sort(function (a, b) {
+                            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+                        });
+                    }
+                });
+                $('#comboCustomerType').val($('#CustomerTypeId').val()).trigger("change");
+
+            }
+        }, 'json');
+
+        $('#comboCustomerType').on('select2:select', function (evt) {
+            $('#CustomerTypeId').val(this.value);
+        });
+
+        InitSubList($('#listGroupMail'), $('#SubEmailString').val());
+        InitSubList($('#listGroupPhone'), $('#SubPhoneString').val());
+
+    });
+
+</script>
