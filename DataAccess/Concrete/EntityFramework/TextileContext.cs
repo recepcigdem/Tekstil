@@ -37,6 +37,11 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Definition> Definition { get; set; }
         public DbSet<DefinitionTitle> DefinitionTitles { get; set; }
         public DbSet<Email> Email { get; set; }
+        public DbSet<Fabric> Fabric { get; set; }
+        public DbSet<FabricColorLabel> FabricColorLabel { get; set; }
+        public DbSet<FabricDetail> FabricDetail { get; set; }
+        public DbSet<FabricPrice> FabricPrice { get; set; }
+        public DbSet<FabricSupplier> FabricSupplier { get; set; }
         public DbSet<Hierarchy> Hierarchy { get; set; }
         public DbSet<Label> Label { get; set; }
         public DbSet<ModelSeasonRowNumber> ModelSeasonRowNumber { get; set; }

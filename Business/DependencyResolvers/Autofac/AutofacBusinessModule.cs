@@ -59,6 +59,21 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EmailManager>().As<IEmailService>().SingleInstance();
             builder.RegisterType<EfEmailDal>().As<IEmailDal>().SingleInstance();
 
+            builder.RegisterType<FabricManager>().As<IFabricService>().SingleInstance();
+            builder.RegisterType<EfFabricDal>().As<IFabricDal>().SingleInstance();
+
+            builder.RegisterType<FabricColorLabelManager>().As<IFabricColorLabelService>().SingleInstance();
+            builder.RegisterType<EfFabricColorLabelDal>().As<IFabricColorLabelDal>().SingleInstance();
+
+            builder.RegisterType<FabricDetailManager>().As<IFabricDetailService>().SingleInstance();
+            builder.RegisterType<EfFabricDetailDal>().As<IFabricDetailDal>().SingleInstance();
+
+            builder.RegisterType<FabricPriceManager>().As<IFabricPriceService>().SingleInstance();
+            builder.RegisterType<EfFabricPriceDal>().As<IFabricPriceDal>().SingleInstance();
+
+            builder.RegisterType<FabricSupplierManager>().As<IFabricSupplierService>().SingleInstance();
+            builder.RegisterType<EfFabricSupplierDal>().As<IFabricSupplierDal>().SingleInstance();
+
             //builder.RegisterModule(new AutofacBusinessModule());
 
             builder.RegisterType<HierarchyManager>().As<IHierarchyService>().SingleInstance();
