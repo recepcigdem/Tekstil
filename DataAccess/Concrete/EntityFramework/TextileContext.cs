@@ -25,6 +25,7 @@ namespace DataAccess.Concrete.EntityFramework
 
         public DbSet<Authorization> Authorizations { get; set; }
         public DbSet<Channel> Channel { get; set; }
+        public DbSet<Color> Color { get; set; }
         public DbSet<CountryShippingMultiplier> CountryShippingMultiplier { get; set; }
         public DbSet<CsNoDeliveryDate> CsNoDeliveryDate { get; set; }
         public DbSet<CsNoDeliveryDateHistory> CsNoDeliveryDateHistory { get; set; }

@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@model UI.Models.Color.Color
+@inject IViewLocalizer Localizer
+@inject UI.Utils.LocalizationService SharedLocaLizer
+
+
+@using (Html.BeginForm("DetailReadOnly", "Color", FormMethod.Post, new { id = "formDetail" }))
+{
+    @Html.HiddenFor(x => x.EntityId)
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top:20px;">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="checkbox-custom checkbox-inline checkbox-success" style="margin-top: 25px">
+                            @Html.CheckBoxFor(x => x.IsActive, new { @id = "isActive", @disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsActive, "")@Localizer["IsActive"]
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Localizer["Date"]
+                        <input type="date" class="form-control" id="date" name="date" disabled="disabled">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Localizer["Code"]
+                        @Html.TextBoxFor(x => x.Code, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Localizer["DescriptionTr"]
+                        @Html.TextBoxFor(x => x.DescriptionTr, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Localizer["DescriptionEn"]
+                        @Html.TextBoxFor(x => x.DescriptionEn, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Localizer["PantoneNo"]
+                        @Html.TextBoxFor(x => x.PantoneNo, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Localizer["Cmyk"]
+                        @Html.TextBoxFor(x => x.Cmyk, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-2" style="float:right">
+                <button class="btn btn-success" onclick="location.href = '@Url.Action("Detail", "Color",new {id=Model.EntityId })'" data-dismiss="modal" type="button">@Localizer["Edit"]</button>
+
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $('.form-group').css('pointer-events', 'none');
+
+    $(document).ready(function() {
+
+        var d = "@Model.Date.ToString("yyyy-MM-dd")";
+        document.getElementById("date").value = d;
+
+    });
+
+</script>
